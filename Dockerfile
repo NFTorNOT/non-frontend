@@ -4,7 +4,7 @@ RUN mkdir /app
 ARG ENV
 COPY . /app
 WORKDIR /app
-RUN mv $ENV.env .env
+# RUN mv $ENV.env .env
 # RUN npm install --global yarn
 RUN npm install
 RUN npm run build
