@@ -1,0 +1,192 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 10% 40% 10%;
+  justify-content: center;
+  align-items: center;
+}
+.yellow {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+
+  background: radial-gradient(
+      107.14% 107.14% at 50% 80.95%,
+      #fa5c00 0%,
+      #ffb800 100%
+    ),
+    #fa5c00;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+.wordOfDay {
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 160%;
+  text-align: center;
+  font-feature-settings: "salt" on;
+  color: rgb(255, 255, 255);
+}
+.generatedImagePrompts {
+  display: grid;
+  min-height: 512px;
+  max-width: 512px;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.masterpeice {
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 160%;
+  font-feature-settings: "salt" on;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  width: 92%;
+  margin: 12px;
+  border-bottom: 0.5px solid gray;
+}
+.bottom {
+  align-self: end;
+}
+
+.submitVote,
+.submitVote:focus {
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  align-self: end;
+
+  color: #ffffff;
+
+  text-align: center;
+
+  background: radial-gradient(
+    107.14% 107.14% at 50% 80.95%,
+    #fa5c00 0%,
+    #ffb800 100%
+  );
+  box-shadow: 0px 8px 32px rgba(250, 92, 0, 0.32),
+    inset 0px -4px 8px rgba(249, 155, 1, 0.6), inset 0px -8px 16px #c75c00;
+  border-radius: 40px;
+  width: 92%;
+
+  margin-bottom: 12px;
+  padding: 7px 0;
+  outline: none;
+}
+
+.nftInfo {
+  align-self: end;
+  display: grid;
+  grid-template-columns: auto auto;
+  margin: 7px 24px;
+  align-items: center;
+  // justify-content: center;
+}
+.id {
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 160%;
+  font-feature-settings: "salt" on;
+  color: rgba(255, 255, 255, 0.6);
+  align-self: left;
+  text-align: left;
+}
+.end {
+  align-self: end;
+}
+.nftButton {
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 160%;
+  text-align: center;
+  font-feature-settings: "salt" on;
+  color: #ffffff;
+  padding: 7px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 4px;
+  width: 208px;
+
+  justify-self: end;
+}
+
+.promt {
+  font-size: 20px;
+  line-height: 160%;
+  font-feature-settings: "ss01" on, "ss02" on, "ss03" on, "ss04" on, "salt" on;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 16px 16px;
+  width: 80%;
+  text-align: left;
+  font-weight: 700;
+}
+
+.bb {
+  cursor: pointer;
+}
+
+.nftContractInfo {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(60px);
+  border-radius: 8px;
+  width: 70%;
+  justify-self: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(60px);
+  border-radius: 8px;
+  align-self: center;
+  margin-top: 20%;
+}
+
+.nfttext {
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 160%;
+  font-feature-settings: "salt" on;
+  color: rgba(255, 255, 255, 0.6);
+
+  text-align: left;
+}
+
+.nftContractInfo {
+  padding: 16px;
+}
+
+.polygon {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: auto auto auto;
+
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 160%;
+  text-decoration-line: underline;
+  font-feature-settings: "salt" on;
+  color: #ffffff;
+
+  align-items: center;
+  justify-content: left;
+  grid-gap: 8px;
+
+  span {
+    text-decoration: none;
+  }
+}
