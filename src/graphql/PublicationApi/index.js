@@ -1,6 +1,11 @@
 import { gql } from "@apollo/client";
 import { apolloClient } from "..";
 
+
+export const ReactionType = {
+  UPVOTE: "UPVOTE"
+}
+
 const Query = {
   comment: gql(`
           mutation($request: CreatePublicCommentRequest! ){
@@ -49,7 +54,52 @@ const Query = {
     }
   }`),
 
-  // publications: gql(``)
+  publications: gql(`query($request: PublicationsQueryRequest!, $profileId:ProfileId){
+    publications(request: $request){
+      items{
+        ... on Post {
+          id
+          appId
+          reaction(request: {profileId: $profileId})
+          profile{
+            handle
+          }
+          metadata{
+            content
+            image
+            attributes{
+              traitType
+              displayType
+              value
+            }
+          }
+        }
+        ... on Comment {
+          id
+          appId
+          reaction(request: {profileId: $profileId})
+          profile{
+            handle
+          }
+          metadata{
+            content
+            image
+            attributes{
+              traitType
+              displayType
+              value
+            }
+          }
+        }
+      }
+      pageInfo{
+        next
+        prev
+        totalCount
+      }
+    }
+  }`),
+  addReaction: gql(`mutation AddReaction($request: ReactionRequest!) {\n  addReaction(request: $request)\n}`)
 };
 
 class PublicationApi {
@@ -72,6 +122,32 @@ class PublicationApi {
     })
   }
 
+  fetchCommentsFromPostId({postId, cursor, profileId}){
+    const request = {}
+    if(postId){
+      request.commentsOf = postId
+    }
+    if(cursor){
+      request.cursor = cursor
+    }
+    console.log("Fetching comment, ", {request, profileId})
+    return apolloClient.query({
+      query: Query.publications,
+      variables: {
+        request: request,
+        profileId
+      }
+    })
+  }
+
+  addReaction({profileId, reactionType, publicationId}){
+    return apolloClient.mutate({
+      mutation: Query.addReaction,
+      variables: {
+        request:{profileId, reaction:reactionType, publicationId}
+      }
+    })
+  }
 
 }
 

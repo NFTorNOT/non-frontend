@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import { apolloClient } from "..";
+import { Constants } from "../../utils/Constants";
 
 const Query = {
   challenge: gql(`query($request: ChallengeRequest!) {
@@ -8,12 +9,15 @@ const Query = {
       }
     }
   `),
-  verify: gql(`mutation($request: SignedAuthChallenge!) {
+  authenticate: gql(`mutation($request: SignedAuthChallenge!) {
     authenticate(request: $request) {
       accessToken
       refreshToken
     }
   }`),
+  verifyToken: gql(`query($request: VerifyRequest!){
+    verify(request: $request)
+  }`)
 };
 
 class AuthApi {
@@ -30,7 +34,7 @@ class AuthApi {
 
   verifySignature({address, signature}) {
     return apolloClient.mutate({
-      mutation: Query.verify,
+      mutation: Query.authenticate,
       variables: {
         request: {
           address,
@@ -38,6 +42,18 @@ class AuthApi {
         },
       },
     });
+  }
+
+  verifyToken(){
+    const accessToken = sessionStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY)
+    return apolloClient.query({
+      query: Query.verifyToken,
+      variables: {
+        request: {
+          accessToken
+        }
+      }
+    })
   }
 }
 

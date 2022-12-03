@@ -6,7 +6,6 @@ const httpLink = new HttpLink({ uri: process.env.REACT_APP_LENS_API_URL });
 
 const authLink = new ApolloLink((operation, forward) => {
   const token = sessionStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY);
-
   if(token){
     operation.setContext({
         headers: {

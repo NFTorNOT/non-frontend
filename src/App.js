@@ -8,6 +8,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { AuthProvider } from "./context/AuthContext";
 import { BottomTabProvider } from "./context/BottomTabContext";
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   const { chains, provider } = configureChains(
@@ -32,11 +33,13 @@ function App() {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
         <AuthProvider>
-          <div className="App">
-            <BottomTabProvider>
-              <Main />
-            </BottomTabProvider>
-          </div>
+          <UserProvider>
+            <div className="App">
+              <BottomTabProvider>
+                <Main />
+              </BottomTabProvider>
+            </div>
+          </UserProvider>
         </AuthProvider>
       </RainbowKitProvider>
     </WagmiConfig>

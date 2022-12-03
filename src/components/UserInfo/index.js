@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { useUserContext } from "../../context/UserContext";
 import UserApi from "../../graphql/UserApi";
 import styles from "./Userinfo.module.css";
 
 export default function UserInfo() {
   const [queryInProgress, setQueryInProgress] = useState(false);
-  const [handle, setHandle] = useState();
+  const {userProfile,setUserProfile} = useUserContext();
   const { address } = useAccount();
 
   useEffect(() => {
@@ -28,8 +29,8 @@ export default function UserInfo() {
             );
             if (defaultProfile.length === 0) {
               defaultProfile = profiles[0];
+              setUserProfile(defaultProfile)
             }
-            setHandle(defaultProfile.handle);
           }
         })
         .catch((error) => {
@@ -44,7 +45,7 @@ export default function UserInfo() {
   return (
     <div className={styles.container}>
       <span className={styles.nameContainer}>
-        {queryInProgress ? "..." : handle}
+        {queryInProgress ? "..." : userProfile.handle}
       </span>
       <img className={styles.lens} src="/lens-logo.png" alt="lens" />
     </div>

@@ -1,3 +1,55 @@
+import { useContract, useSigner } from "wagmi";
+import { Constants } from "../../utils/Constants";
+import NFTOfTheDayAbis from "../../abis/NFTOfTheDayAbi.json";
+import { useEffect, useState } from "react";
+import { CircleLoader } from "react-spinners";
+import moment from "moment";
+
 export default function NFTOfTheDay() {
-    return <div>NFT of the day</div>
+  const { data: signer } = useSigner();
+  const contract = useContract({
+    abi: NFTOfTheDayAbis,
+    address: Constants.NFT_OF_THE_DAY_CONTRACT_ADDRESS,
+    signerOrProvider: signer,
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [nftOfTheDayLink, setNftOfTheDayLink] = useState();
+
+  async function fetchLink() {
+    setLoading(true);
+    const currentTimestampInSeconds = Math.floor(Date.now() / 1000);
+    const startOfHourTimestamp = moment(
+      currentTimestampInSeconds * 1000
+    ).startOf("hour");
+
+    console.log("startOfHourTimestamp -----------", startOfHourTimestamp);
+    const lastEpochTimestamp = Math.floor(
+      startOfHourTimestamp.valueOf() / 1000 - 60 * 60
+    );
+    let link = "https://testnet.lenster.xyz/posts/0x5671-0x0b";
+    try {
+      const publicationId = await contract.getPublicationIdForTimestamp(
+        lastEpochTimestamp
+      );
+      link = `https://testnet.lenster.xyz/posts/${publicationId}`;
+    } catch (error) {
+      console.error("Error while getting publication Id");
+    }
+    setNftOfTheDayLink(link)
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    fetchLink();
+  }, []);
+  return (
+    <div>
+      {loading ? (
+        <CircleLoader />
+      ) : (
+        <a href={nftOfTheDayLink}>Go to NFT of the day Post. </a>
+      )}
+    </div>
+  );
 }

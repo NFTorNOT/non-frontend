@@ -5,7 +5,6 @@ import styles from "./Main.module.css";
 
 export default function Main() {
     const {currentTab} = useBottomTab()
-    console.log({currentTab})
     const {Component} = currentTab;
   return (
     <div className={styles.container}>
