@@ -8,11 +8,15 @@ import axios, { isCancel, AxiosError } from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems, TabNames } from "../Main/TabItems";
+import { useUserContext } from "../../context/UserContext";
+import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 
 export default function GenerateNFT() {
   const wordOfTheDay = "Light";
   const [image, setImage] = useState("https://static.nftornot.com/img.png");
   const { address } = useAccount();
+  const {userProfile} = useUserContext()
+  const {getPostId} = useCurrentPublicationId()
   const { onTabChange } = useBottomTab();
   var sectionStyle = {
     backgroundImage: `url(${image})`,
@@ -78,6 +82,7 @@ export default function GenerateNFT() {
   async function onSubmitToVote() {
     setPutImageToVoteInProgress(true);
     try {
+      const publicationId = await getPostId()
       const response = await NFTApi.submitToVote({
         receiverAddress: address,
         imageUrl: image,
@@ -125,7 +130,7 @@ export default function GenerateNFT() {
         tags: [],
         appId: "react-lens",
       };
-      await LensHelper.postCommentWithDispatcher({ commentMetadata: postData });
+      await LensHelper.postCommentWithDispatcher({ commentMetadata: postData, profileId: userProfile?.profileId, publicationId });
       onTabChange(TabItems[TabNames.VoteImage]);
     } catch (error) {
       console.log(error);

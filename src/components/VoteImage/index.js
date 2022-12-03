@@ -1,45 +1,20 @@
 import styles from "./Main.module.scss";
 import React, { useEffect, useRef, useState } from "react";
-import { useContract, useProvider, useSigner } from "wagmi";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
-import { Constants } from "../../utils/Constants";
 import { useUserContext } from "../../context/UserContext";
-import NFTOfTheDayAbis from '../../abis/NFTOfTheDayAbi.json'
-import moment from 'moment'
-import { ethers } from "ethers";
+import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 
 export default function VoteImage() {
   const wordOfTheDay = "Light";
   const ipfs = "0x34...2745";
   const { userProfile } = useUserContext();
   // const provider = useProvider();
-  const provider = new ethers.providers.InfuraProvider('maticmum');
-  const contract = useContract({
-    abi: NFTOfTheDayAbis,
-    address: Constants.NFT_OF_THE_DAY_CONTRACT_ADDRESS,
-    signerOrProvider: provider,
-  });
+  const {getPostId} = useCurrentPublicationId()
 
   const [nftDetailsModal, setNftDetailsModal] = useState(false);
   const imageDetailsListRef = useRef([]);
   const [apiInProgress, setIsApiInProgress] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
-
-  async function getPostId() {
-    const currentTimestampInSeconds = Math.floor(Date.now()/1000);
-    const startOfHourTimestamp = moment(currentTimestampInSeconds * 1000).startOf('hour');
-
-    console.log('startOfHourTimestamp -----------', startOfHourTimestamp, Math.floor(startOfHourTimestamp.valueOf()/1000));
-    let publicationId = '0x5671-0x0b';
-    try{
-      publicationId = await contract.getPublicationIdForTimestamp(Math.floor(startOfHourTimestamp.valueOf()/1000))
-    }
-    catch(error){
-      console.error('Error while getting publication Id');
-    }
-    
-    return publicationId;
-  }
 
   async function fetchImages() {
     setIsApiInProgress(true);

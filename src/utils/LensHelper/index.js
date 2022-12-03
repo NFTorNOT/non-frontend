@@ -2,11 +2,11 @@ import PublicationApi from "../../graphql/PublicationApi";
 import IPFSHelper from "../IPFSHelper";
 
 class LensHelper {
-  async postCommentWithDispatcher({ commentMetadata }) {
+  async postCommentWithDispatcher({ commentMetadata, profileId, publicationId }) {
     const cid = await IPFSHelper.uploadDataToIPFS(commentMetadata);
     const postRequest = {
-      profileId: "0x5671",
-      publicationId: "0x5671-0x0b",
+      profileId: profileId,
+      publicationId: publicationId,
       contentURI: `ipfs://${cid}`,
       collectModule: {
         revertCollectModule: true,
@@ -25,6 +25,7 @@ class LensHelper {
     );
     const { txHash, txId } = response.data.createCommentViaDispatcher || {};
   }
+  
 }
 
 export default new LensHelper();
