@@ -11,13 +11,17 @@
     "axios": "^1.2.0",
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
+    "mime": "^3.0.0",
+    "nft.storage": "^7.0.0",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.7",
+    "true-case-path": "^2.2.1",
     "wagmi": "^0.8.9",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "web3.storage": "^4.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

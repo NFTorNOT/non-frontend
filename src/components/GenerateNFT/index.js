@@ -1,23 +1,34 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useAccount } from "wagmi";
+import NFTApi from "../../api/NFTApi";
+import LensHelper from "../../utils/LensHelper";
 import styles from "./Main.module.scss";
 import axios, { isCancel, AxiosError } from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useBottomTab } from "../../context/BottomTabContext";
+import { TabItems, TabNames } from "../Main/TabItems";
 
 export default function GenerateNFT() {
   const wordOfTheDay = "Light";
   const [image, setImage] = useState("https://static.nftornot.com/img.png");
+  const { address } = useAccount();
+  const { onTabChange } = useBottomTab();
   var sectionStyle = {
     backgroundImage: `url(${image})`,
   };
   const [prompt, setPromt] = useState("Dramatic sky and buildings painting");
   const [filter, setfilter] = useState("volvo");
+  const [imageTitle, setImageTitle] = useState("");
 
   const imageGenerationURL =
     "https://nftornot.com/api/fetch-stable-diffusion-image/";
 
-  console.log(image);
   var filterOptions = [];
-  const [loading, setLoading] = useState(false);
+  const [imageGenerationInProgress, setImageGenerationInProgress] =
+    useState(false);
+  const [putImageToVoteInProgress, setPutImageToVoteInProgress] =
+    useState(false);
 
   const filterToText = {
     None: "",
@@ -51,7 +62,7 @@ export default function GenerateNFT() {
     filterOptions.push(key);
   }
   const submitForGeneration = () => {
-    setLoading(true);
+    setImageGenerationInProgress(true);
     const data = {
       prompt: prompt,
       art_style: filterToText[filter],
@@ -60,9 +71,67 @@ export default function GenerateNFT() {
     axios.post(imageGenerationURL, data).then((response) => {
       console.log(response.data);
       setImage(response.data.data.image.url);
-      setLoading(false);
+      setImageGenerationInProgress(false);
     });
   };
+
+  async function onSubmitToVote() {
+    setPutImageToVoteInProgress(true);
+    try {
+      const response = await NFTApi.submitToVote({
+        receiverAddress: address,
+        imageUrl: image,
+        imageTitle: imageTitle,
+      });
+      console.log("mint response", { response });
+      const { imageCid, transactionHash, tokenId } = response.data.data;
+      console.log("spliting imageUrl", { imageCid, transactionHash, tokenId });
+      const imageUrlComponents = image.split("/");
+      const imageNameWithExt =
+        imageUrlComponents[imageUrlComponents.length - 1];
+      console.log("imageNameWithExt: ", imageNameWithExt);
+
+      const [imageName, imageExt] = imageNameWithExt.split(".");
+      console.log({ imageName, imageExt });
+      const postData = {
+        version: "2.0.0",
+        mainContentFocus: "IMAGE",
+        metadata_id: uuidv4(),
+        description: imageTitle,
+        locale: "en-US",
+        content: imageTitle,
+        external_url: null,
+        image: `ipfs://${imageCid}`,
+        imageMimeType: `image/${imageExt}`,
+        name: imageName,
+        media: [
+          {
+            item: `ipfs://${imageCid}`,
+            type: `image/${imageExt}`,
+          },
+        ],
+        attributes: [
+          {
+            displayType: "string",
+            traitType: "NFTtxHash",
+            value: transactionHash,
+          },
+          {
+            displayType: "number",
+            traitType: "TokenId",
+            value: tokenId.toString(),
+          },
+        ],
+        tags: [],
+        appId: "react-lens",
+      };
+      await LensHelper.postCommentWithDispatcher({ commentMetadata: postData });
+      onTabChange(TabItems[TabNames.VoteImage]);
+    } catch (error) {
+      console.log(error);
+    }
+    setPutImageToVoteInProgress(false);
+  }
 
   return (
     <>
@@ -100,7 +169,7 @@ export default function GenerateNFT() {
               submitForGeneration();
             }}
           >
-            {loading ? (
+            {imageGenerationInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
             ) : (
               <span>Generate Image</span>
@@ -118,12 +187,22 @@ export default function GenerateNFT() {
               <div className={styles.bottom}>
                 <input
                   type="text"
+                  value={imageTitle}
+                  onChange={(event) => setImageTitle(event.target.value)}
                   placeholder="Enter a title for your masterpiece..."
                   className={styles.masterpeice}
                 ></input>
 
-                <button className={styles.submitVote} type="submit">
-                  Submit for voting
+                <button
+                  onClick={onSubmitToVote}
+                  className={styles.submitVote}
+                  type="submit"
+                >
+                  {putImageToVoteInProgress ? (
+                    <ClipLoader color={"#fff"} loading={true} size={15} />
+                  ) : (
+                    "Submit for voting"
+                  )}
                 </button>
               </div>
             </div>
