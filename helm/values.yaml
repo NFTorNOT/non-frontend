@@ -12,7 +12,7 @@ serviceAccount:
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "sd-training-fe"
+fullnameOverride: "non-frontend"
 
 podAnnotations: {}
 podSecurityContext: {}
@@ -32,7 +32,7 @@ ingress:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/healthcheck-path: /health-checker
   hosts:
-  - host: sd.quick-poc.com
+  - host: nftornot.com
     paths:
       - path: /
         pathType: Prefix
