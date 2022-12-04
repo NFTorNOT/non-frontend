@@ -79,7 +79,6 @@ export default function VoteImage() {
   }
 
   async function onHot() {
-    console.log({pubId: imageDetailsListRef.current[imageIndex]?.publicationId})
     PublicationApi.addReaction({
       profileId: userProfile?.id,
       reactionType: ReactionType.UPVOTE,

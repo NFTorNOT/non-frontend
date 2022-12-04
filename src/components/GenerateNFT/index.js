@@ -130,7 +130,7 @@ export default function GenerateNFT() {
         tags: [],
         appId: "react-lens",
       };
-      await LensHelper.postCommentWithDispatcher({ commentMetadata: postData, profileId: userProfile?.profileId, publicationId });
+      await LensHelper.postCommentWithDispatcher({ commentMetadata: postData, profileId: userProfile?.id, publicationId });
       onTabChange(TabItems[TabNames.VoteImage]);
     } catch (error) {
       console.log(error);
@@ -144,12 +144,12 @@ export default function GenerateNFT() {
         <div className={styles.enter_prompt_container}>
           <div>Enter Prompt</div>
           <textarea
+            placeholder="Dramatic sky and buildings painting"
             className={styles.prompt_area}
             onChange={(e) => {
               setPromt(e.target.value);
             }}
           >
-            Dramatic sky and buildings painting
           </textarea>
           <div>Filter</div>
           <div className={styles.generateText}>
