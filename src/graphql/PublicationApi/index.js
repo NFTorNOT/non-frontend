@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client";
 import { apolloClient } from "..";
 
-
 export const ReactionType = {
-  UPVOTE: "UPVOTE"
-}
+  UPVOTE: "UPVOTE",
+};
 
 const Query = {
   comment: gql(`
@@ -54,7 +53,8 @@ const Query = {
     }
   }`),
 
-  publications: gql(`query($request: PublicationsQueryRequest!, $profileId:ProfileId){
+  publications:
+    gql(`query($request: PublicationsQueryRequest!, $profileId:ProfileId){
     publications(request: $request){
       items{
         ... on Post {
@@ -99,56 +99,76 @@ const Query = {
       }
     }
   }`),
-  addReaction: gql(`mutation AddReaction($request: ReactionRequest!) {\n  addReaction(request: $request)\n}`)
+  addReaction: gql(
+    `mutation AddReaction($request: ReactionRequest!) {\n  addReaction(request: $request)\n}`
+  ),
+  publication: gql(`query($request:PublicationQueryRequest!){
+  	publication(request: $request){
+    	... on Post{
+        metadata{
+          description
+        }
+      }
+  }
+}`),
 };
 
 class PublicationApi {
-
   createCommentTypedData(request) {
     return apolloClient.mutate({
       mutation: Query.comment,
       variables: {
-        request: request
-      }
-    })
+        request: request,
+      },
+    });
   }
 
-  createCommentViaDispatcher(request){
+  createCommentViaDispatcher(request) {
     return apolloClient.mutate({
       mutation: Query.commentViaDispatcher,
       variables: {
-        request
-      }
-    })
+        request,
+      },
+    });
   }
 
-  fetchCommentsFromPostId({postId, cursor, profileId}){
-    const request = {}
-    if(postId){
-      request.commentsOf = postId
+  fetchCommentsFromPostId({ postId, cursor, profileId }) {
+    const request = {};
+    if (postId) {
+      request.commentsOf = postId;
     }
-    if(cursor){
-      request.cursor = cursor
+    if (cursor) {
+      request.cursor = cursor;
     }
-    console.log("Fetching comment, ", {request, profileId})
+    console.log("Fetching comment, ", { request, profileId });
     return apolloClient.query({
       query: Query.publications,
       variables: {
         request: request,
-        profileId
-      }
-    })
+        profileId,
+      },
+    });
   }
 
-  addReaction({profileId, reactionType, publicationId}){
+  addReaction({ profileId, reactionType, publicationId }) {
     return apolloClient.mutate({
       mutation: Query.addReaction,
       variables: {
-        request:{profileId, reaction:reactionType, publicationId}
-      }
-    })
+        request: { profileId, reaction: reactionType, publicationId },
+      },
+    });
   }
 
+  fetchPublication(publicationId) {
+    return apolloClient.query({
+      query: Query.publication,
+      variables: {
+        request: {
+          publicationId
+        }
+      }
+    });
+  }
 }
 
 export default new PublicationApi();

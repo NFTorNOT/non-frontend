@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
+import { Constants } from "../../utils/Constants";
 
 export default function VoteImage() {
   const wordOfTheDay = "Light";

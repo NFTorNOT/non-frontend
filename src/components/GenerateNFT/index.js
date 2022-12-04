@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useAccount } from "wagmi";
 import NFTApi from "../../api/NFTApi";
@@ -10,13 +10,15 @@ import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems, TabNames } from "../Main/TabItems";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
+import { CircleLoader } from "react-spinners";
+import PublicationApi from "../../graphql/PublicationApi";
 
 export default function GenerateNFT() {
-  const wordOfTheDay = "Light";
   const [image, setImage] = useState("https://static.nftornot.com/img.png");
+  const [wordOfTheDay, setWordOfTheDay] = useState();
   const { address } = useAccount();
-  const {userProfile} = useUserContext()
-  const {getPostId} = useCurrentPublicationId()
+  const { userProfile } = useUserContext();
+  const { getPostId } = useCurrentPublicationId();
   const { onTabChange } = useBottomTab();
   var sectionStyle = {
     backgroundImage: `url(${image})`,
@@ -24,6 +26,8 @@ export default function GenerateNFT() {
   const [prompt, setPromt] = useState("Dramatic sky and buildings painting");
   const [filter, setfilter] = useState("volvo");
   const [imageTitle, setImageTitle] = useState("");
+
+  const postIdRef = useRef(null);
 
   const imageGenerationURL =
     "https://nftornot.com/api/fetch-stable-diffusion-image/";
@@ -33,6 +37,7 @@ export default function GenerateNFT() {
     useState(false);
   const [putImageToVoteInProgress, setPutImageToVoteInProgress] =
     useState(false);
+  const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
 
   const filterToText = {
     None: "",
@@ -82,61 +87,83 @@ export default function GenerateNFT() {
   async function onSubmitToVote() {
     setPutImageToVoteInProgress(true);
     try {
-      const publicationId = await getPostId()
+      const publicationId = postIdRef.current || (await getPostId());
       const response = await NFTApi.submitToVote({
         receiverAddress: address,
         imageUrl: image,
         imageTitle: imageTitle,
       });
       console.log("mint response", { response });
-      const { imageCid, transactionHash, tokenId } = response.data.data;
-      console.log("spliting imageUrl", { imageCid, transactionHash, tokenId });
-      const imageUrlComponents = image.split("/");
-      const imageNameWithExt =
-        imageUrlComponents[imageUrlComponents.length - 1];
-      console.log("imageNameWithExt: ", imageNameWithExt);
+      const { imageCid, transactionHash, tokenId, lensMataDataCid } = response.data.data;
+      console.log("spliting imageUrl", { imageCid, transactionHash, tokenId, lensMataDataCid });
+      // const imageUrlComponents = image.split("/");
+      // const imageNameWithExt =
+      //   imageUrlComponents[imageUrlComponents.length - 1];
+      // console.log("imageNameWithExt: ", imageNameWithExt);
 
-      const [imageName, imageExt] = imageNameWithExt.split(".");
-      console.log({ imageName, imageExt });
-      const postData = {
-        version: "2.0.0",
-        mainContentFocus: "IMAGE",
-        metadata_id: uuidv4(),
-        description: imageTitle,
-        locale: "en-US",
-        content: imageTitle,
-        external_url: null,
-        image: `ipfs://${imageCid}`,
-        imageMimeType: `image/${imageExt}`,
-        name: imageName,
-        media: [
-          {
-            item: `ipfs://${imageCid}`,
-            type: `image/${imageExt}`,
-          },
-        ],
-        attributes: [
-          {
-            displayType: "string",
-            traitType: "NFTtxHash",
-            value: transactionHash,
-          },
-          {
-            displayType: "number",
-            traitType: "TokenId",
-            value: tokenId.toString(),
-          },
-        ],
-        tags: [],
-        appId: "react-lens",
-      };
-      await LensHelper.postCommentWithDispatcher({ commentMetadata: postData, profileId: userProfile?.id, publicationId });
+      // const [imageName, imageExt] = imageNameWithExt.split(".");
+      // console.log({ imageName, imageExt });
+      // const postData = {
+      //   version: "2.0.0",
+      //   mainContentFocus: "IMAGE",
+      //   metadata_id: uuidv4(),
+      //   description: imageTitle,
+      //   locale: "en-US",
+      //   content: imageTitle,
+      //   external_url: null,
+      //   image: `ipfs://${imageCid}`,
+      //   imageMimeType: `image/${imageExt}`,
+      //   name: imageName,
+      //   media: [
+      //     {
+      //       item: `ipfs://${imageCid}`,
+      //       type: `image/${imageExt}`,
+      //     },
+      //   ],
+      //   attributes: [
+      //     {
+      //       displayType: "string",
+      //       traitType: "NFTtxHash",
+      //       value: transactionHash,
+      //     },
+      //     {
+      //       displayType: "number",
+      //       traitType: "TokenId",
+      //       value: tokenId.toString(),
+      //     },
+      //   ],
+      //   tags: [],
+      //   appId: "react-lens",
+      // };
+      await LensHelper.postCommentWithDispatcher({
+        commentMetadataCid: lensMataDataCid,
+        profileId: userProfile?.id,
+        publicationId,
+      });
       onTabChange(TabItems[TabNames.VoteImage]);
     } catch (error) {
       console.log(error);
     }
     setPutImageToVoteInProgress(false);
   }
+
+  async function fetchWordOfTheDay() {
+    console.log("fetching word");
+    setWordFetchInProgress(true);
+    postIdRef.current = await getPostId();
+    console.log("post id", { pid: postIdRef.current });
+    const response = await PublicationApi.fetchPublication(
+      postIdRef.current
+    );
+    console.log({response});
+    const postDescription = response.data?.publication?.metadata?.description
+    setWordOfTheDay(postDescription);
+    setWordFetchInProgress(false);
+  }
+
+  useEffect(() => {
+    fetchWordOfTheDay();
+  }, [userProfile?.id]);
 
   return (
     <>
@@ -149,8 +176,7 @@ export default function GenerateNFT() {
             onChange={(e) => {
               setPromt(e.target.value);
             }}
-          >
-          </textarea>
+          ></textarea>
           <div>Filter</div>
           <div className={styles.generateText}>
             Explore various stylistic filters you can apply
@@ -185,7 +211,11 @@ export default function GenerateNFT() {
         <div className={styles.secondTab}>
           <div className={styles.yellow}>Word of the day</div>
           <center>
-            <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
+            {wordFetchInProgress ? (
+              <ClipLoader color={"#fff"} loading={true} size={15} />
+            ) : (
+              <div className={styles.wordOfDay}>"{"Space"}"</div>
+            )}
           </center>
           <div className={styles.generatedImage}>
             <div className={styles.generatedImagePrompts} style={sectionStyle}>

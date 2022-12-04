@@ -1,13 +1,11 @@
 import PublicationApi from "../../graphql/PublicationApi";
-import IPFSHelper from "../IPFSHelper";
 
 class LensHelper {
-  async postCommentWithDispatcher({ commentMetadata, profileId, publicationId }) {
-    const cid = await IPFSHelper.uploadDataToIPFS(commentMetadata);
+  async postCommentWithDispatcher({ commentMetadataCid, profileId, publicationId }) {
     const postRequest = {
       profileId: profileId,
       publicationId: publicationId,
-      contentURI: `ipfs://${cid}`,
+      contentURI: `ipfs://${commentMetadataCid}`,
       collectModule: {
         revertCollectModule: true,
       },
