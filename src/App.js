@@ -12,7 +12,7 @@ import { UserProvider } from "./context/UserContext";
 
 function App() {
   const { chains, provider } = configureChains(
-    [chain.polygon, chain.polygonMumbai],
+    [chain.polygonMumbai],
     [
       alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_API_KEY }),
       publicProvider(),
