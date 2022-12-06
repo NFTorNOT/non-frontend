@@ -4,23 +4,27 @@ import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 import { Constants } from "../../utils/Constants";
+import { ClipLoader } from "react-spinners";
 
 export default function VoteImage() {
-  const wordOfTheDay = "Light";
   const ipfs = "0x34...2745";
   const { userProfile } = useUserContext();
   // const provider = useProvider();
-  const {getPostId} = useCurrentPublicationId()
+  const { getPostId } = useCurrentPublicationId();
 
   const [nftDetailsModal, setNftDetailsModal] = useState(false);
   const imageDetailsListRef = useRef([]);
   const [apiInProgress, setIsApiInProgress] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [wordOfTheDay, setWordOfTheDay] = useState();
+  const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
+  const postIdRef = useRef();
 
   async function fetchImages() {
     setIsApiInProgress(true);
     try {
-      const postId = await getPostId();
+      const postId = postIdRef.current;
+      console.log("fetching postId", { postId });
       let nextPageCursor = null;
       let imageDetails = [];
       do {
@@ -28,12 +32,14 @@ export default function VoteImage() {
           await PublicationApi.fetchCommentsFromPostId({
             postId,
             cursor: nextPageCursor,
-            profileId: userProfile.id
+            profileId: userProfile.id,
           })
         ).data;
+
         const publications = apiResponseData.publications;
         const comments = publications.items;
         nextPageCursor = publications.pageInfo.next;
+        console.log("comments ", { comments });
         const filteredImageDetails = comments
           // .filter((comment) => comment.appId === Constants.LENS_APP_ID)
           .filter((comment) => {
@@ -60,16 +66,30 @@ export default function VoteImage() {
     } catch (error) {
       console.log({ error });
     }
+    console.log({ arr: imageDetailsListRef.current });
     setIsApiInProgress(false);
     setImageIndex(0);
   }
 
-  useEffect(() => {
+  async function fetchWordOfTheDay() {
+    console.log("fetching word");
+    setWordFetchInProgress(true);
+    postIdRef.current = await getPostId();
+    console.log("post id", { pid: postIdRef.current });
+    const response = await PublicationApi.fetchPublication(postIdRef.current);
+    console.log({ response });
+    const postDescription = response.data?.publication?.metadata?.description;
+    setWordOfTheDay(postDescription);
+    setWordFetchInProgress(false);
     fetchImages();
+  }
+
+  useEffect(() => {
+    fetchWordOfTheDay();
   }, []);
 
   var sectionStyle = {
-    backgroundImage: `url(${imageDetailsListRef.current[imageIndex]?.url})`,
+    // backgroundImage: `url(${imageDetailsListRef.current[imageIndex]?.url})`,
   };
 
   function showNextImage() {
@@ -95,38 +115,57 @@ export default function VoteImage() {
           alt="wrong"
           onClick={showNextImage}
           src={"/not.png"}
-          className={styles.bb}
+          className={`${styles.bb}`}
         />
         <div className={styles.secondTab}>
           <div className={styles.yellow}>Word of the day</div>
           <center>
-            <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
+            {wordFetchInProgress ? (
+              <ClipLoader color={"#fff"} loading={true} size={15} />
+            ) : (
+              <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
+            )}
           </center>
 
-          <div
-            style={{
-              display: "grid",
-            }}
-          >
-            <div className={styles.generatedImagePrompts} style={sectionStyle}>
-              <div className={styles.end}>
-                <div className={styles.promt}>
-                  {imageDetailsListRef.current[imageIndex]?.title}
-                </div>
-                <div className={styles.nftInfo}>
-                  <div className={styles.id}>
-                    {imageDetailsListRef.current[imageIndex]?.handle}
+          {imageIndex < imageDetailsListRef.current.length ? (
+            <div
+              style={{
+                display: "grid",
+              }}
+            >
+              <div
+                className={styles.generatedImagePrompts}
+                style={sectionStyle}
+              >
+                <img
+                  className={"absolute w-[512px] h-[512px]"}
+                  src={imageDetailsListRef.current[imageIndex]?.url}
+                />
+                <div className={styles.end}>
+                  <div className={styles.promt}>
+                    {imageDetailsListRef.current[imageIndex]?.title}
                   </div>
-                  <button
-                    className={styles.nftButton}
-                    onClick={() => setNftDetailsModal(true)}
-                  >
-                    NFT contract info
-                  </button>
+                  <div className={styles.nftInfo}>
+                    <div className={styles.id}>
+                      {imageDetailsListRef.current[imageIndex]?.handle}
+                    </div>
+                    <button
+                      className={styles.nftButton}
+                      onClick={() => setNftDetailsModal(true)}
+                    >
+                      NFT contract info
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div
+              className={"w-[512px] h-[512px] flex items-center justify-center"}
+            >
+              All images are Voted.
+            </div>
+          )}
         </div>
 
         <img

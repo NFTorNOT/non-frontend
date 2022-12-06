@@ -94,8 +94,8 @@ export default function GenerateNFT() {
         imageTitle: imageTitle,
       });
       console.log("mint response", { response });
-      const { imageCid, transactionHash, tokenId, lensMataDataCid } = response.data.data;
-      console.log("spliting imageUrl", { imageCid, transactionHash, tokenId, lensMataDataCid });
+      const { imageCid, transactionHash, tokenId, lensMetaDataCid } = response.data.data;
+      console.log("spliting imageUrl", { imageCid, transactionHash, tokenId, lensMetaDataCid });
       // const imageUrlComponents = image.split("/");
       // const imageNameWithExt =
       //   imageUrlComponents[imageUrlComponents.length - 1];
@@ -136,7 +136,7 @@ export default function GenerateNFT() {
       //   appId: "react-lens",
       // };
       await LensHelper.postCommentWithDispatcher({
-        commentMetadataCid: lensMataDataCid,
+        commentMetadataCid: lensMetaDataCid,
         profileId: userProfile?.id,
         publicationId,
       });
@@ -214,7 +214,7 @@ export default function GenerateNFT() {
             {wordFetchInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
             ) : (
-              <div className={styles.wordOfDay}>"{"Space"}"</div>
+              <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
             )}
           </center>
           <div className={styles.generatedImage}>

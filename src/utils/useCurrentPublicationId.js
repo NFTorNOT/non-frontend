@@ -32,6 +32,8 @@ export default function useCurrentPublicationId() {
       console.error("Error while getting publication Id");
     }
 
+    console.log("publication id: ", {publicationId})
+
     return publicationId;
   }
 

@@ -32,11 +32,14 @@
   color: rgb(255, 255, 255);
 }
 .generatedImagePrompts {
+  width: 512px;
+  height: 512px;
   display: grid;
-  min-height: 512px;
+  max-height: 512px;
   max-width: 512px;
   align-self: center;
   margin-left: auto;
+  background-size: cover;
   background-repeat: no-repeat;
   margin-right: auto;
 }
