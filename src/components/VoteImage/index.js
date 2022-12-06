@@ -161,7 +161,9 @@ export default function VoteImage() {
             </div>
           ) : (
             <div
-              className={"w-[512px] h-[512px] flex items-center justify-center"}
+              className={
+                "w-[512px] h-[512px] flex items-center justify-center text-white font-bold"
+              }
             >
               All images are Voted.
             </div>

@@ -36,7 +36,7 @@ export default function NFTOfTheDay() {
     } catch (error) {
       console.error("Error while getting publication Id");
     }
-    setNftOfTheDayLink(link)
+    setNftOfTheDayLink(link);
     setLoading(false);
   }
 
@@ -48,7 +48,9 @@ export default function NFTOfTheDay() {
       {loading ? (
         <CircleLoader />
       ) : (
-        <a href={nftOfTheDayLink}>Go to NFT of the day Post. </a>
+        <a href={nftOfTheDayLink} className="text-white font-bold">
+          Go to NFT of the day Post.{" "}
+        </a>
       )}
     </div>
   );
