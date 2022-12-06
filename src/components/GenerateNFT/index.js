@@ -173,6 +173,7 @@ export default function GenerateNFT() {
             onClick={() => {
               submitForGeneration();
             }}
+            title="Generate Image"
           >
             {imageGenerationInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
@@ -184,13 +185,13 @@ export default function GenerateNFT() {
 
         <div className={styles.secondTab}>
           <div className={styles.yellow}>Word of the day</div>
-          <center>
+          <div className={styles.generatedTitle}>
             {wordFetchInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
             ) : (
               <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
             )}
-          </center>
+          </div>
           <div className={styles.generatedImage}>
             <div className={styles.generatedImagePrompts} style={sectionStyle}>
               <div className={styles.bottom}>
@@ -207,6 +208,7 @@ export default function GenerateNFT() {
                   onClick={onSubmitToVote}
                   className={`${styles.submitVote} ${isSubmitDisabled ? styles.disabled : {}}`}
                   type="submit"
+                  title="Submit for voting"
                 >
                   {putImageToVoteInProgress ? (
                     <ClipLoader color={"#fff"} loading={true} size={15} />

@@ -16,8 +16,9 @@ export default function BottomTabSelector() {
             className={`${styles.tabContainer} ${
               isSelected ? styles.selectedTab : {}
             }`}
+            title={tab.tabName}
           >
-            <div>{tab.tabName}</div>
+            {tab.tabName}
           </div>
         );
       })}

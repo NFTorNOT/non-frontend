@@ -121,13 +121,13 @@ export default function VoteImage() {
         />
         <div className={styles.secondTab}>
           <div className={styles.yellow}>Word of the day</div>
-          <center>
+          <div className={styles.generatedTitle}>
             {wordFetchInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
             ) : (
               <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
             )}
-          </center>
+          </div>
 
           {imageIndex < imageDetailsListRef.current.length ? (
             <div
@@ -142,6 +142,7 @@ export default function VoteImage() {
                 <img
                   className={"absolute w-[512px] h-[512px]"}
                   src={imageDetailsListRef.current[imageIndex]?.url}
+                  alt="Voted Pic"
                 />
                 <div className={styles.end}>
                   <div className={styles.promt}>
