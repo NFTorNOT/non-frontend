@@ -205,6 +205,7 @@ export default function GenerateNFT() {
             onClick={() => {
               submitForGeneration();
             }}
+            title="Generate Image"
           >
             {imageGenerationInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
@@ -238,6 +239,7 @@ export default function GenerateNFT() {
                   onClick={onSubmitToVote}
                   className={styles.submitVote}
                   type="submit"
+                  title="Submit for voting"
                 >
                   {putImageToVoteInProgress ? (
                     <ClipLoader color={"#fff"} loading={true} size={15} />
