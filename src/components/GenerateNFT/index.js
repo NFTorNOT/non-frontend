@@ -168,8 +168,7 @@ export default function GenerateNFT() {
           </select>
 
           <button
-            disabled={!isUserLoggedIn}
-            className={`${styles.button} ${styles.disabled}`}
+            className={`${styles.button}`}
             onClick={() => {
               submitForGeneration();
             }}
