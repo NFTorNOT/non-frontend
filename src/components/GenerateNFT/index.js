@@ -141,11 +141,13 @@ export default function GenerateNFT() {
       //   tags: [],
       //   appId: "react-lens",
       // };
-      await LensHelper.postCommentWithDispatcher({
+      const { txId } = await LensHelper.postCommentWithDispatcher({
         commentMetadataCid: lensMetaDataCid,
         profileId: userProfile?.id,
         publicationId,
       });
+
+      const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
       onTabChange(TabItems[TabNames.VoteImage]);
     } catch (error) {
       console.log(error);

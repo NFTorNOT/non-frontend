@@ -54,7 +54,7 @@ export default function VoteImage() {
             )?.[0].value;
             return {
               publicationId,
-              url: `https://${cid}.ipfs.dweb.link`,
+              url: `https://nftornot.infura-ipfs.io/ipfs/${cid}`,
               title: "",
               txHash: txHash,
               handle,

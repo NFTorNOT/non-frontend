@@ -111,6 +111,22 @@ const Query = {
       }
   }
 }`),
+
+  index: gql(`query($request: HasTxHashBeenIndexedRequest!){
+    hasTxHashBeenIndexed(request:$request){
+      ... on TransactionIndexedResult{
+        indexed
+        txHash
+        metadataStatus{
+          status
+          reason
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }`)
 };
 
 class PublicationApi {
@@ -168,6 +184,23 @@ class PublicationApi {
         }
       }
     });
+  }
+
+  hasTxBeenIndexed({txId, txHash}){
+    let request = {};
+    if(txId){
+      request.txId = txId
+    }
+    if(txHash){
+      request.txHash = txHash
+    }
+    return apolloClient.query({
+      query: Query.index,
+      variables: {
+        request
+      },
+      fetchPolicy: 'no-cache'
+    })
   }
 }
 
