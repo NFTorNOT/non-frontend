@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useAccount } from "wagmi";
 import NFTApi from "../../api/NFTApi";
 import LensHelper from "../../utils/LensHelper";
-import styles from "./Main.module.scss";
+import styles from "./Generate.module.scss";
 import axios, { isCancel, AxiosError } from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useBottomTab } from "../../context/BottomTabContext";

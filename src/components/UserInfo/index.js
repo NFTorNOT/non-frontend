@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useUserContext } from "../../context/UserContext";
 import UserApi from "../../graphql/UserApi";
-import styles from "./Userinfo.module.css";
+import styles from "./Userinfo.module.scss";
 
 export default function UserInfo() {
   const [queryInProgress, setQueryInProgress] = useState(false);
-  const {userProfile,setUserProfile} = useUserContext();
+  const { userProfile, setUserProfile } = useUserContext();
   const { address } = useAccount();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function UserInfo() {
             );
             if (defaultProfile.length === 0) {
               defaultProfile = profiles[0];
-              setUserProfile(defaultProfile)
+              setUserProfile(defaultProfile);
             }
           }
         })

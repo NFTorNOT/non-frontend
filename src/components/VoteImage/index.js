@@ -1,4 +1,4 @@
-import styles from "./Main.module.scss";
+import styles from "./Vote.module.scss";
 import React, { useEffect, useRef, useState } from "react";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";

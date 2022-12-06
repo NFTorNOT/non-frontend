@@ -1,11 +1,11 @@
 .container {
   display: flex;
   flex-direction: row;
-  width: fit-content;
   align-self: center;
   padding: 8px;
   border-radius: 100px;
   gap: 4px;
+  width: 70%;
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -17,8 +17,9 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 6px 67px;
+  padding: 14px 0;
   color: white;
+  white-space: nowrap;
   &:hover {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 100px;
