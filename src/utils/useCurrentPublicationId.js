@@ -23,7 +23,7 @@ export default function useCurrentPublicationId() {
       startOfHourTimestamp,
       Math.floor(startOfHourTimestamp.valueOf() / 1000)
     );
-    let publicationId = "0x5671-0x0b";
+    let publicationId = "0x5a26-0x38";
     try {
       publicationId = await contract.getPublicationIdForTimestamp(
         Math.floor(startOfHourTimestamp.valueOf() / 1000)
