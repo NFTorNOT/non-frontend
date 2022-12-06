@@ -27,7 +27,7 @@ export default function NFTOfTheDay() {
     const lastEpochTimestamp = Math.floor(
       startOfHourTimestamp.valueOf() / 1000 - 60 * 60
     );
-    let link = "https://testnet.lenster.xyz/posts/0x5671-0x0b";
+    let link = "https://testnet.lenster.xyz/u/nftornot.test";
     try {
       const publicationId = await contract.getPublicationIdForTimestamp(
         lastEpochTimestamp

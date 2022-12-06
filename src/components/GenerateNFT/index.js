@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { useAccount } from "wagmi";
 import NFTApi from "../../api/NFTApi";
 import LensHelper from "../../utils/LensHelper";
 import styles from "./Generate.module.scss";
-import axios, { isCancel, AxiosError } from "axios";
+import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems, TabNames } from "../Main/TabItems";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
-import { CircleLoader } from "react-spinners";
 import PublicationApi from "../../graphql/PublicationApi";
+import { useAuthContext } from "../../context/AuthContext";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("https://static.nftornot.com/img.png");
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const { address } = useAccount();
   const { userProfile } = useUserContext();
+  const { isUserLoggedIn } = useAuthContext();
   const { getPostId } = useCurrentPublicationId();
   const { onTabChange } = useBottomTab();
   var sectionStyle = {
@@ -28,6 +28,8 @@ export default function GenerateNFT() {
   const [imageTitle, setImageTitle] = useState("");
 
   const postIdRef = useRef(null);
+
+  const isSubmitDisabled = !isUserLoggedIn || (isUserLoggedIn && imageTitle === "")
 
   const imageGenerationURL =
     "https://nftornot.com/api/fetch-stable-diffusion-image/";
@@ -102,52 +104,17 @@ export default function GenerateNFT() {
         tokenId,
         lensMetaDataCid,
       });
-      // const imageUrlComponents = image.split("/");
-      // const imageNameWithExt =
-      //   imageUrlComponents[imageUrlComponents.length - 1];
-      // console.log("imageNameWithExt: ", imageNameWithExt);
 
-      // const [imageName, imageExt] = imageNameWithExt.split(".");
-      // console.log({ imageName, imageExt });
-      // const postData = {
-      //   version: "2.0.0",
-      //   mainContentFocus: "IMAGE",
-      //   metadata_id: uuidv4(),
-      //   description: imageTitle,
-      //   locale: "en-US",
-      //   content: imageTitle,
-      //   external_url: null,
-      //   image: `ipfs://${imageCid}`,
-      //   imageMimeType: `image/${imageExt}`,
-      //   name: imageName,
-      //   media: [
-      //     {
-      //       item: `ipfs://${imageCid}`,
-      //       type: `image/${imageExt}`,
-      //     },
-      //   ],
-      //   attributes: [
-      //     {
-      //       displayType: "string",
-      //       traitType: "NFTtxHash",
-      //       value: transactionHash,
-      //     },
-      //     {
-      //       displayType: "number",
-      //       traitType: "TokenId",
-      //       value: tokenId.toString(),
-      //     },
-      //   ],
-      //   tags: [],
-      //   appId: "react-lens",
-      // };
       const { txId } = await LensHelper.postCommentWithDispatcher({
         commentMetadataCid: lensMetaDataCid,
         profileId: userProfile?.id,
         publicationId,
       });
 
-      const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
+      if(txId){
+        const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
+      }
+      
       onTabChange(TabItems[TabNames.VoteImage]);
     } catch (error) {
       console.log(error);
@@ -201,7 +168,8 @@ export default function GenerateNFT() {
           </select>
 
           <button
-            className={styles.button}
+            disabled={!isUserLoggedIn}
+            className={`${styles.button} ${styles.disabled}`}
             onClick={() => {
               submitForGeneration();
             }}
@@ -235,8 +203,9 @@ export default function GenerateNFT() {
                 ></input>
 
                 <button
+                  disabled={isSubmitDisabled}
                   onClick={onSubmitToVote}
-                  className={styles.submitVote}
+                  className={`${styles.submitVote} ${isSubmitDisabled ? styles.disabled : {}}`}
                   type="submit"
                 >
                   {putImageToVoteInProgress ? (

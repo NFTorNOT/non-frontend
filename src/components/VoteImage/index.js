@@ -5,6 +5,7 @@ import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 import { Constants } from "../../utils/Constants";
 import { ClipLoader } from "react-spinners";
+import { useAuthContext } from "../../context/AuthContext";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -18,6 +19,7 @@ export default function VoteImage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
+  const {isUserLoggedIn} = useAuthContext()
   const postIdRef = useRef();
 
   async function fetchImages() {
@@ -41,7 +43,7 @@ export default function VoteImage() {
         nextPageCursor = publications.pageInfo.next;
         console.log("comments ", { comments });
         const filteredImageDetails = comments
-          // .filter((comment) => comment.appId === Constants.LENS_APP_ID)
+          .filter((comment) => comment.appId === Constants.LENS_APP_ID)
           .filter((comment) => {
             return comment.reaction == null;
           })

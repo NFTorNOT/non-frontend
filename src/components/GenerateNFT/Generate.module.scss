@@ -7,6 +7,10 @@
   //   margin-top: -15%;
 }
 
+.disabled {
+  opacity: 0.7;
+}
+
 .enter_prompt_container {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(60px);
