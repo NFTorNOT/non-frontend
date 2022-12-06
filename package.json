@@ -22,7 +22,8 @@
     "true-case-path": "^2.2.1",
     "wagmi": "^0.8.9",
     "web-vitals": "^2.1.4",
-    "web3.storage": "^4.4.0"
+    "web3.storage": "^4.4.0",
+    "sass": "1.56.1"
   },
   "scripts": {
     "start": "react-scripts start",
