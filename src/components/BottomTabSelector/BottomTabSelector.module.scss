@@ -20,8 +20,9 @@
   padding: 14px 0;
   color: white;
   white-space: nowrap;
+  cursor: pointer;
   &:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4);
     border-radius: 100px;
   }
 }
@@ -30,8 +31,13 @@
   background: rgba(0, 0, 0, 0.6);
   box-shadow: 0px 8px 32px rgba(250, 92, 0, 0.32);
   border-radius: 100px;
+  cursor: default;
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+  }
+  &:hover {
+    cursor: default;
+    background: rgba(0, 0, 0, 0.6);
   }
 }
