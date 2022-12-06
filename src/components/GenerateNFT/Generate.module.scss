@@ -39,7 +39,6 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 140%;
-  font-feature-settings: "salt" on;
   color: rgba(255, 255, 255, 0.6);
 }
 .dropdown {
@@ -55,8 +54,6 @@
   font-size: 16px;
   line-height: 160%;
   /* identical to box height, or 26px */
-
-  font-feature-settings: "salt" on;
 }
 
 .button {
@@ -67,7 +64,6 @@
   font-weight: 700;
   font-size: 16px;
   // line-height: 160%;
-  font-feature-settings: "salt" on;
   color: #ffffff;
   text-align: center;
 
@@ -98,7 +94,6 @@
   font-size: 32px;
   line-height: 160%;
   text-align: center;
-  font-feature-settings: "salt" on;
   color: rgb(255, 255, 255);
 }
 .generatedImagePrompts {
@@ -111,7 +106,6 @@
   font-weight: 700;
   font-size: 20px;
   line-height: 160%;
-  font-feature-settings: "salt" on;
   color: rgba(255, 255, 255, 0.6);
   background: none;
   width: 92%;
