@@ -103,9 +103,9 @@
 .generatedImagePrompts {
   display: grid;
   min-height: 512px;
-  object-fit: cover;
   min-width: 386px;
-  object-position: center center;
+  background-position: center;
+  background-size: cover;
 }
 .generatedTitle {
   height: 52px;
