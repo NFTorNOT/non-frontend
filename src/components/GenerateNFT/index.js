@@ -217,13 +217,13 @@ export default function GenerateNFT() {
 
         <div className={styles.secondTab}>
           <div className={styles.yellow}>Word of the day</div>
-          <center>
+          <div className={styles.generatedTitle}>
             {wordFetchInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
             ) : (
               <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
             )}
-          </center>
+          </div>
           <div className={styles.generatedImage}>
             <div className={styles.generatedImagePrompts} style={sectionStyle}>
               <div className={styles.bottom}>
