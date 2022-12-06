@@ -1,6 +1,6 @@
 .wrapper {
-  display: grid;
-  grid-template-columns: 10% 40% 10%;
+  display: flex;
+  // grid-template-columns: 10% 40% 10%;
   justify-content: center;
   align-items: center;
 }

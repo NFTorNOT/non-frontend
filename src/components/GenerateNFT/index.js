@@ -94,8 +94,14 @@ export default function GenerateNFT() {
         imageTitle: imageTitle,
       });
       console.log("mint response", { response });
-      const { imageCid, transactionHash, tokenId, lensMetaDataCid } = response.data.data;
-      console.log("spliting imageUrl", { imageCid, transactionHash, tokenId, lensMetaDataCid });
+      const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
+        response.data.data;
+      console.log("spliting imageUrl", {
+        imageCid,
+        transactionHash,
+        tokenId,
+        lensMetaDataCid,
+      });
       // const imageUrlComponents = image.split("/");
       // const imageNameWithExt =
       //   imageUrlComponents[imageUrlComponents.length - 1];
@@ -152,11 +158,9 @@ export default function GenerateNFT() {
     setWordFetchInProgress(true);
     postIdRef.current = await getPostId();
     console.log("post id", { pid: postIdRef.current });
-    const response = await PublicationApi.fetchPublication(
-      postIdRef.current
-    );
-    console.log({response});
-    const postDescription = response.data?.publication?.metadata?.description
+    const response = await PublicationApi.fetchPublication(postIdRef.current);
+    console.log({ response });
+    const postDescription = response.data?.publication?.metadata?.description;
     setWordOfTheDay(postDescription);
     setWordFetchInProgress(false);
   }
@@ -167,7 +171,7 @@ export default function GenerateNFT() {
 
   return (
     <>
-      <div className={styles.generateNFT}>
+      <div className={`${styles.generateNFT} gap-x-10`}>
         <div className={styles.enter_prompt_container}>
           <div>Enter Prompt</div>
           <textarea

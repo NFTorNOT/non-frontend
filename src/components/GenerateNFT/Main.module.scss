@@ -1,8 +1,9 @@
 .generateNFT {
-  display: grid;
-  grid-template-columns: 360px 512px;
-  grid-column-gap: 32px;
-  padding: 0 340px;
+  display: flex;
+  justify-content: center;
+  // grid-template-columns: 360px 512px;
+  // grid-column-gap: 32px;
+  // padding: 0 340px;
   //   margin-top: -15%;
 }
 
@@ -103,6 +104,8 @@
 .generatedImagePrompts {
   display: grid;
   min-height: 512px;
+  object-fit: cover;
+  object-position: center center;
 }
 .masterpeice {
   font-weight: 700;
