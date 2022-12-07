@@ -13,7 +13,7 @@ import PublicationApi from "../../graphql/PublicationApi";
 import { useAuthContext } from "../../context/AuthContext";
 
 export default function GenerateNFT() {
-  const [image, setImage] = useState("https://static.nftornot.com/img.png");
+  const [image, setImage] = useState("");
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const { address } = useAccount();
   const { userProfile } = useUserContext();
@@ -29,7 +29,8 @@ export default function GenerateNFT() {
 
   const postIdRef = useRef(null);
 
-  const isSubmitDisabled = !isUserLoggedIn || (isUserLoggedIn && imageTitle === "")
+  const isSubmitDisabled =
+    !isUserLoggedIn || (isUserLoggedIn && imageTitle === "");
 
   const imageGenerationURL =
     "https://nftornot.com/api/fetch-stable-diffusion-image/";
@@ -111,10 +112,10 @@ export default function GenerateNFT() {
         publicationId,
       });
 
-      if(txId){
+      if (txId) {
         const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
       }
-      
+
       onTabChange(TabItems[TabNames.VoteImage]);
     } catch (error) {
       console.log(error);
@@ -140,7 +141,7 @@ export default function GenerateNFT() {
 
   return (
     <>
-      <div className={`${styles.generateNFT} gap-x-10`}>
+      <div className={`${styles.generateNFT} gap-x-5`}>
         <div className={styles.enter_prompt_container}>
           <div>Enter Prompt</div>
           <textarea
@@ -191,32 +192,40 @@ export default function GenerateNFT() {
               <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
             )}
           </div>
-          <div className={styles.generatedImage}>
-            <div className={styles.generatedImagePrompts} style={sectionStyle}>
-              <div className={styles.bottom}>
-                <input
-                  type="text"
-                  value={imageTitle}
-                  onChange={(event) => setImageTitle(event.target.value)}
-                  placeholder="Enter a title for your masterpiece..."
-                  className={styles.masterpeice}
-                ></input>
-
-                <button
-                  disabled={isSubmitDisabled}
-                  onClick={onSubmitToVote}
-                  className={`${styles.submitVote} ${isSubmitDisabled ? styles.disabled : {}}`}
-                  type="submit"
-                  title="Submit for voting"
-                >
-                  {putImageToVoteInProgress ? (
-                    <ClipLoader color={"#fff"} loading={true} size={15} />
-                  ) : (
-                    "Submit for voting"
-                  )}
-                </button>
+          <div className={styles.generatedImagePrompts}>
+            {!image ? (
+              <div className={styles.emptyImageContainer}>
+                Generate image to preview here
               </div>
-            </div>
+            ) : (
+              <div style={sectionStyle}>
+                <div className={styles.bottom}>
+                  <input
+                    type="text"
+                    value={imageTitle}
+                    onChange={(event) => setImageTitle(event.target.value)}
+                    placeholder="Enter a title for your masterpiece..."
+                    className={styles.masterpeice}
+                  ></input>
+
+                  <button
+                    disabled={isSubmitDisabled}
+                    onClick={onSubmitToVote}
+                    className={`${styles.submitVote} ${
+                      isSubmitDisabled ? styles.disabled : {}
+                    }`}
+                    type="submit"
+                    title="Submit for voting"
+                  >
+                    {putImageToVoteInProgress ? (
+                      <ClipLoader color={"#fff"} loading={true} size={15} />
+                    ) : (
+                      "Submit for voting"
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
