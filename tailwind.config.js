@@ -1,8 +1,10 @@
 const plugin = require("tailwindcss/plugin");
 const buttons = require("./theme/buttons.json");
 
-
-const content = ["./src/**/*.{js,jsx,ts,tsx}"];
+const content = [
+  "./pages/**/*.{js,ts,jsx,tsx}",
+  "./components/**/*.{js,ts,jsx,tsx}",
+];
 const theme = {
   screens: {
     sm: "480px",
@@ -34,8 +36,5 @@ const plugins = [
 module.exports = {
   content,
   theme,
-  plugins
-}
-
-
-
+  plugins,
+};
