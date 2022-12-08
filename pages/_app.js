@@ -1,20 +1,19 @@
-import "@rainbow-me/rainbowkit/styles.css";
-import "./App.css";
-import Main from "./components/Main";
+import "../styles/globals.scss";
+import "../styles/App.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-import { AuthProvider } from "./context/AuthContext";
-import { BottomTabProvider } from "./context/BottomTabContext";
-import { UserProvider } from "./context/UserContext";
+import { AuthProvider } from "../context/AuthContext";
+import { BottomTabProvider } from "../context/BottomTabContext";
+import { UserProvider } from "../context/UserContext";
 
-function App() {
+function App({ Component, pageProps }) {
   const { chains, provider } = configureChains(
     [chain.polygonMumbai],
     [
-      alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY }),
+      alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_API_KEY }),
       publicProvider(),
     ]
   );
@@ -34,11 +33,9 @@ function App() {
       <RainbowKitProvider chains={chains}>
         <AuthProvider>
           <UserProvider>
-            <div className="App">
-              <BottomTabProvider>
-                <Main />
-              </BottomTabProvider>
-            </div>
+            <BottomTabProvider>
+              <Component {...pageProps} />
+            </BottomTabProvider>
           </UserProvider>
         </AuthProvider>
       </RainbowKitProvider>

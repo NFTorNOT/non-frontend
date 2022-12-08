@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Constants } from "../utils/Constants";
 
 export const AuthContext = React.createContext({
@@ -16,7 +16,15 @@ export function useAuthContext() {
 }
 
 export const AuthProvider = ({ children }) => {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(!!sessionStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY));
+  let accessToken = useRef();
+
+  useEffect(() => {
+    accessToken.current = !!sessionStorage.getItem(
+      Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY
+    );
+  }, []);
+
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(accessToken.current);
   return (
     <AuthContext.Provider
       value={{ isUserLoggedIn: isUserLoggedIn, setIsUserLoggedIn }}
