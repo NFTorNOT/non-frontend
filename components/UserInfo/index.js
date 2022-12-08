@@ -34,7 +34,7 @@ export default function UserInfo() {
           }
         })
         .catch((error) => {
-          console.error("Error while fetching profiles: ", error);
+          console.log("Error while fetching profiles: ", error);
         })
         .finally(() => {
           setQueryInProgress(false);

@@ -5,12 +5,12 @@ import NFTOfTheDayAbis from "../abis/NFTOfTheDayAbi.json";
 import { Constants } from "./Constants";
 
 export default function useCurrentPublicationId() {
-    const provider = new ethers.providers.InfuraProvider('maticmum');
-    const contract = useContract({
-      abi: NFTOfTheDayAbis,
-      address: Constants.NFT_OF_THE_DAY_CONTRACT_ADDRESS,
-      signerOrProvider: provider,
-    });
+  const provider = new ethers.providers.InfuraProvider("maticmum");
+  const contract = useContract({
+    abi: NFTOfTheDayAbis,
+    address: Constants.NFT_OF_THE_DAY_CONTRACT_ADDRESS,
+    signerOrProvider: provider,
+  });
 
   async function getPostId() {
     const currentTimestampInSeconds = Math.floor(Date.now() / 1000);
@@ -29,15 +29,15 @@ export default function useCurrentPublicationId() {
         Math.floor(startOfHourTimestamp.valueOf() / 1000)
       );
     } catch (error) {
-      console.error("Error while getting publication Id");
+      console.log("Error while getting publication Id");
     }
 
-    console.log("publication id: ", {publicationId})
+    console.log("publication id: ", { publicationId });
 
     return publicationId;
   }
 
   return {
-    getPostId
-  }
+    getPostId,
+  };
 }

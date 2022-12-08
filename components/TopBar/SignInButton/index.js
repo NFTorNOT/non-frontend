@@ -41,7 +41,7 @@ const SignIn = () => {
                 );
               })
               .catch((error) => {
-                console.error("error signing in: ", error);
+                console.log("error signing in: ", error);
                 setIsLoading(false);
               })
               .finally(() => {
@@ -49,12 +49,12 @@ const SignIn = () => {
               });
           })
           .catch((error) => {
-            console.error("error signing in: ", error);
+            console.log("error signing in: ", error);
             setIsLoading(false);
           });
       })
       .catch((error) => {
-        console.error("error signing in: ", error);
+        console.log("error signing in: ", error);
         setIsLoading(false);
       });
   }
@@ -76,8 +76,10 @@ const SignIn = () => {
   );
 };
 export default function SignInButton() {
-  const {isUserLoggedIn} = useAuthContext()
+  const { isUserLoggedIn } = useAuthContext();
   const { isConnected } = useAccount();
+
+  console.log({ isUserLoggedIn, isConnected });
 
   return (
     <div>

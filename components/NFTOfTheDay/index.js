@@ -34,7 +34,7 @@ export default function NFTOfTheDay() {
       );
       link = `https://testnet.lenster.xyz/posts/${publicationId}`;
     } catch (error) {
-      console.error("Error while getting publication Id");
+      console.log("Error while getting publication Id");
     }
     setNftOfTheDayLink(link);
     setLoading(false);
