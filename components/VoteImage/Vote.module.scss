@@ -7,7 +7,6 @@
 .yellow {
   font-weight: 600;
   font-size: 14px;
-  text-align: center;
 
   background: radial-gradient(
       107.14% 107.14% at 50% 80.95%,
@@ -94,6 +93,9 @@
   align-self: left;
   text-align: left;
 }
+.end {
+  align-self: end;
+}
 .nftButton {
   font-weight: 700;
   font-size: 16px;
@@ -109,6 +111,18 @@
 
   justify-self: end;
 }
+
+.promt {
+  font-size: 20px;
+  line-height: 160%;
+  font-feature-settings: "ss01" on, "ss02" on, "ss03" on, "ss04" on, "salt" on;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 16px 16px;
+  width: 80%;
+  text-align: left;
+  font-weight: 700;
+}
+
 .bb {
   cursor: pointer;
 }
@@ -176,37 +190,8 @@
   height: 100%;
   display: grid;
 }
-.cardContainer {
-  width: 90vw;
-  max-width: 300px;
-  height: 300px;
-  @media screen and (min-width: 568px) {
-    margin: 0 20px;
-    max-width: 512px;
-    height: 512px;
-  }
-}
-
-.buttonClass {
-  padding: 8px;
-  align-self: center;
-  border-radius: 100px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.12),
-    0px 1px 2px rgba(0, 0, 0, 0.2);
-  @media screen and (min-width: 568px) {
-    padding: 12px;
-  }
-}
-
-.buttons button:hover {
-  transform: scale(1.05);
-}
-
 .card {
   width: 80vw;
-  position: absolute;
   max-width: 300px;
   height: 300px;
   box-shadow: 1px 1px 6px 0px rgb(0 0 0 / 30%);
@@ -222,32 +207,4 @@
     max-width: 512px;
     height: 512px;
   }
-}
-.card_title_overlay {
-  position: absolute;
-  width: 100%;
-  height: 100px;
-  bottom: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.8) 41.15%
-  );
-}
-
-.card_title {
-  text-align: center;
-  padding: 0 15px;
-  bottom: 0;
-  width: 100%;
-}
-
-.card_title_text {
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 160%;
-  color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: flex-start;
-  height: 30px;
 }
