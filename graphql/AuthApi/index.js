@@ -1,6 +1,9 @@
 import { gql } from "@apollo/client";
 import { apolloClient } from "..";
-import { Constants } from "../../utils/Constants";
+
+export const AuthApiOperationName = {
+  refreshTokens: "refreshTokens"
+}
 
 const Query = {
   challenge: gql(`query($request: ChallengeRequest!) {
@@ -15,8 +18,11 @@ const Query = {
       refreshToken
     }
   }`),
-  verifyToken: gql(`query($request: VerifyRequest!){
-    verify(request: $request)
+  refresh: gql(`mutation ${AuthApiOperationName.refreshTokens}($request: RefreshRequest!){
+    refresh(request:$request){
+      accessToken
+      refreshToken
+    }
   }`)
 };
 
@@ -44,13 +50,12 @@ class AuthApi {
     });
   }
 
-  verifyToken(){
-    const accessToken = sessionStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY)
-    return apolloClient.query({
-      query: Query.verifyToken,
+  refresh({refreshToken}){
+    return apolloClient.mutate({
+      mutation: Query.refresh,
       variables: {
         request: {
-          accessToken
+          refreshToken
         }
       }
     })
