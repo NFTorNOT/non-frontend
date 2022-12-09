@@ -20,7 +20,7 @@ export default function VoteImage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
-  const {isUserLoggedIn} = useAuthContext()
+  const { isUserLoggedIn } = useAuthContext()
   const postIdRef = useRef();
 
   async function fetchImages() {
@@ -111,54 +111,80 @@ export default function VoteImage() {
     showNextImage();
   }
 
+  const swiped = (direction) => {
+    if (direction === 'right') {
+      onHot();
+    }
+    if (direction === 'left') {
+      showNextImage();
+    }
+  };
+
   return (
     <>
-      <div className={styles.wrapper}>
-        <img
-          alt="wrong"
-          onClick={showNextImage}
-          src={"/not.png"}
-          className={`${styles.bb}`}
-        />
-        <div className={styles.secondTab}>
-          <div className={styles.yellow}>Word of the day</div>
-          <div className={styles.generatedTitle}>
-            {wordFetchInProgress ? (
-              <ClipLoader color={"#fff"} loading={true} size={15} />
-            ) : (
-              <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
-            )}
-          </div>
-
-          {imageIndex < imageDetailsListRef.current.length ? (
-            <TinderCard>
-              <div className={`${styles.card}`}>
-                  <img
-                    className={"w-[512px] h-[512px]"}
-                    src={imageDetailsListRef.current[imageIndex]?.url}
-                    alt="Voted Pic"
-                  />
-              </div>
-            </TinderCard>
+    <div className={styles.secondTab}>
+      <div className={styles.yellow}>Word of the day</div>
+      <div className={styles.generatedTitle}>
+        {wordFetchInProgress ? (
+            <ClipLoader color={"#fff"} loading={true} size={15} />
           ) : (
-            <div
-              className={
-                "w-[512px] h-[512px] flex items-center justify-center text-white font-bold"
-              }
-            >
-              All images are Voted.
-            </div>
+            <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
           )}
-        </div>
-
-        <img
-          alt="right"
-          onClick={onHot}
-          src={"/hot.png"}
-          className={styles.bb}
-        />
+      </div>  
+  </div>  
+    <div className="relative md:flex justify-center">
+      <div className={`${styles.cardContainer} flex justify-center mb-[15px] order-2`}>
+          {imageDetailsListRef.current.length > 0 && imageDetailsListRef.current.map((character) => (
+          <TinderCard
+            onSwipe={(dir) => swiped(dir)}
+            className={`absolute pressable`}
+            preventSwipe={["up", "down"]}
+          >
+            <div className={`${styles.card}`}
+              style={{ backgroundImage: `url(${character.url})` }}
+            >
+ 
+              <div className={styles.card_title_overlay}>
+                <div className={styles.card_title}>
+                  <div className={styles.card_title_text}>
+                    {character.title}
+                  </div>
+                </div>
+                <div className={styles.nftInfo}>
+                  <div className={styles.id}>
+                    {character.handle}
+                  </div>
+                  <button
+                    className={styles.nftButton}
+                    onClick={() => setNftDetailsModal(true)}
+                  >
+                    NFT contract info
+                    </button>
+                </div>
+              </div>
+            </div>
+          </TinderCard>
+        ))}
       </div>
-      {nftDetailsModal && (
+      <button
+        className={`absolute left-[20px] md:relative md:left-0`}
+        onClick={showNextImage}>
+        <img src={"/not.png"} />
+      </button>
+
+      <button
+        className={`absolute right-[20px] md:relative md:right-0 order-last`}
+        onClick={onHot}>
+        <div className="relative">
+          <img
+            alt="right"
+            src={"/hot.png"}
+          />
+        </div>
+      </button>
+    </div>
+    
+    {nftDetailsModal && (
         <div className={styles.popup} onClick={() => setNftDetailsModal(false)}>
           <div className={styles.nftContractInfo}>
             <div className={styles.nfttext}>NFT contract information</div>
