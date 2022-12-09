@@ -6,6 +6,7 @@ import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 import { Constants } from "../../utils/Constants";
 import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "../../context/AuthContext";
+import TinderCard from "react-tinder-card";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -130,38 +131,15 @@ export default function VoteImage() {
           </div>
 
           {imageIndex < imageDetailsListRef.current.length ? (
-            <div
-              style={{
-                display: "grid",
-              }}
-            >
-              <div
-                className={styles.generatedImagePrompts}
-                style={sectionStyle}
-              >
-                <img
-                  className={"absolute w-[512px] h-[512px]"}
-                  src={imageDetailsListRef.current[imageIndex]?.url}
-                  alt="Voted Pic"
-                />
-                <div className={styles.end}>
-                  <div className={styles.promt}>
-                    {imageDetailsListRef.current[imageIndex]?.title}
-                  </div>
-                  <div className={styles.nftInfo}>
-                    <div className={styles.id}>
-                      {imageDetailsListRef.current[imageIndex]?.handle}
-                    </div>
-                    <button
-                      className={styles.nftButton}
-                      onClick={() => setNftDetailsModal(true)}
-                    >
-                      NFT contract info
-                    </button>
-                  </div>
-                </div>
+            <TinderCard>
+              <div className={`${styles.card}`}>
+                  <img
+                    className={"w-[512px] h-[512px]"}
+                    src={imageDetailsListRef.current[imageIndex]?.url}
+                    alt="Voted Pic"
+                  />
               </div>
-            </div>
+            </TinderCard>
           ) : (
             <div
               className={
