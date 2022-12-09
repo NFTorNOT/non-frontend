@@ -27,7 +27,8 @@ export default function UserInfo() {
             let defaultProfile = profiles.filter(
               (profile) => profile.isDefault
             );
-            if (defaultProfile.length === 0) {
+
+            if (defaultProfile) {
               defaultProfile = profiles[0];
               setUserProfile(defaultProfile);
             }
@@ -41,6 +42,8 @@ export default function UserInfo() {
         });
     }
   }, [address]);
+
+  console.log({ queryInProgress, userProfile });
 
   return (
     <div className={styles.container}>
