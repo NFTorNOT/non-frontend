@@ -43,8 +43,6 @@ export default function UserInfo() {
     }
   }, [address]);
 
-  console.log({ queryInProgress, userProfile });
-
   return (
     <div className={styles.container}>
       <span className={styles.nameContainer}>
