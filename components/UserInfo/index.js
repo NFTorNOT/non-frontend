@@ -11,26 +11,21 @@ export default function UserInfo() {
 
   useEffect(() => {
     if (address) {
-      console.log("fetching profiles for ", { address });
       setQueryInProgress(true);
-      UserApi.profiles({ ownedBy: address })
+
+      UserApi.defaultProfile({ walletAddress: address })
         .then((profilesResponse) => {
           const error = profilesResponse.error;
           if (error) {
             throw new Error(error.message);
           }
 
-          const profiles = profilesResponse.data.profiles.items;
-          if (profiles.length === 0) {
-            // TODO: Create profile model.
+          console.log({ res: profilesResponse.data });
+
+          if (profilesResponse.data.defaultProfile) {
+            setUserProfile(profilesResponse.data.defaultProfile);
           } else {
-            let defaultProfile = profiles.filter(
-              (profile) => profile.isDefault
-            );
-            if (defaultProfile.length === 0) {
-              defaultProfile = profiles[0];
-              setUserProfile(defaultProfile);
-            }
+            //TODO:create a profile
           }
         })
         .catch((error) => {

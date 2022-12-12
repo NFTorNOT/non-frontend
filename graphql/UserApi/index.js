@@ -48,16 +48,111 @@ const Query = {
     }
   }
   `),
+
+  defaultProfile: gql(`query DefaultProfile($request: DefaultProfileRequest!) {
+    defaultProfile(request: $request) {
+      id
+      name
+      bio
+      isDefault
+      attributes {
+        displayType
+        traitType
+        key
+        value
+      }
+      followNftAddress
+      metadata
+      handle
+      picture {
+        ... on NftImage {
+          contractAddress
+          tokenId
+          uri
+          chainId
+          verified
+        }
+        ... on MediaSet {
+          original {
+            url
+            mimeType
+          }
+        }
+      }
+      coverPicture {
+        ... on NftImage {
+          contractAddress
+          tokenId
+          uri
+          chainId
+          verified
+        }
+        ... on MediaSet {
+          original {
+            url
+            mimeType
+          }
+        }
+      }
+      ownedBy
+      dispatcher {
+        address
+        canUseRelay
+      }
+      stats {
+        totalFollowers
+        totalFollowing
+        totalPosts
+        totalComments
+        totalMirrors
+        totalPublications
+        totalCollects
+      }
+      followModule {
+        ... on FeeFollowModuleSettings {
+          type
+          contractAddress
+          amount {
+            asset {
+              name
+              symbol
+              decimals
+              address
+            }
+            value
+          }
+          recipient
+        }
+        ... on ProfileFollowModuleSettings {
+         type
+        }
+        ... on RevertFollowModuleSettings {
+         type
+        }
+      }
+    }
+  }`),
 };
 
 class UserApi {
-  profiles({ownedBy}) {
-    console.log({ownedBy})
+  profiles({ ownedBy }) {
+    console.log({ ownedBy });
     return apolloClient.query({
       query: Query.profiles,
       variables: {
         request: {
-            ownedBy,
+          ownedBy,
+        },
+      },
+    });
+  }
+
+  defaultProfile({ walletAddress }) {
+    return apolloClient.query({
+      query: Query.defaultProfile,
+      variables: {
+        request: {
+          ethereumAddress: walletAddress,
         },
       },
     });
