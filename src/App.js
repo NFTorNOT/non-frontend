@@ -1,5 +1,4 @@
 import "@rainbow-me/rainbowkit/styles.css";
-import "./App.css";
 import Main from "./components/Main";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";

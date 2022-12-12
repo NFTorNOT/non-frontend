@@ -1,5 +1,4 @@
 import "../styles/globals.scss";
-import "../styles/App.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
