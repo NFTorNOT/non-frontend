@@ -22,7 +22,6 @@ export default function VoteImage() {
   const { isUserLoggedIn } = useAuthContext();
   const postIdRef = useRef();
 
-  console.log({ isUserLoggedIn });
 
   async function fetchImages() {
     setIsApiInProgress(true);
