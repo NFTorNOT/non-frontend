@@ -132,6 +132,20 @@ const Query = {
       }
     }
   }`),
+
+  createProfile: gql`
+    mutation CreateProfile($request: CreateProfileRequest!) {
+      createProfile(request: $request) {
+        ... on RelayerResult {
+          txHash
+        }
+        ... on RelayError {
+          reason
+        }
+        __typename
+      }
+    }
+  `,
 };
 
 class UserApi {
@@ -153,6 +167,17 @@ class UserApi {
       variables: {
         request: {
           ethereumAddress: walletAddress,
+        },
+      },
+    });
+  }
+
+  createProfile({ handle }) {
+    return apolloClient.mutate({
+      mutation: Query.createProfile,
+      variables: {
+        request: {
+          handle,
         },
       },
     });
