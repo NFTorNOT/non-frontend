@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useAuthContext } from "../../../context/AuthContext";
 import AuthApi from "../../../graphql/AuthApi";
-import UserApi from "../../../graphql/UserApi";
-import { Constants } from "../../../utils/Constants";
+import SessionHelper from "../../../utils/SessionHelper";
 import UserInfo from "../../UserInfo";
 import styles from "./SignInButton.module.css";
 import WalletConnect from "./WalletConnect/WalletConnect";
@@ -31,14 +30,10 @@ const SignIn = () => {
                 const { accessToken, refreshToken } =
                   verifyResponse.data.authenticate;
                 setIsUserLoggedIn(true);
-                sessionStorage.setItem(
-                  Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY,
-                  accessToken
-                );
-                sessionStorage.setItem(
-                  Constants.SESSION_STORAGE_REFRESH_TOKEN_KEY,
-                  refreshToken
-                );
+                SessionHelper.handleSessionTokens({
+                  accessToken,
+                  refreshToken,
+                });
               })
               .catch((error) => {
                 console.log("error signing in: ", error);
@@ -79,11 +74,9 @@ export default function SignInButton() {
   const { isUserLoggedIn } = useAuthContext();
   const { isConnected } = useAccount();
 
-  console.log({ isUserLoggedIn, isConnected });
-
-  return (
+  return isUserLoggedIn !== undefined && (
     <div>
-      {isUserLoggedIn ? (
+      {isUserLoggedIn && isConnected ? (
         <UserInfo />
       ) : (
         <div className={styles.container}>
