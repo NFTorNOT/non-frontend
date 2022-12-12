@@ -164,7 +164,7 @@ export default function GenerateNFT() {
             }}
           >
             {filterOptions.map((style) => {
-              return <option value={style}>{style}</option>;
+              return <option key={style} value={style}>{style}</option>;
             })}
           </select>
 
