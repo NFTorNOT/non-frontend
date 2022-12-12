@@ -1,25 +1,32 @@
-on:
-  push:
-    branches:
-      - development
-      - master
- 
-
 name: Deploy to Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Enter github branch name to be deployed'
+        required: true
+        default: 'master'
+      description:
+        description: 'Enter description about deployment'
+        required: true
+        default: 'New feature release' 
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
+          
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.HON_STAGING_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.HON_STAGING_SECRET_KEY }}
+          aws-access-key-id: ${{ secrets.PLG_STAGING_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.PLG_STAGING_SECRET_KEY }}
           aws-region: us-east-1
 
       - name: Login to Amazon ECR
@@ -37,9 +44,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ github.event.repository.name }}
           IMAGE_TAG: ${{ github.sha }}
-          ENV: staging
+          ENV: ${{ secrets.STAGING_ENV_VARS }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  --build-arg ENV=$ENV .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  --build-arg ENV="$ENV" .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
@@ -55,7 +62,12 @@ jobs:
           ECR_REPOSITORY: ${{ github.event.repository.name }}
           IMAGE_TAG: ${{ github.sha }}
           AWS_REGION: us-east-1
-          AWS_EKS_CLUSTER_NAME: sd-production
+          AWS_EKS_CLUSTER_NAME: plg-staging
         run: |-
           aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION}
-          helm upgrade --install --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY --set image.tag=${IMAGE_TAG} --namespace nftornot nftornot-frontend  ./helm
+          helm upgrade --install \
+          --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY \
+          --set image.tag=${IMAGE_TAG} \
+          --namespace non \
+          --values ./kubernetes-values/staging.yaml \
+          nftornot-backend ./helm
