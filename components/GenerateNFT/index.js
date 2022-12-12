@@ -74,6 +74,10 @@ export default function GenerateNFT() {
     filterOptions.push(key);
   }
   const submitForGeneration = () => {
+    if (!prompt) {
+      alert("prompt is required for image generaration");
+      return;
+    }
     setImageGenerationInProgress(true);
     const data = {
       prompt: prompt,
