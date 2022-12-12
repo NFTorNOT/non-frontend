@@ -1,5 +1,5 @@
 import styles from "./Vote.module.scss";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
@@ -22,7 +22,7 @@ export default function VoteImage() {
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
   const { isUserLoggedIn } = useAuthContext();
   const postIdRef = useRef();
-
+  const childRefs = useRef();
 
   async function fetchImages() {
     setIsApiInProgress(true);
@@ -72,7 +72,8 @@ export default function VoteImage() {
     }
     console.log({ arr: imageDetailsListRef.current });
     setIsApiInProgress(false);
-    setImageIndex(0);
+    setImageIndex(imageDetailsListRef.current.length - 1);
+    childRefs.current = Array(imageDetailsListRef.current.length).fill(0).map((i) => React.createRef())
   }
 
   async function fetchWordOfTheDay() {
@@ -105,7 +106,7 @@ export default function VoteImage() {
     if (imageIndex === imageDetailsListRef.current - 1) {
       return;
     }
-    setImageIndex((imageIndex) => imageIndex + 1);
+    setImageIndex((imageIndex) => imageIndex - 1);
   }
 
   async function onHot() {
@@ -130,6 +131,14 @@ export default function VoteImage() {
     }
   };
 
+  const canSwipe = imageIndex >= 0;
+
+  const swipe = async (dir) => {
+    if (canSwipe && imageIndex < imageDetailsListRef.current.length) {
+      await childRefs.current[imageIndex].swipe(dir) // Swipe the card!
+    }
+  }
+
   return (
     <>
     <div className={styles.secondTab}>
@@ -144,8 +153,9 @@ export default function VoteImage() {
   </div>  
     <div className="relative md:flex justify-center">
       <div className={`${styles.cardContainer} flex justify-center mb-[15px] order-2`}>
-          {imageDetailsListRef.current.length > 0 && imageDetailsListRef.current.map((character) => (
+          {imageDetailsListRef.current.length > 0 && imageDetailsListRef.current.map((character, index) => (
           <TinderCard
+            ref={(ref) => childRefs.current[index] = ref}
             onSwipe={(dir) => swiped(dir)}
             className={`absolute pressable`}
             preventSwipe={["up", "down"]}
@@ -178,13 +188,14 @@ export default function VoteImage() {
       </div>
       <button
         className={`absolute left-[20px] md:relative md:left-0`}
-        onClick={showNextImage}>
+        onClick={() => swipe('left')}>
         <img src={"/not.png"} />
       </button>
 
       <button
         className={`absolute right-[20px] md:relative md:right-0 order-last`}
-        onClick={onHot}>
+        onClick={() => swipe('right')}
+      >
         <div className="relative">
           <img
             alt="right"
