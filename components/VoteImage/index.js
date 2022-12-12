@@ -19,8 +19,9 @@ export default function VoteImage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
-  const {isUserLoggedIn} = useAuthContext()
+  const { isUserLoggedIn } = useAuthContext();
   const postIdRef = useRef();
+
 
   async function fetchImages() {
     setIsApiInProgress(true);
@@ -95,6 +96,11 @@ export default function VoteImage() {
   };
 
   function showNextImage() {
+    if (!isUserLoggedIn) {
+      alert("Please sign in to vote");
+      return;
+    }
+
     if (imageIndex === imageDetailsListRef.current - 1) {
       return;
     }
@@ -102,6 +108,10 @@ export default function VoteImage() {
   }
 
   async function onHot() {
+    if (!isUserLoggedIn) {
+      alert("Please sign in to vote");
+      return;
+    }
     PublicationApi.addReaction({
       profileId: userProfile?.id,
       reactionType: ReactionType.UPVOTE,
