@@ -6,6 +6,7 @@ import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 import { Constants } from "../../utils/Constants";
 import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "../../context/AuthContext";
+import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -51,7 +52,7 @@ export default function VoteImage() {
             const publicationId = comment?.id;
             const handle = comment.profile?.handle;
             const cid = comment.metadata?.image?.split("ipfs://")?.[1];
-            const txHash = comment.metadata?.attributes?.map(
+            const txHash = comment.metadata?.attributes?.filter(
               (attribute) => attribute.traitType === "NFTtxHash"
             )?.[0].value;
             return {
@@ -131,10 +132,14 @@ export default function VoteImage() {
 
           {imageIndex < imageDetailsListRef.current.length ? (
             <div
-              style={{
-                display: "grid",
-              }}
+              className={styles.imageContainer}
             >
+              <NFTContractInfoModal
+                visible={nftDetailsModal}
+                onClose={() => setNftDetailsModal(false)}
+                ipfsCid={ipfs}
+                txHash={imageDetailsListRef.current[imageIndex]?.txHash}
+              />
               <div
                 className={styles.generatedImagePrompts}
                 style={sectionStyle}
@@ -180,30 +185,6 @@ export default function VoteImage() {
           className={styles.bb}
         />
       </div>
-      {nftDetailsModal && (
-        <div className={styles.popup} onClick={() => setNftDetailsModal(false)}>
-          <div className={styles.nftContractInfo}>
-            <div className={styles.nfttext}>NFT contract information</div>
-
-            <div className={styles.polygon}>
-              <img
-                src="https://static.nftornot.com/Ipfs-logo-1024-ice-text+1.png"
-                alt="ipfs"
-              ></img>
-              <span>IPFS metadata: </span>
-              <span>{ipfs}</span>
-            </div>
-            <div className={styles.polygon}>
-              <img
-                src="https://static.nftornot.com/polygon-matic-logo+2.png"
-                alt="polygon"
-              ></img>
-              <span>Polygon transaction:</span>
-              <span>{imageDetailsListRef.current.txHash}</span>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
