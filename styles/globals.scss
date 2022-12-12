@@ -4,16 +4,17 @@
 
 @import url("https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap");
 
+:root {
+  --color-text-base: 255, 255, 255;
+  --color-text-muted: 199, 210, 254;
+  --color-text-inverted: 79, 70, 229;
+  --color-fill: 67, 56, 202;
+  --color-button-accent: 255, 255, 255;
+  --color-button-accent-hover: 238, 242, 255;
+  --color-button-muted: 99, 102, 241;
+}
+
 @layer base {
-  :root {
-    --color-text-base: 255, 255, 255;
-    --color-text-muted: 199, 210, 254;
-    --color-text-inverted: 79, 70, 229;
-    --color-fill: 67, 56, 202;
-    --color-button-accent: 255, 255, 255;
-    --color-button-accent-hover: 238, 242, 255;
-    --color-button-muted: 99, 102, 241;
-  }
   html,
   body {
     @apply font-satoshi;
@@ -27,9 +28,4 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "salt" on;
   -webkit-font-smoothing: antialiased;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }
