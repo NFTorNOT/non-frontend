@@ -74,6 +74,10 @@ export default function GenerateNFT() {
     filterOptions.push(key);
   }
   const submitForGeneration = () => {
+    if (!prompt) {
+      alert("prompt is required for image generaration");
+      return;
+    }
     setImageGenerationInProgress(true);
     const data = {
       prompt: prompt,
@@ -164,7 +168,7 @@ export default function GenerateNFT() {
             }}
           >
             {filterOptions.map((style) => {
-              return <option value={style}>{style}</option>;
+              return <option key={style} value={style}>{style}</option>;
             })}
           </select>
 

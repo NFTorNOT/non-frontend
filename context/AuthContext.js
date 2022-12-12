@@ -16,15 +16,13 @@ export function useAuthContext() {
 }
 
 export const AuthProvider = ({ children }) => {
-  let accessToken = useRef();
-
   useEffect(() => {
-    accessToken.current = !!sessionStorage.getItem(
-      Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY
+    setIsUserLoggedIn(
+      !!sessionStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY)
     );
   }, []);
 
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(accessToken.current);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState();
   return (
     <AuthContext.Provider
       value={{ isUserLoggedIn: isUserLoggedIn, setIsUserLoggedIn }}
