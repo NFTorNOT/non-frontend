@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Enter github branch name to be deployed'
+        description: "Enter github branch name to be deployed"
         required: true
-        default: 'master'
+        default: "master"
       description:
-        description: 'Enter description about deployment'
+        description: "Enter description about deployment"
         required: true
-        default: 'New feature release' 
+        default: "New feature release"
 
 jobs:
   deploy:
@@ -21,7 +21,6 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch }}
 
-          
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

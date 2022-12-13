@@ -1,0 +1,29 @@
+.container {
+  background: radial-gradient(
+    107.14% 107.14% at 50% 80.95%,
+    #aafe2d 0%,
+    #99ff00 100%
+  );
+  box-shadow: 0px 8px 32px rgba(170, 254, 45, 0.32),
+    inset 0px -4px 8px rgba(153, 255, 51, 0.6), inset 0px -8px 16px #50a000;
+  border-radius: 20px;
+  padding: 8px 24px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.btnContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.lensRoot {
+  width: 20px;
+  height: 20px;
+}
