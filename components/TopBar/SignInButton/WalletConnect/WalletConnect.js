@@ -1,5 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import styles from "./WalletConnect.module.css";
+import styles from "./WalletConnect.module.scss";
+import Image from "next/image";
 
 export default function WalletConnect() {
   return (
@@ -13,23 +14,33 @@ export default function WalletConnect() {
         mounted,
       }) => {
         const ready = mounted;
-        const connected =
-          ready &&
-          account &&
-          chain;
+        const connected = ready && account && chain;
 
         return (
           <div
             {...(!ready && {
               "aria-hidden": true,
-              className: styles.container
+              className: styles.container,
             })}
           >
             {(() => {
               if (!connected) {
                 return (
-                  <button className={styles.connectButton} onClick={openConnectModal} type="button">
-                    Connect Wallet
+                  <button
+                    className={`${styles.connectButton}`}
+                    onClick={openConnectModal}
+                    type="button"
+                    title="Sign in with lens"
+                  >
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                    <span className="ml-2 hidden text-skin-green md:block">
+                      Sign in with lens
+                    </span>
                   </button>
                 );
               }
@@ -44,7 +55,11 @@ export default function WalletConnect() {
 
               return (
                 <div className={styles.chainInfoContainer}>
-                  <button style={{color: 'white'}} onClick={openAccountModal} type="button">
+                  <button
+                    style={{ color: "white" }}
+                    onClick={openAccountModal}
+                    type="button"
+                  >
                     {account.displayName}
                   </button>
                 </div>

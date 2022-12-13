@@ -26,8 +26,8 @@ const theme = {
     textColor: {
       skin: {
         base: "rgb(var(--color-text-base))",
-        muted: "rgb(var(--color-text-muted))",
-        inverted: "rgb(var(--color-text-inverted))",
+        muted: "rgb(var(--color-text-base)/0.6)",
+        green: "rgb(var(--color-text-green))",
       },
     },
     backgroundColor: {
