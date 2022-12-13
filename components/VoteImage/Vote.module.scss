@@ -8,7 +8,7 @@
   text-align: center;
   font-weight: 600;
   font-size: 14px;
-
+  text-align: center;
   background: radial-gradient(
       107.14% 107.14% at 50% 80.95%,
       #fa5c00 0%,
@@ -94,9 +94,6 @@
   align-self: left;
   text-align: left;
 }
-.end {
-  align-self: end;
-}
 .nftButton {
   font-weight: 700;
   font-size: 16px;
@@ -112,18 +109,127 @@
 
   justify-self: end;
 }
-
-.promt {
-  font-size: 20px;
-  line-height: 160%;
-  font-feature-settings: "ss01" on, "ss02" on, "ss03" on, "ss04" on, "salt" on;
-  color: rgba(255, 255, 255, 0.8);
-  padding: 16px 16px;
-  width: 80%;
-  text-align: left;
-  font-weight: 700;
-}
-
 .bb {
   cursor: pointer;
+}
+
+.nftContractInfo {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(60px);
+  border-radius: 8px;
+  width: 320px;
+  height: 140px;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(60px);
+  border-radius: 8px;
+  justify-self: center;
+  align-self: center;
+}
+
+.nfttext {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 160%;
+  color: rgba(255, 255, 255, 0.6);
+
+  text-align: left;
+}
+
+.generatedTitle {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nftContractInfo {
+  padding: 16px;
+}
+
+.polygon {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: auto auto auto;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 160%;
+  text-decoration-line: underline;
+  color: #ffffff;
+
+  align-items: center;
+  justify-content: left;
+  grid-gap: 8px;
+
+  span {
+    text-decoration: none;
+  }
+}
+
+.popup {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  // background-color: red;
+  width: 100%;
+  height: 100%;
+  display: grid;
+}
+.cardContainer {
+  width: 90vw;
+  max-width: 300px;
+  height: 300px;
+  @media screen and (min-width: 568px) {
+    margin: 0 20px;
+    max-width: 512px;
+    height: 512px;
+  }
+}
+.card {
+  width: 80vw;
+  position: absolute;
+  max-width: 300px;
+  height: 300px;
+  box-shadow: 1px 1px 6px 0px rgb(0 0 0 / 30%);
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-content: end;
+  position: relative;
+  overflow: hidden;
+  @media screen and (min-width: 568px) {
+    margin: 0 20px;
+    max-width: 512px;
+    height: 512px;
+  }
+}
+.card_title_overlay {
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.8) 41.15%
+  );
+}
+
+.card_title {
+  text-align: center;
+  padding: 0 15px;
+  bottom: 0;
+  width: 100%;
+}
+
+.card_title_text {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 160%;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: flex-start;
+  height: 30px;
 }
