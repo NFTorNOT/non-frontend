@@ -1,7 +1,8 @@
 import "../styles/globals.scss";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { AuthProvider } from "../context/AuthContext";
@@ -10,7 +11,7 @@ import { UserProvider } from "../context/UserContext";
 
 function App({ Component, pageProps }) {
   const { chains, provider } = configureChains(
-    [chain.polygonMumbai],
+    [polygonMumbai],
     [
       alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY }),
       publicProvider(),
