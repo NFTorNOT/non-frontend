@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "non-frontend"
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+ 
+service:
+  type: NodePort
+  port: 80
