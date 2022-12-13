@@ -17,7 +17,7 @@ fullnameOverride: "non-frontend"
 podAnnotations: {}
 podSecurityContext: {}
 securityContext: {}
- 
+
 service:
   type: NodePort
   port: 80
