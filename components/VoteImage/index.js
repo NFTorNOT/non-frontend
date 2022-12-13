@@ -212,31 +212,6 @@ export default function VoteImage() {
           </div>
         </button>
       </div>
-
-      {nftDetailsModal && (
-        <div className={styles.popup} onClick={() => setNftDetailsModal(false)}>
-          <div className={styles.nftContractInfo}>
-            <div className={styles.nfttext}>NFT contract information</div>
-
-            <div className={styles.polygon}>
-              <img
-                src="https://static.nftornot.com/Ipfs-logo-1024-ice-text+1.png"
-                alt="ipfs"
-              ></img>
-              <span>IPFS metadata: </span>
-              <span>{ipfs}</span>
-            </div>
-            <div className={styles.polygon}>
-              <img
-                src="https://static.nftornot.com/polygon-matic-logo+2.png"
-                alt="polygon"
-              ></img>
-              <span>Polygon transaction:</span>
-              <span>{imageDetailsListRef.current.txHash}</span>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
