@@ -1,0 +1,73 @@
+name: Deploy to Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Enter github branch name to be deployed'
+        required: true
+        default: 'master'
+      description:
+        description: 'Enter description about deployment'
+        required: true
+        default: 'New feature release' 
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PLG_STAGING_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.PLG_STAGING_SECRET_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Create a ECR repo
+        shell: bash
+        run: |
+          aws ecr describe-repositories --repository-names ${{ github.event.repository.name }} || ( aws ecr create-repository --repository-name ${{ github.event.repository.name }}  && aws ecr put-lifecycle-policy --repository-name ${{ github.event.repository.name }} --lifecycle-policy-text "{\"rules\":[{\"rulePriority\":1,\"description\":\"Keep last 5 images\",\"selection\":{\"tagStatus\":\"any\",\"countType\":\"imageCountMoreThan\",\"countNumber\":5},\"action\":{\"type\":\"expire\"}}]}"  )
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ github.event.repository.name }}
+          IMAGE_TAG: ${{ github.sha }}
+          ENV: ${{ secrets.STAGING_ENV_VARS }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  --build-arg ENV="$ENV" .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - uses: azure/setup-kubectl@v2.0
+        with:
+          version: "v1.23.6"
+        id: install
+
+      - name: "Deploy to EKS"
+        id: deploy-eks
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ github.event.repository.name }}
+          IMAGE_TAG: ${{ github.sha }}
+          AWS_REGION: us-east-1
+          AWS_EKS_CLUSTER_NAME: plg-staging
+        run: |-
+          aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region ${AWS_REGION}
+          helm upgrade --install \
+          --set image.repository=$ECR_REGISTRY/$ECR_REPOSITORY \
+          --set image.tag=${IMAGE_TAG} \
+          --namespace non \
+          --values ./kubernetes-values/staging.yaml \
+          nftornot-backend ./helm
