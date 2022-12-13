@@ -31,8 +31,9 @@ class LensHelper {
 
   async pollUntilIndexed({ txId, txHash }) {
     while (true) {
-      console.log("pool until indexed: polling again")
-      const response = (await PublicationApi.hasTxBeenIndexed({txId, txHash})).data.hasTxHashBeenIndexed;
+      console.log("pool until indexed: polling again");
+      const response = (await PublicationApi.hasTxBeenIndexed({ txId, txHash }))
+        .data.hasTxHashBeenIndexed;
       console.log("pool until indexed: result", response);
 
       if (response.__typename === "TransactionIndexedResult") {
@@ -57,12 +58,10 @@ class LensHelper {
           }
         }
 
-        console.log(
-          "pool until indexed: sleep 1500 milliseconds"
-        );
+        console.log("pool until indexed: sleep 1500 milliseconds");
         await new Promise((resolve) => setTimeout(resolve, 1500));
       } else {
-        console.log("error", response.reason)
+        console.log("error", response.reason);
         throw new Error(response.reason);
       }
     }

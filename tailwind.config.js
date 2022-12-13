@@ -23,6 +23,26 @@ const theme = {
     fontFamily: {
       satoshi: ["satoshi", "sans-serif"],
     },
+    textColor: {
+      skin: {
+        base: "rgb(var(--color-text-base))",
+        muted: "rgb(var(--color-text-muted))",
+        inverted: "rgb(var(--color-text-inverted))",
+      },
+    },
+    backgroundColor: {
+      skin: {
+        fill: "rgb(var(--color-fill))",
+        "button-accent": "rgb(var(--color-button-accent))",
+        "button-accent-hover": "rgb(var(--color-button-accent-hover))",
+        "button-muted": "rgb(var(--color-button-muted))",
+      },
+    },
+    gradientColorStops: {
+      skin: {
+        hue: "rgb(var(--color-fill))",
+      },
+    },
   },
 };
 

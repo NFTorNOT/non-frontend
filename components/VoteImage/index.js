@@ -7,6 +7,7 @@ import { Constants } from "../../utils/Constants";
 import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "../../context/AuthContext";
 import TinderCard from "react-tinder-card";
+import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -53,7 +54,7 @@ export default function VoteImage() {
             const publicationId = comment?.id;
             const handle = comment.profile?.handle;
             const cid = comment.metadata?.image?.split("ipfs://")?.[1];
-            const txHash = comment.metadata?.attributes?.map(
+            const txHash = comment.metadata?.attributes?.filter(
               (attribute) => attribute.traitType === "NFTtxHash"
             )?.[0].value;
             return {
@@ -73,7 +74,9 @@ export default function VoteImage() {
     console.log({ arr: imageDetailsListRef.current });
     setIsApiInProgress(false);
     setImageIndex(imageDetailsListRef.current.length - 1);
-    childRefs.current = Array(imageDetailsListRef.current.length).fill(0).map((i) => React.createRef())
+    childRefs.current = Array(imageDetailsListRef.current.length)
+      .fill(0)
+      .map((i) => React.createRef());
   }
 
   async function fetchWordOfTheDay() {
@@ -123,10 +126,10 @@ export default function VoteImage() {
   }
 
   const swiped = (direction) => {
-    if (direction === 'right') {
+    if (direction === "right") {
       onHot();
     }
-    if (direction === 'left') {
+    if (direction === "left") {
       showNextImage();
     }
   };
@@ -135,77 +138,82 @@ export default function VoteImage() {
 
   const swipe = async (dir) => {
     if (canSwipe && imageIndex < imageDetailsListRef.current.length) {
-      await childRefs.current[imageIndex].swipe(dir) // Swipe the card!
+      await childRefs.current[imageIndex].swipe(dir); // Swipe the card!
     }
-  }
+  };
 
   return (
     <>
-    <div className={styles.secondTab}>
-      <div className={styles.yellow}>Word of the day</div>
-      <div className={styles.generatedTitle}>
-        {wordFetchInProgress ? (
+      <div className={styles.secondTab}>
+        <div className={styles.yellow}>Word of the day</div>
+        <div className={styles.generatedTitle}>
+          {wordFetchInProgress ? (
             <ClipLoader color={"#fff"} loading={true} size={15} />
           ) : (
             <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
           )}
-      </div>  
-  </div>  
-    <div className="relative md:flex justify-center">
-      <div className={`${styles.cardContainer} flex justify-center mb-[15px] order-2`}>
-          {imageDetailsListRef.current.length > 0 && imageDetailsListRef.current.map((character, index) => (
-          <TinderCard
-            ref={(ref) => childRefs.current[index] = ref}
-            onSwipe={(dir) => swiped(dir)}
-            className={`absolute pressable`}
-            preventSwipe={["up", "down"]}
-          >
-            <div className={`${styles.card}`}
-              style={{ backgroundImage: `url(${character.url})` }}
-            >
- 
-              <div className={styles.card_title_overlay}>
-                <div className={styles.card_title}>
-                  <div className={styles.card_title_text}>
-                    {character.title}
-                  </div>
-                </div>
-                <div className={styles.nftInfo}>
-                  <div className={styles.id}>
-                    {character.handle}
-                  </div>
-                  <button
-                    className={styles.nftButton}
-                    onClick={() => setNftDetailsModal(true)}
-                  >
-                    NFT contract info
-                    </button>
-                </div>
-              </div>
-            </div>
-          </TinderCard>
-        ))}
-      </div>
-      <button
-        className={`absolute left-[20px] md:relative md:left-0`}
-        onClick={() => swipe('left')}>
-        <img src={"/not.png"} />
-      </button>
-
-      <button
-        className={`absolute right-[20px] md:relative md:right-0 order-last`}
-        onClick={() => swipe('right')}
-      >
-        <div className="relative">
-          <img
-            alt="right"
-            src={"/hot.png"}
-          />
         </div>
-      </button>
-    </div>
-    
-    {nftDetailsModal && (
+      </div>
+      <div className="relative md:flex justify-center">
+        <NFTContractInfoModal
+          visible={nftDetailsModal}
+          onClose={() => setNftDetailsModal(false)}
+          ipfsCid={ipfs}
+          txHash={imageDetailsListRef.current[imageIndex]?.txHash}
+        />
+        <div
+          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2`}
+        >
+          {imageDetailsListRef.current.length > 0 &&
+            imageDetailsListRef.current.map((character, index) => (
+              <TinderCard
+                ref={(ref) => (childRefs.current[index] = ref)}
+                onSwipe={(dir) => swiped(dir)}
+                className={`absolute pressable`}
+                preventSwipe={["up", "down"]}
+              >
+                <div
+                  className={`${styles.card}`}
+                  style={{ backgroundImage: `url(${character.url})` }}
+                >
+                  <div className={styles.card_title_overlay}>
+                    <div className={styles.card_title}>
+                      <div className={styles.card_title_text}>
+                        {character.title}
+                      </div>
+                    </div>
+                    <div className={styles.nftInfo}>
+                      <div className={styles.id}>{character.handle}</div>
+                      <button
+                        className={styles.nftButton}
+                        onClick={() => setNftDetailsModal(true)}
+                      >
+                        NFT contract info
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </TinderCard>
+            ))}
+        </div>
+        <button
+          className={`absolute left-[20px] md:relative md:left-0`}
+          onClick={() => swipe("left")}
+        >
+          <img src={"/not.png"} />
+        </button>
+
+        <button
+          className={`absolute right-[20px] md:relative md:right-0 order-last`}
+          onClick={() => swipe("right")}
+        >
+          <div className="relative">
+            <img alt="right" src={"/hot.png"} />
+          </div>
+        </button>
+      </div>
+
+      {nftDetailsModal && (
         <div className={styles.popup} onClick={() => setNftDetailsModal(false)}>
           <div className={styles.nftContractInfo}>
             <div className={styles.nfttext}>NFT contract information</div>
