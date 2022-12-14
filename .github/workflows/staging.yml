@@ -69,4 +69,4 @@ jobs:
           --set image.tag=${IMAGE_TAG} \
           --namespace non \
           --values ./kubernetes-values/staging.yaml \
-          nftornot-backend ./helm
+          nftornot-frontend ./helm
