@@ -27,7 +27,7 @@ export default function WalletConnect() {
               if (!connected) {
                 return (
                   <button
-                    className={`${styles.connectButton} rounded-full btn btn-green p-[10px] transition`}
+                    className={`${styles.connectButton} btn btn-green px-[10px] md:px-[20px] transition`}
                     onClick={openConnectModal}
                     type="button"
                     title="Sign in with lens"

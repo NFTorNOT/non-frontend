@@ -7,6 +7,7 @@
     "cursor": "pointer"
   },
   ".btn-green": {
+    "borderRadius": "9999px",
     "color": "#01501E",
     "boxShadow": "0px 8px 32px rgba(170, 254, 45, 0.32), inset 0px -4px 8px rgba(153, 255, 51, 0.6), inset 0px -8px 16px #50a000",
     "background": "radial-gradient(107.14% 107.14% at 50% 80.95%,#aafe2d 0%,#99ff00 100%)",
