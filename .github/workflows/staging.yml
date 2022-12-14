@@ -43,7 +43,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ github.event.repository.name }}
           IMAGE_TAG: ${{ github.sha }}
-          ENV: ${{ secrets.STAGING_ENV_VARS }}
+          ENV: "staging"
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  --build-arg ENV="$ENV" .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
