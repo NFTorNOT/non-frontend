@@ -24,9 +24,9 @@ export default function Layout({ children, ...props }) {
         return ( 
         <div className={styles.container}>
             <div className={styles.innerContainer}>
-                {<TopBar />}
-                    { children }
-                {<BottomTabSelector />}
+                <TopBar />
+                { children }
+                <BottomTabSelector />
             </div>
         </div>
         );
