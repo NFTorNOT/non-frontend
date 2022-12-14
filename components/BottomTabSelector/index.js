@@ -5,9 +5,16 @@ import { TwitterShareButton, TelegramShareButton } from "react-share";
 import TwitterIcon from './svg/TwitterIcon';
 import TelegramIcon from './svg/TelegramIcon';
 import QuestionMarkIcon from './svg/QuestionMarkIcon';
+import Link from 'next/link';
 
 export default function BottomTabSelector() {
   const { currentTab, onTabChange } = useBottomTab();
+  const routesMap = {
+    SubmitYourOwn : '/',
+     Collect : '/collect',
+     Vote : '/vote'
+  }
+
   return (
     <div className="flex justify-center">
       <div className="flex md:basis-2/12 items-center mt-[12px] md:mt-0">
@@ -17,22 +24,24 @@ export default function BottomTabSelector() {
         </span>
       </div>
       <div className={`${styles.container} md:basis-8/12 grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px]`}>
-          {Object.values(TabItems).map((tab) => {
-            const isSelected = tab.id === currentTab.id;
-            return (
+        {Object.values(TabItems).map((tab) => {
+          const isSelected = tab.id === currentTab.id;
+          const tabId = tab.id;
+          return (
+            <Link href={routesMap[tabId]}>
               <div
                 key={tab.id}
                 onClick={() => onTabChange(tab)}
                 id={tab.id}
-                className={`${styles.tabContainer} ${
-                  isSelected ? styles.selectedTab : {}
-                }`}
+                className={`${styles.tabContainer} ${isSelected ? styles.selectedTab : {}
+                  }`}
                 title={tab.tabName}
               >
                 {tab.tabName}
               </div>
-            );
-          })}
+            </Link>
+          );
+        })}
       </div>
       <div className='hidden md:flex basis-2/12 items-center justify-end gap-[20px] pr-[20px]'>
         <TelegramShareButton
