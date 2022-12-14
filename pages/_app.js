@@ -1,5 +1,5 @@
 import "../styles/globals.scss";
-
+import Layout from '../components/Layout';
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { polygonMumbai } from 'wagmi/chains';
@@ -34,7 +34,9 @@ function App({ Component, pageProps }) {
         <AuthProvider>
           <UserProvider>
             <BottomTabProvider>
-              <Component {...pageProps} />
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
             </BottomTabProvider>
           </UserProvider>
         </AuthProvider>
