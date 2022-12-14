@@ -1,6 +1,6 @@
 import GenerateNFT from "../GenerateNFT";
-import NFTOfTheDay from "../NFTOfTheDay";
-import VoteImage from "../VoteImage";
+import NFTOfTheDay from "../../pages/collect";
+import VoteImage from "../../pages";
 
 export const TabNames = {
   NftOfTheDay: "NftOfTheDay",
@@ -9,13 +9,13 @@ export const TabNames = {
 };
 export const TabItems = {
   [TabNames.NftOfTheDay]: {
-    id: "NFT of the day",
-    tabName: "NFT of the day",
+    id: "Collect",
+    tabName: "Collect 🔥 NFT’s",
     Component: () => <NFTOfTheDay />,
   },
   [TabNames.GenerateImage]: {
-    id: "Generate Image",
-    tabName: "Generate Image",
+    id: "SubmitYourOwn",
+    tabName: "Submit Your Own",
     Component: () => <GenerateNFT />,
   },
   [TabNames.VoteImage]: {
@@ -25,4 +25,4 @@ export const TabItems = {
   },
 };
 
-export const DEFAULT_TAB = TabItems[TabNames.GenerateImage];
+export const DEFAULT_TAB = TabItems[TabNames.VoteImage];

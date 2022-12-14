@@ -1,6 +1,6 @@
 import { useContract, useSigner } from "wagmi";
-import { Constants } from "../../utils/Constants";
-import NFTOfTheDayAbis from "../../abis/NFTOfTheDayAbi.json";
+import { Constants } from "../utils/Constants";
+import NFTOfTheDayAbis from "../abis/NFTOfTheDayAbi.json";
 import { useEffect, useState } from "react";
 import { CircleLoader } from "react-spinners";
 import moment from "moment";
