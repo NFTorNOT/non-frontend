@@ -8,6 +8,8 @@ import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "../../context/AuthContext";
 import TinderCard from "react-tinder-card";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
+import Not from "./svg/not";
+import Hot from "./svg/hot";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -154,7 +156,7 @@ export default function VoteImage() {
           )}
         </div>
       </div>
-      <div className="relative md:flex justify-center mt-[40px] md:mt-0 md:items-center">
+      <div className="relative mt-[40px] justify-center md:mt-0 md:flex md:items-center">
         <NFTContractInfoModal
           visible={nftDetailsModal}
           onClose={() => setNftDetailsModal(false)}
@@ -162,14 +164,14 @@ export default function VoteImage() {
           txHash={imageDetailsListRef.current[imageIndex]?.txHash}
         />
         <div
-          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2`}
+          className={`${styles.cardContainer} order-2 mb-[15px] flex justify-center`}
         >
           {imageDetailsListRef.current.length > 0 &&
             imageDetailsListRef.current.map((character, index) => (
               <TinderCard
                 ref={(ref) => (childRefs.current[index] = ref)}
                 onSwipe={(dir) => swiped(dir)}
-                className={`absolute pressable`}
+                className={`pressable absolute`}
                 preventSwipe={["up", "down"]}
               >
                 <div
@@ -197,18 +199,18 @@ export default function VoteImage() {
             ))}
         </div>
         <button
-          className={`absolute md:relative left-0 ${styles.nonButton}`}
+          className={`absolute left-0 md:relative ${styles.buttonClass}`}
           onClick={() => swipe("left")}
         >
-          <img src={"/not.png"} />
+          <Not />
         </button>
 
         <button
-          className={`absolute md:relative right-0 order-last ${styles.nonButton}`}
+          className={`absolute right-0 order-last md:relative ${styles.buttonClass}`}
           onClick={() => swipe("right")}
         >
           <div className={`relative`}>
-            <img alt="right" src={"/hot.png"} />
+            <Hot />
           </div>
         </button>
       </div>
