@@ -144,17 +144,17 @@ export default function VoteImage() {
 
   return (
     <>
-      <div className={styles.secondTab}>
+      <div className={`${styles.secondTab} mt-[40px] md:mt-0`}>
         <div className={styles.yellow}>Word of the day</div>
         <div className={styles.generatedTitle}>
           {wordFetchInProgress ? (
             <ClipLoader color={"#fff"} loading={true} size={15} />
           ) : (
-            <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
+            <div className={styles.wordOfDay}>{wordOfTheDay}</div>
           )}
         </div>
       </div>
-      <div className="relative md:flex justify-center">
+      <div className="relative md:flex justify-center mt-[40px] md:mt-0 md:items-center">
         <NFTContractInfoModal
           visible={nftDetailsModal}
           onClose={() => setNftDetailsModal(false)}
@@ -197,17 +197,17 @@ export default function VoteImage() {
             ))}
         </div>
         <button
-          className={`absolute left-[20px] md:relative md:left-0`}
+          className={`absolute md:relative left-0 ${styles.nonButton}`}
           onClick={() => swipe("left")}
         >
           <img src={"/not.png"} />
         </button>
 
         <button
-          className={`absolute right-[20px] md:relative md:right-0 order-last`}
+          className={`absolute md:relative right-0 order-last ${styles.nonButton}`}
           onClick={() => swipe("right")}
         >
-          <div className="relative">
+          <div className={`relative`}>
             <img alt="right" src={"/hot.png"} />
           </div>
         </button>

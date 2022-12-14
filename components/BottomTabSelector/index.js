@@ -9,29 +9,32 @@ import QuestionMarkIcon from './svg/QuestionMarkIcon';
 export default function BottomTabSelector() {
   const { currentTab, onTabChange } = useBottomTab();
   return (
-    <div className='flex'>
-      <div className='basis-2/12  flex items-center'>
+    <div className="flex justify-center">
+      <div className="flex md:basis-2/12 items-center mt-[12px] md:mt-0">
         <QuestionMarkIcon />
-        <span className='text-[16px] text-[#fff] pl-[10px]'>How does this work?</span>
+        <span className="pl-[10px] text-[16px] text-[#fff]">
+          How does this work?
+        </span>
       </div>
-      <div className={`${styles.container} basis-8/12`}>
-        {Object.values(TabItems).map((tab) => {
-          const isSelected = tab.id === currentTab.id;
-          return (
-            <div
-              key={tab.id}
-              onClick={() => onTabChange(tab)}
-              id={tab.id}
-              className={`${styles.tabContainer} ${isSelected ? styles.selectedTab : {}
+      <div className={`${styles.container} md:basis-8/12 grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px]`}>
+          {Object.values(TabItems).map((tab) => {
+            const isSelected = tab.id === currentTab.id;
+            return (
+              <div
+                key={tab.id}
+                onClick={() => onTabChange(tab)}
+                id={tab.id}
+                className={`${styles.tabContainer} ${
+                  isSelected ? styles.selectedTab : {}
                 }`}
-              title={tab.tabName}
-            >
-              {tab.tabName}
-            </div>
-          );
-        })}
+                title={tab.tabName}
+              >
+                {tab.tabName}
+              </div>
+            );
+          })}
       </div>
-      <div className='basis-2/12 flex items-center justify-end gap-[20px]'>
+      <div className='hidden md:flex basis-2/12 items-center justify-end gap-[20px]'>
 
         <TwitterShareButton
           url={'https://diffusion.quick-poc.com/outputs/000237.3249342071.png'}
