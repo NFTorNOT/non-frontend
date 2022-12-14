@@ -55,7 +55,9 @@ const SignIn = () => {
       });
   }
   return (
-    <div className={`${styles.btnContainer} btn-green btn transition`}>
+    <div
+      className={`${styles.btnContainer} rounded-full btn btn-green p-[10px] transition`}
+    >
       {isLoading ? (
         <span>Signing in...</span>
       ) : (
