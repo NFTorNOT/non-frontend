@@ -10,9 +10,9 @@ import Link from 'next/link';
 export default function BottomTabSelector() {
   const { currentTab, onTabChange } = useBottomTab();
   const routesMap = {
-    SubmitYourOwn : '/',
+    SubmitYourOwn : '/generate-image',
      Collect : '/collect',
-     Vote : '/vote'
+     Vote : '/'
   }
 
   return (

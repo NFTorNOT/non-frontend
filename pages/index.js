@@ -1,23 +1,19 @@
-import "@rainbow-me/rainbowkit/styles.css";
-import Main from "../components/Main";
-import NonPageMeta from "../components/NonPageMeta";
+import React from 'react';
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 
-export default function Home() {
-  return (
-    <>
-      <Main />
-      <NonPageMeta />
-    </>
-  )
+const DynamicHeader = dynamic(() => import('../components/GenerateImage/VoteImage'), {
+  ssr: false
+})
+
+function VoteCard(props) {
+    
+    return (
+        <Suspense fallback={`Loading...`}>
+            <DynamicHeader />
+        </Suspense>
+    );
 }
 
-export async function getServerSideProps() {
 
-  // imageUrl : props.query.i || null,
-  const data = {
-      title : 'DALLE ',
-      imageUrl : null,
-      id:"render props"
-    }
-    return { props: { data } }
-}
+export default VoteCard;
