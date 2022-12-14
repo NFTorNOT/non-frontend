@@ -1,8 +1,23 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import Main from "../components/Main";
+import NonPageMeta from "../components/NonPageMeta";
 
-function Home() {
-  return <Main />;
+export default function Home() {
+  return (
+    <>
+      <Main />
+      <NonPageMeta />
+    </>
+  )
 }
 
-export default Home;
+export async function getServerSideProps() {
+
+  // imageUrl : props.query.i || null,
+  const data = {
+      title : 'DALLE ',
+      imageUrl : null,
+      id:"render props"
+    }
+    return { props: { data } }
+}

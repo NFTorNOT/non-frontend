@@ -34,16 +34,15 @@ export default function BottomTabSelector() {
             );
           })}
       </div>
-      <div className='hidden md:flex basis-2/12 items-center justify-end gap-[20px]'>
-
+      <div className='hidden md:flex basis-2/12 items-center justify-end gap-[20px] pr-[20px]'>
         <TwitterShareButton
-          url={'https://diffusion.quick-poc.com/outputs/000237.3249342071.png'}
+          url={'https://plgworks.com/'}
           title={'Sharing text goes Here'}
         >
           <TwitterIcon />
         </TwitterShareButton>
         <TelegramShareButton
-          url={'https://diffusion.quick-poc.com/outputs/000237.3249342071.png'}
+          url={'https://plgworks.com/'}
           title={'Sharing text goes Here'}
         >
           <TelegramIcon />
