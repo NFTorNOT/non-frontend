@@ -185,7 +185,7 @@ export default function VoteImage() {
                     <div className={styles.nftInfo}>
                       <div className={styles.id}>{character.handle}</div>
                       <button
-                        className={styles.nftButton}
+                        className={`${styles.nftButton} pb-[30px]`}
                         onClick={() => setNftDetailsModal(true)}
                       >
                         NFT contract info

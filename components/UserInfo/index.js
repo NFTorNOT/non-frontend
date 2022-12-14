@@ -67,7 +67,7 @@ export default function UserInfo() {
   return (
     <div className={styles.container}>
       <span className={styles.nameContainer}>
-        {queryInProgress ? "..." : userProfile.handle}
+        {queryInProgress ? "..." : userProfile.handle} User Name
       </span>
       <img className={styles.lens} src="/lens-logo.png" alt="lens" />
     </div>
