@@ -25,6 +25,7 @@ html,
 body {
   margin: 0;
   line-height: 1.2;
+  color: var(--color-text-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "salt" on;

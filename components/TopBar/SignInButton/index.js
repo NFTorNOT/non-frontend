@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useAuthContext } from "../../../context/AuthContext";
+import Image from "next/image";
 import AuthApi from "../../../graphql/AuthApi";
 import SessionHelper from "../../../utils/SessionHelper";
 import UserInfo from "../../UserInfo";
-import styles from "./SignInButton.module.css";
+import styles from "./SignInButton.module.scss";
 import WalletConnect from "./WalletConnect/WalletConnect";
 
 const SignIn = () => {
@@ -54,15 +55,16 @@ const SignIn = () => {
       });
   }
   return (
-    <div className={styles.btnContainer}>
+    <div className={`${styles.btnContainer} btn-green btn transition`}>
       {isLoading ? (
         <span>Signing in...</span>
       ) : (
         <>
-          <img
-            className={styles.lensRoot}
-            src="/lens-root.png"
-            alt="lens-root"
+          <Image
+            src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+            alt="Lens Icon"
+            width="20"
+            height="20"
           />
           <button onClick={onSignIn}>Sign in with lens</button>
         </>
@@ -74,15 +76,15 @@ export default function SignInButton() {
   const { isUserLoggedIn } = useAuthContext();
   const { isConnected } = useAccount();
 
-  return isUserLoggedIn !== undefined && (
-    <div>
-      {isUserLoggedIn && isConnected ? (
-        <UserInfo />
-      ) : (
-        <div className={styles.container}>
-          {isConnected ? <SignIn /> : <WalletConnect />}
-        </div>
-      )}
-    </div>
+  return (
+    isUserLoggedIn !== undefined && (
+      <>
+        {isUserLoggedIn && isConnected ? (
+          <UserInfo />
+        ) : (
+          <>{isConnected ? <SignIn /> : <WalletConnect />}</>
+        )}
+      </>
+    )
   );
 }
