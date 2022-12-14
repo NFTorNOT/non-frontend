@@ -1,6 +1,7 @@
 import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems } from "../Main/TabItems";
 import styles from "./BottomTabSelector.module.scss";
+import { TwitterShareButton, TelegramShareButton } from "react-share";
 import TwitterIcon from './svg/TwitterIcon';
 import TelegramIcon from './svg/TelegramIcon';
 import QuestionMarkIcon from './svg/QuestionMarkIcon';
@@ -31,8 +32,19 @@ export default function BottomTabSelector() {
         })}
       </div>
       <div className='basis-2/12 flex items-center justify-end gap-[20px]'>
-        <TwitterIcon/>
-        <TelegramIcon />
+
+        <TwitterShareButton
+          url={'https://diffusion.quick-poc.com/outputs/000237.3249342071.png'}
+          title={'Sharing text goes Here'}
+        >
+          <TwitterIcon />
+        </TwitterShareButton>
+        <TelegramShareButton
+          url={'https://diffusion.quick-poc.com/outputs/000237.3249342071.png'}
+          title={'Sharing text goes Here'}
+        >
+          <TelegramIcon />
+        </TelegramShareButton>
       </div>
     </div>
   );
