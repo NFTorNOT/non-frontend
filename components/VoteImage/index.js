@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react';
-// import VoteImage from './VoteImage';
+import React from 'react';
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 
 const DynamicHeader = dynamic(() => import('./VoteImage'), {
-  suspense: true,
+  ssr: false
 })
 
-
 function VoteCard(props) {
-    const [isMounted, setIsMounted] = useState(false);
-    useEffect(() => {
-        setIsMounted(true)
-    },[])
+    
     return (
         <Suspense fallback={`Loading...`}>
             <DynamicHeader />
