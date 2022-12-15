@@ -2,7 +2,7 @@ import React from 'react';
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 
-const DynamicHeader = dynamic(() => import('../components/GenerateImage/VoteImage'), {
+const DynamicHeader = dynamic(() => import('../components/vote/VoteImage'), {
   ssr: false
 })
 
