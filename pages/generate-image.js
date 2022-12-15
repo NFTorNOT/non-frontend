@@ -15,7 +15,7 @@ export async function getServerSideProps() {
 
   // imageUrl : props.query.i || null,
   const data = {
-      title : 'DALLE ',
+      title : 'Share title',
       imageUrl : null,
       id:"render props"
     }
