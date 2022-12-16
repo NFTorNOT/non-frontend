@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "wagmi";
+import Image from "next/image";
 import NFTApi from "../../api/NFTApi";
 import LensHelper from "../../utils/LensHelper";
 import styles from "./Generate.module.scss";
@@ -222,7 +223,19 @@ export default function GenerateNFT() {
           </div> */}
           <div className={styles.generatedImagePrompts}>
             {!image ? (
-              <div className={styles.emptyImageContainer}>Your Generations</div>
+              <div className={styles.emptyImageContainer}>
+                <div className="text-skin-base font-semibold mb-[5px]">
+                  Your Generations
+                </div>
+                <div className={styles.emptyImageCell}>
+                  <Image
+                    src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                    alt="Lens Icon"
+                    width="20"
+                    height="20"
+                  />
+                </div>
+              </div>
             ) : (
               <div style={sectionStyle}>
                 <div className={styles.bottom}>

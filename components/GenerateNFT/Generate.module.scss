@@ -1,8 +1,9 @@
 .generateNFT {
   display: grid;
-  padding: 0 75px;
+  // padding: 0 75px;
   grid-template-columns: 360px 1fr;
   grid-column-gap: 20px;
+  padding: 20px 0;
   // padding: 0 340px;
   //   margin-top: -15%;
 }
@@ -134,13 +135,26 @@
   justify-content: flex-end;
 }
 .emptyImageContainer {
-  color: #ffffff;
-  font-weight: 500;
+  // color: #ffffff;
+  // font-weight: 500;
   // display: flex;
   // align-items: center;
   // justify-content: center;
+  padding: 15px;
   background-color: rgba(0, 0, 0, 0.4);
   // height: 100%;
+}
+.emptyImageCell {
+  display: grid;
+  height: 512px;
+  width: 512px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  justify-items: center;
+  align-items: center;
 }
 
 .submitVote,
