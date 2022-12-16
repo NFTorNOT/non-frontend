@@ -32,21 +32,24 @@ export default function VoteImage() {
 
   async function fetchLensPost() {
     setIsApiInProgress(true);
-    const lensPostData = await axios.get('/api/dummy/nfts', {
+    const lensPostData = await axios.get("/api/dummy/nfts", {
       params: {
-        pagination_identifier: imagePaginationIdentifier
-      }
+        pagination_identifier: imagePaginationIdentifier,
+      },
     });
 
-    const lensPostResponseData = lensPostData && lensPostData.data && lensPostData.data.data;
+    const lensPostResponseData =
+      lensPostData && lensPostData.data && lensPostData.data.data;
 
     if (!lensPostResponseData) {
       // TODO:DS : Show Response Err
-      return
+      return;
     }
 
-    const nextPagePayload = lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
-    imagePaginationIdentifier = nextPagePayload && nextPagePayload.pagination_identifier;
+    const nextPagePayload =
+      lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
+    imagePaginationIdentifier =
+      nextPagePayload && nextPagePayload.pagination_identifier;
 
     const lensPostIdsArr = lensPostResponseData.lens_post_ids;
     const lenstPostsMap = lensPostResponseData.lens_posts;
@@ -58,7 +61,7 @@ export default function VoteImage() {
       const lensPost = lenstPostsMap[lensPostIdsArr[cnt]];
 
       if (!lensPost) {
-        continue
+        continue;
       }
 
       const descriptionTextId = lensPost.description_text_id,
@@ -72,8 +75,8 @@ export default function VoteImage() {
         title: lensPost.title,
         txHash: lensPost.nft_mint_transaction_hash,
         description: textObj.text,
-        handle: '@non.dummy.hardCoded'                 // TODO:DS -  Please removew hard coded value
-      })
+        handle: "@non.dummy.hardCoded", // TODO:DS -  Please removew hard coded value
+      });
     }
     imageDetailsListRef.current = lensPostDetails;
 
@@ -205,11 +208,11 @@ export default function VoteImage() {
   }
 
   const swiped = (dir) => {
-
-    const publicationId = imageDetailsListRef.current[imageIndex]?.publicationId;
-    axios.post('/api/dummy/reaction', {
-      reaction: dir == 'right' ? 'UPVOTED' : 'IGNORED',
-      lens_publication_id: publicationId
+    const publicationId =
+      imageDetailsListRef.current[imageIndex]?.publicationId;
+    axios.post("/api/dummy/reaction", {
+      reaction: dir == "right" ? "UPVOTED" : "IGNORED",
+      lens_publication_id: publicationId,
     });
 
     upvoteImage({ publicationId });
@@ -217,7 +220,7 @@ export default function VoteImage() {
     showNextImage();
     // if (imageIndex <= 2){
     //   fetchLensPost()
-    // }   
+    // }
   };
 
   const canSwipe = imageIndex >= 0;
@@ -226,8 +229,7 @@ export default function VoteImage() {
     if (canSwipe && imageIndex < imageDetailsListRef.current.length) {
       await childRefs.current[imageIndex].swipe(dir); // Swipe the card!
     }
-  }
-
+  };
 
   return (
     <>
@@ -254,6 +256,7 @@ export default function VoteImage() {
           {imageDetailsListRef.current.length > 0 &&
             imageDetailsListRef.current.map((character, index) => (
               <TinderCard
+                key={index}
                 ref={(ref) => (childRefs.current[index] = ref)}
                 // onSwipe={(dir) => swiped(dir)}    TODO: DS - enable it later
                 className={`absolute pressable`}
