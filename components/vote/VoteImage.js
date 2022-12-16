@@ -24,7 +24,6 @@ export default function VoteImage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
-  const [direction, setDirection] = useState('');
   const { isUserLoggedIn } = useAuthContext();
   const postIdRef = useRef();
   const childRefs = useRef();
@@ -42,7 +41,7 @@ export default function VoteImage() {
     const lensPostResponseData = lensPostData && lensPostData.data && lensPostData.data.data;
 
     if (!lensPostResponseData) {
-      // TODO : Show Response Err
+      // TODO:DS : Show Response Err
       return
     }
 
@@ -77,6 +76,9 @@ export default function VoteImage() {
       })
     }
     imageDetailsListRef.current = lensPostDetails;
+
+    // imageDetailsListRef.current = imageDetailsListRef.current || [];
+    // imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
 
     console.log("lensPostDetails", lensPostDetails);
     setIsApiInProgress(false);
@@ -203,17 +205,19 @@ export default function VoteImage() {
   }
 
   const swiped = (dir) => {
-  
+
     const publicationId = imageDetailsListRef.current[imageIndex]?.publicationId;
-    
     axios.post('/api/dummy/reaction', {
       reaction: dir == 'right' ? 'UPVOTED' : 'IGNORED',
-      lens_publication_id: publicationId  
+      lens_publication_id: publicationId
     });
 
     upvoteImage({ publicationId });
     swipeAnimation(dir);
     showNextImage();
+    // if (imageIndex <= 2){
+    //   fetchLensPost()
+    // }   
   };
 
   const canSwipe = imageIndex >= 0;
@@ -251,7 +255,7 @@ export default function VoteImage() {
             imageDetailsListRef.current.map((character, index) => (
               <TinderCard
                 ref={(ref) => (childRefs.current[index] = ref)}
-                onSwipe={(dir) => swiped(dir)}
+                // onSwipe={(dir) => swiped(dir)}    TODO: DS - enable it later
                 className={`absolute pressable`}
                 preventSwipe={["up", "down"]}
               >
