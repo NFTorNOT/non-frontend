@@ -145,8 +145,28 @@ export default function GenerateNFT() {
 
   return (
     <>
-      <div className={`${styles.generateNFT} gap-x-5`}>
+      <div className={`${styles.generateNFT}`}>
         <div className={styles.enter_prompt_container}>
+          <div>Themes</div>
+          <div className={styles.generateText}>
+            Select a theme that the prompt describes
+          </div>
+          <select
+            className={styles.dropdown}
+            name="cars"
+            id="cars"
+            onChange={(e) => {
+              setfilter(e.target.value);
+            }}
+          >
+            {filterOptions.map((style) => {
+              return (
+                <option key={style} value={style}>
+                  {style}
+                </option>
+              );
+            })}
+          </select>
           <div>Enter Prompt</div>
           <textarea
             placeholder="Dramatic sky and buildings painting"
@@ -168,12 +188,16 @@ export default function GenerateNFT() {
             }}
           >
             {filterOptions.map((style) => {
-              return <option key={style} value={style}>{style}</option>;
+              return (
+                <option key={style} value={style}>
+                  {style}
+                </option>
+              );
             })}
           </select>
 
           <button
-            className={`${styles.button}`}
+            className={`${styles.button} btn btn-primary`}
             onClick={() => {
               submitForGeneration();
             }}
@@ -187,20 +211,18 @@ export default function GenerateNFT() {
           </button>
         </div>
 
-        <div className={styles.secondTab}>
-          <div className={styles.yellow}>Word of the day</div>
+        <div className={`${styles.secondTab}`}>
+          {/* <div className={styles.yellow}>Word of the day</div>
           <div className={styles.generatedTitle}>
             {wordFetchInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
             ) : (
               <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
             )}
-          </div>
+          </div> */}
           <div className={styles.generatedImagePrompts}>
             {!image ? (
-              <div className={styles.emptyImageContainer}>
-                Generate image to preview here
-              </div>
+              <div className={styles.emptyImageContainer}>Your Generations</div>
             ) : (
               <div style={sectionStyle}>
                 <div className={styles.bottom}>
