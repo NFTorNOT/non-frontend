@@ -232,8 +232,8 @@ export default function VoteImage() {
   };
 
   return (
-    <>
-      <div className={`${styles.secondTab} mt-[40px] md:mt-0`}>
+    <div className="flex flex-col items-center justify-center">
+      <div className={`${styles.secondTab}`}>
         <div className={styles.yellow}>Word of the day</div>
         <div className={styles.generatedTitle}>
           {wordFetchInProgress ? (
@@ -243,7 +243,7 @@ export default function VoteImage() {
           )}
         </div>
       </div>
-      <div className="relative md:flex justify-center mt-[40px] md:mt-0 md:items-center">
+      <div className="relative md:flex justify-center mt-[10px] md:items-center">
         <NFTContractInfoModal
           visible={nftDetailsModal}
           onClose={() => setNftDetailsModal(false)}
@@ -302,6 +302,6 @@ export default function VoteImage() {
           </div>
         </button>
       </div>
-    </>
+    </div>
   );
 }
