@@ -1,12 +1,12 @@
 import styles from "./Vote.module.scss";
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 import { Constants } from "../../utils/Constants";
 import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "../../context/AuthContext";
-import TinderCard from "react-tinder-card";
+import NonCard from '../nonCard';
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
@@ -168,15 +168,16 @@ export default function VoteImage() {
         >
           {imageDetailsListRef.current.length > 0 &&
             imageDetailsListRef.current.map((character, index) => (
-              <TinderCard
+              <NonCard
                 ref={(ref) => (childRefs.current[index] = ref)}
                 onSwipe={(dir) => swiped(dir)}
                 className={`absolute pressable`}
                 preventSwipe={["up", "down"]}
+                key={index}
               >
                 <div
                   className={`${styles.card}`}
-                  style={{ backgroundImage: `url(${character.url})` }}
+                  style={{ backgroundImage: `url(${character.url})`} }
                 >
                   <div className={styles.card_title_overlay}>
                     <div className={styles.card_title}>
@@ -195,7 +196,7 @@ export default function VoteImage() {
                     </div>
                   </div>
                 </div>
-              </TinderCard>
+              </NonCard>
             ))}
         </div>
         <button
