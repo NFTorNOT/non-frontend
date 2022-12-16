@@ -16,15 +16,15 @@ export default function BottomTabSelector() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="flex md:basis-2/12 items-center mt-[12px] md:mt-0">
+    <div className="flex items-center self-end justify-between">
+      <div className="flex items-center mt-[12px] md:mt-0">
         <QuestionMarkIcon />
         <span className="pl-[10px] text-[16px] text-[#fff]">
           How does this work?
         </span>
       </div>
       <div
-        className={`${styles.container} md:basis-8/12 grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px]`}
+        className={`${styles.container} grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] w-2/3`}
       >
         {Object.values(TabItems).map((tab) => {
           const isSelected = tab.id === currentTab.id;
@@ -46,7 +46,7 @@ export default function BottomTabSelector() {
           );
         })}
       </div>
-      <div className="hidden md:flex basis-2/12 items-center justify-end gap-[20px] pr-[20px]">
+      <div className="hidden md:flex items-center justify-end gap-[20px] pr-[20px]">
         <TelegramShareButton
           url={"https://plgworks.com/"}
           title={"Sharing text goes Here"}

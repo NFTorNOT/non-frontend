@@ -251,7 +251,7 @@ export default function VoteImage() {
           txHash={imageDetailsListRef.current[imageIndex]?.txHash}
         />
         <div
-          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2`}
+          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512]`}
         >
           {imageDetailsListRef.current.length > 0 &&
             imageDetailsListRef.current.map((character, index) => (
