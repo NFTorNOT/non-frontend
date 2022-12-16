@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "wagmi";
-import NFTApi from "../../api/NFTApi";
+import Image from "next/image";
 import LensHelper from "../../utils/LensHelper";
 import styles from "./Generate.module.scss";
 import axios from "axios";
@@ -93,37 +93,37 @@ export default function GenerateNFT() {
 
   async function onSubmitToVote() {
     setPutImageToVoteInProgress(true);
-    try {
-      const publicationId = postIdRef.current || (await getPostId());
-      const response = await NFTApi.submitToVote({
-        receiverAddress: address,
-        imageUrl: image,
-        imageTitle: imageTitle,
-      });
-      console.log("mint response", { response });
-      const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
-        response.data.data;
-      console.log("spliting imageUrl", {
-        imageCid,
-        transactionHash,
-        tokenId,
-        lensMetaDataCid,
-      });
+    // try {
+    //   const publicationId = postIdRef.current || (await getPostId());
+    //   // const response = await NFTApi.submitToVote({
+    //   //   receiverAddress: address,
+    //   //   imageUrl: image,
+    //   //   imageTitle: imageTitle,
+    //   // });
+    //   console.log("mint response", { response });
+    //   const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
+    //     response.data.data;
+    //   console.log("spliting imageUrl", {
+    //     imageCid,
+    //     transactionHash,
+    //     tokenId,
+    //     lensMetaDataCid,
+    //   });
 
-      const { txId } = await LensHelper.postCommentWithDispatcher({
-        commentMetadataCid: lensMetaDataCid,
-        profileId: userProfile?.id,
-        publicationId,
-      });
+    //   const { txId } = await LensHelper.postCommentWithDispatcher({
+    //     commentMetadataCid: lensMetaDataCid,
+    //     profileId: userProfile?.id,
+    //     publicationId,
+    //   });
 
-      if (txId) {
-        const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
-      }
+    //   if (txId) {
+    //     const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
+    //   }
 
-      onTabChange(TabItems[TabNames.VoteImage]);
-    } catch (error) {
-      console.log(error);
-    }
+    //   onTabChange(TabItems[TabNames.VoteImage]);
+    // } catch (error) {
+    //   console.log(error);
+    // }
     setPutImageToVoteInProgress(false);
   }
 
@@ -145,8 +145,28 @@ export default function GenerateNFT() {
 
   return (
     <>
-      <div className={`${styles.generateNFT} gap-x-5`}>
+      <div className={`${styles.generateNFT}`}>
         <div className={styles.enter_prompt_container}>
+          <div>Themes</div>
+          <div className={styles.generateText}>
+            Select a theme that the prompt describes
+          </div>
+          <select
+            className={styles.dropdown}
+            name="cars"
+            id="cars"
+            onChange={(e) => {
+              setfilter(e.target.value);
+            }}
+          >
+            {filterOptions.map((style) => {
+              return (
+                <option key={style} value={style}>
+                  {style}
+                </option>
+              );
+            })}
+          </select>
           <div>Enter Prompt</div>
           <textarea
             placeholder="Dramatic sky and buildings painting"
@@ -168,12 +188,16 @@ export default function GenerateNFT() {
             }}
           >
             {filterOptions.map((style) => {
-              return <option key={style} value={style}>{style}</option>;
+              return (
+                <option key={style} value={style}>
+                  {style}
+                </option>
+              );
             })}
           </select>
 
           <button
-            className={`${styles.button}`}
+            className={`${styles.button} btn btn-primary`}
             onClick={() => {
               submitForGeneration();
             }}
@@ -187,19 +211,55 @@ export default function GenerateNFT() {
           </button>
         </div>
 
-        <div className={styles.secondTab}>
-          <div className={styles.yellow}>Word of the day</div>
+        <div className={`${styles.secondTab}`}>
+          {/* <div className={styles.yellow}>Word of the day</div>
           <div className={styles.generatedTitle}>
             {wordFetchInProgress ? (
               <ClipLoader color={"#fff"} loading={true} size={15} />
             ) : (
               <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
             )}
-          </div>
+          </div> */}
           <div className={styles.generatedImagePrompts}>
             {!image ? (
               <div className={styles.emptyImageContainer}>
-                Generate image to preview here
+                <div className="text-skin-base font-semibold mb-[5px]">
+                  Your Generations
+                </div>
+                <div className="flex gap-5 flex-wrap overflow-y-auto h-full">
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                </div>
               </div>
             ) : (
               <div style={sectionStyle}>

@@ -2,18 +2,18 @@ import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems } from "../Main/TabItems";
 import styles from "./BottomTabSelector.module.scss";
 import { TwitterShareButton, TelegramShareButton } from "react-share";
-import TwitterIcon from './svg/TwitterIcon';
-import TelegramIcon from './svg/TelegramIcon';
-import QuestionMarkIcon from './svg/QuestionMarkIcon';
-import Link from 'next/link';
+import TwitterIcon from "./svg/TwitterIcon";
+import TelegramIcon from "./svg/TelegramIcon";
+import QuestionMarkIcon from "./svg/QuestionMarkIcon";
+import Link from "next/link";
 
 export default function BottomTabSelector() {
   const { currentTab, onTabChange } = useBottomTab();
   const routesMap = {
-    SubmitYourOwn : '/generate-image',
-     Collect : '/collect',
-     Vote : '/'
-  }
+    SubmitYourOwn: "/generate-image",
+    Collect: "/collect",
+    Vote: "/",
+  };
 
   return (
     <div className="flex justify-center">
@@ -23,18 +23,21 @@ export default function BottomTabSelector() {
           How does this work?
         </span>
       </div>
-      <div className={`${styles.container} md:basis-8/12 grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px]`}>
+      <div
+        className={`${styles.container} md:basis-8/12 grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px]`}
+      >
         {Object.values(TabItems).map((tab) => {
           const isSelected = tab.id === currentTab.id;
           const tabId = tab.id;
           return (
-            <Link href={routesMap[tabId]}>
+            <Link href={routesMap[tabId]} key={tab.id}>
               <div
                 key={tab.id}
                 onClick={() => onTabChange(tab)}
                 id={tab.id}
-                className={`${styles.tabContainer} ${isSelected ? styles.selectedTab : {}
-                  }`}
+                className={`${styles.tabContainer} ${
+                  isSelected ? styles.selectedTab : {}
+                }`}
                 title={tab.tabName}
               >
                 {tab.tabName}
@@ -43,16 +46,16 @@ export default function BottomTabSelector() {
           );
         })}
       </div>
-      <div className='hidden md:flex basis-2/12 items-center justify-end gap-[20px] pr-[20px]'>
+      <div className="hidden md:flex basis-2/12 items-center justify-end gap-[20px] pr-[20px]">
         <TelegramShareButton
-          url={'https://plgworks.com/'}
-          title={'Sharing text goes Here'}
+          url={"https://plgworks.com/"}
+          title={"Sharing text goes Here"}
         >
           <TelegramIcon />
         </TelegramShareButton>
         <TwitterShareButton
-          url={'https://plgworks.com/'}
-          title={'Sharing text goes Here'}
+          url={"https://plgworks.com/"}
+          title={"Sharing text goes Here"}
         >
           <TwitterIcon />
         </TwitterShareButton>
