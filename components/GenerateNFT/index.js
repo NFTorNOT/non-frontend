@@ -226,13 +226,39 @@ export default function GenerateNFT() {
                 <div className="text-skin-base font-semibold mb-[5px]">
                   Your Generations
                 </div>
-                <div className={styles.emptyImageCell}>
-                  <Image
-                    src="https://static.plgworks.com/assets/images/non/lens-icon.png"
-                    alt="Lens Icon"
-                    width="20"
-                    height="20"
-                  />
+                <div className="flex gap-5 flex-wrap overflow-y-auto h-full">
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
+                  <div className={styles.emptyImageCell}>
+                    <Image
+                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      alt="Lens Icon"
+                      width="20"
+                      height="20"
+                    />
+                  </div>
                 </div>
               </div>
             ) : (

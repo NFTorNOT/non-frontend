@@ -4,6 +4,8 @@
   grid-template-columns: 360px 1fr;
   grid-column-gap: 20px;
   padding: 20px 0;
+  height: 100%;
+  overflow: hidden;
   // padding: 0 340px;
   //   margin-top: -15%;
 }
@@ -146,8 +148,8 @@
 }
 .emptyImageCell {
   display: grid;
-  height: 512px;
-  width: 512px;
+  height: 445px;
+  width: 445px;
   background-position: center;
   background-size: cover;
   border-radius: 10px;
