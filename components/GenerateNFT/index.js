@@ -226,7 +226,7 @@ export default function GenerateNFT() {
                 <div className="text-skin-base font-semibold mb-[5px]">
                   Your Generations
                 </div>
-                <div className="flex gap-5 flex-wrap overflow-y-auto h-full">
+                <div className="grid gap-5 overflow-y-auto h-full grid-cols-2">
                   <div className={styles.emptyImageCell}>
                     <Image
                       src="https://static.plgworks.com/assets/images/non/lens-icon.png"
