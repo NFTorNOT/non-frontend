@@ -39,8 +39,6 @@ export default function VoteImage() {
       }
     });
 
-    console.log("response=======", lensPostData);
-
     const lensPostResponseData = lensPostData && lensPostData.data && lensPostData.data.data;
 
     if (!lensPostResponseData) {
@@ -56,7 +54,6 @@ export default function VoteImage() {
     const lensPostImagesMap = lensPostResponseData.images;
     const lensPostTextMap = lensPostResponseData.texts;
     const lensPostDetails = [];
-
 
     for (let cnt = 0; cnt < lensPostIdsArr.length; cnt++) {
       const lensPost = lenstPostsMap[lensPostIdsArr[cnt]];
@@ -171,9 +168,6 @@ export default function VoteImage() {
       alert("Please sign in to vote");
       return;
     }
-    console.log("imageDetailsListRef.current", imageDetailsListRef.current);
-    console.log("imageDetailsListRef.current", imageIndex);
-
 
     if (imageIndex === imageDetailsListRef.current - 1) {
       return;
@@ -194,13 +188,30 @@ export default function VoteImage() {
   //   showNextImage();
   // }
 
-  const swiped = (dir, publicationId) => {
+  async function upvoteImage({ publicationId }) {
+    try {
+      const res = await PublicationApi.addReaction({
+        profileId: userProfile?.id,
+        reactionType: ReactionType.UPVOTE,
+        publicationId: publicationId.toString(),
+      });
 
+      console.log({ res });
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  const swiped = (dir) => {
+  
+    const publicationId = imageDetailsListRef.current[imageIndex]?.publicationId;
+    
     axios.post('/api/dummy/reaction', {
       reaction: dir == 'right' ? 'UPVOTED' : 'IGNORED',
-      lens_publication_id: publicationId    //TODO:DS Dummy data
+      lens_publication_id: publicationId  
     });
 
+    upvoteImage({ publicationId });
     swipeAnimation(dir);
     showNextImage();
   };
@@ -213,9 +224,6 @@ export default function VoteImage() {
     }
   }
 
-  // useEffect(() => {
-   
-  // }, [direction]);
 
   return (
     <>
@@ -243,7 +251,7 @@ export default function VoteImage() {
             imageDetailsListRef.current.map((character, index) => (
               <TinderCard
                 ref={(ref) => (childRefs.current[index] = ref)}
-                onSwipe={(dir) => swiped(dir,character.publicationId)}
+                onSwipe={(dir) => swiped(dir)}
                 className={`absolute pressable`}
                 preventSwipe={["up", "down"]}
               >
