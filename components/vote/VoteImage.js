@@ -10,6 +10,7 @@ import TinderCard from "react-tinder-card";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
+import axios from "axios";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -23,9 +24,70 @@ export default function VoteImage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
+  const [direction, setDirection] = useState('');
   const { isUserLoggedIn } = useAuthContext();
   const postIdRef = useRef();
   const childRefs = useRef();
+
+  let imagePaginationIdentifier = null;
+
+  async function fetchLensPost() {
+    setIsApiInProgress(true);
+    const lensPostData = await axios.get('/api/dummy/nfts', {
+      params: {
+        pagination_identifier: imagePaginationIdentifier
+      }
+    });
+
+    console.log("response=======", lensPostData);
+
+    const lensPostResponseData = lensPostData && lensPostData.data && lensPostData.data.data;
+
+    if (!lensPostResponseData) {
+      // TODO : Show Response Err
+      return
+    }
+
+    const nextPagePayload = lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
+    imagePaginationIdentifier = nextPagePayload && nextPagePayload.pagination_identifier;
+
+    const lensPostIdsArr = lensPostResponseData.lens_post_ids;
+    const lenstPostsMap = lensPostResponseData.lens_posts;
+    const lensPostImagesMap = lensPostResponseData.images;
+    const lensPostTextMap = lensPostResponseData.texts;
+    const lensPostDetails = [];
+
+
+    for (let cnt = 0; cnt < lensPostIdsArr.length; cnt++) {
+      const lensPost = lenstPostsMap[lensPostIdsArr[cnt]];
+
+      if (!lensPost) {
+        continue
+      }
+
+      const descriptionTextId = lensPost.description_text_id,
+        imageId = lensPost.image_id,
+        imageObj = lensPostImagesMap && lensPostImagesMap[imageId],
+        textObj = lensPostTextMap && lensPostTextMap[descriptionTextId];
+
+      lensPostDetails.push({
+        publicationId: lensPost.lens_publication_id,
+        url: imageObj.url,
+        title: lensPost.title,
+        txHash: lensPost.nft_mint_transaction_hash,
+        description: textObj.text,
+        handle: '@non.dummy.hardCoded'                 // TODO:DS -  Please removew hard coded value
+      })
+    }
+    imageDetailsListRef.current = lensPostDetails;
+
+    console.log("lensPostDetails", lensPostDetails);
+    setIsApiInProgress(false);
+    setImageIndex(imageDetailsListRef.current.length - 1);
+    childRefs.current = Array(imageDetailsListRef.current.length)
+      .fill(0)
+      .map((i) => React.createRef());
+  }
 
   async function fetchImages() {
     setIsApiInProgress(true);
@@ -44,6 +106,7 @@ export default function VoteImage() {
         ).data;
 
         const publications = apiResponseData.publications;
+        console.log("publications", publications);
         const comments = publications.items;
         nextPageCursor = publications.pageInfo.next;
         console.log("comments ", { comments });
@@ -91,7 +154,8 @@ export default function VoteImage() {
     const postDescription = response.data?.publication?.metadata?.description;
     setWordOfTheDay(postDescription);
     setWordFetchInProgress(false);
-    fetchImages();
+    // fetchImages();
+    fetchLensPost();
   }
 
   useEffect(() => {
@@ -107,6 +171,9 @@ export default function VoteImage() {
       alert("Please sign in to vote");
       return;
     }
+    console.log("imageDetailsListRef.current", imageDetailsListRef.current);
+    console.log("imageDetailsListRef.current", imageIndex);
+
 
     if (imageIndex === imageDetailsListRef.current - 1) {
       return;
@@ -114,35 +181,41 @@ export default function VoteImage() {
     setImageIndex((imageIndex) => imageIndex - 1);
   }
 
-  async function onHot() {
-    if (!isUserLoggedIn) {
-      alert("Please sign in to vote");
-      return;
-    }
-    PublicationApi.addReaction({
-      profileId: userProfile?.id,
-      reactionType: ReactionType.UPVOTE,
-      publicationId: imageDetailsListRef.current[imageIndex]?.publicationId,
-    });
-    showNextImage();
-  }
+  // async function onHot() {
+  //   if (!isUserLoggedIn) {
+  //     alert("Please sign in to vote");
+  //     return;
+  //   }
+  //   PublicationApi.addReaction({
+  //     profileId: userProfile?.id,
+  //     reactionType: ReactionType.UPVOTE,
+  //     publicationId: imageDetailsListRef.current[imageIndex]?.publicationId,
+  //   });
+  //   showNextImage();
+  // }
 
-  const swiped = (direction) => {
-    if (direction === "right") {
-      onHot();
-    }
-    if (direction === "left") {
-      showNextImage();
-    }
+  const swiped = (dir, publicationId) => {
+
+    axios.post('/api/dummy/reaction', {
+      reaction: dir == 'right' ? 'UPVOTED' : 'IGNORED',
+      lens_publication_id: publicationId    //TODO:DS Dummy data
+    });
+
+    swipeAnimation(dir);
+    showNextImage();
   };
 
   const canSwipe = imageIndex >= 0;
 
-  const swipe = async (dir) => {
+  const swipeAnimation = async (dir) => {
     if (canSwipe && imageIndex < imageDetailsListRef.current.length) {
       await childRefs.current[imageIndex].swipe(dir); // Swipe the card!
     }
-  };
+  }
+
+  // useEffect(() => {
+   
+  // }, [direction]);
 
   return (
     <>
@@ -170,7 +243,7 @@ export default function VoteImage() {
             imageDetailsListRef.current.map((character, index) => (
               <TinderCard
                 ref={(ref) => (childRefs.current[index] = ref)}
-                onSwipe={(dir) => swiped(dir)}
+                onSwipe={(dir) => swiped(dir,character.publicationId)}
                 className={`absolute pressable`}
                 preventSwipe={["up", "down"]}
               >
@@ -200,14 +273,14 @@ export default function VoteImage() {
         </div>
         <button
           className={`absolute md:relative left-0 ${styles.buttonClass}`}
-          onClick={() => swipe("left")}
+          onClick={() => swiped("left")}
         >
           <Not />
         </button>
 
         <button
           className={`absolute md:relative right-0 order-last ${styles.buttonClass}`}
-          onClick={() => swipe("right")}
+          onClick={() => swiped("right")}
         >
           <div className={`relative`}>
             <Hot />

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import Image from "next/image";
-import NFTApi from "../../api/NFTApi";
 import LensHelper from "../../utils/LensHelper";
 import styles from "./Generate.module.scss";
 import axios from "axios";
@@ -94,37 +93,37 @@ export default function GenerateNFT() {
 
   async function onSubmitToVote() {
     setPutImageToVoteInProgress(true);
-    try {
-      const publicationId = postIdRef.current || (await getPostId());
-      const response = await NFTApi.submitToVote({
-        receiverAddress: address,
-        imageUrl: image,
-        imageTitle: imageTitle,
-      });
-      console.log("mint response", { response });
-      const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
-        response.data.data;
-      console.log("spliting imageUrl", {
-        imageCid,
-        transactionHash,
-        tokenId,
-        lensMetaDataCid,
-      });
+    // try {
+    //   const publicationId = postIdRef.current || (await getPostId());
+    //   // const response = await NFTApi.submitToVote({
+    //   //   receiverAddress: address,
+    //   //   imageUrl: image,
+    //   //   imageTitle: imageTitle,
+    //   // });
+    //   console.log("mint response", { response });
+    //   const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
+    //     response.data.data;
+    //   console.log("spliting imageUrl", {
+    //     imageCid,
+    //     transactionHash,
+    //     tokenId,
+    //     lensMetaDataCid,
+    //   });
 
-      const { txId } = await LensHelper.postCommentWithDispatcher({
-        commentMetadataCid: lensMetaDataCid,
-        profileId: userProfile?.id,
-        publicationId,
-      });
+    //   const { txId } = await LensHelper.postCommentWithDispatcher({
+    //     commentMetadataCid: lensMetaDataCid,
+    //     profileId: userProfile?.id,
+    //     publicationId,
+    //   });
 
-      if (txId) {
-        const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
-      }
+    //   if (txId) {
+    //     const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
+    //   }
 
-      onTabChange(TabItems[TabNames.VoteImage]);
-    } catch (error) {
-      console.log(error);
-    }
+    //   onTabChange(TabItems[TabNames.VoteImage]);
+    // } catch (error) {
+    //   console.log(error);
+    // }
     setPutImageToVoteInProgress(false);
   }
 
