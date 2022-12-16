@@ -24,7 +24,7 @@
   // flex-direction: column;
   height: 100%;
   display: grid;
-  grid-auto-rows: auto 1fr auto;
+  grid-template-rows: 44px 1fr 64px;
   @media screen and (min-width: 586px) {
     // justify-content: space-between;
   }
