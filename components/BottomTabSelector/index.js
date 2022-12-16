@@ -16,7 +16,7 @@ export default function BottomTabSelector() {
   };
 
   return (
-    <div className="flex justify-center items-center self-end">
+    <div className="flex items-center self-end justify-between">
       <div className="flex items-center mt-[12px] md:mt-0">
         <QuestionMarkIcon />
         <span className="pl-[10px] text-[16px] text-[#fff]">
@@ -24,7 +24,7 @@ export default function BottomTabSelector() {
         </span>
       </div>
       <div
-        className={`${styles.container} grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px]`}
+        className={`${styles.container} grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] w-2/3`}
       >
         {Object.values(TabItems).map((tab) => {
           const isSelected = tab.id === currentTab.id;
