@@ -59,7 +59,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ github.event.repository.name }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: 1234567890
           AWS_REGION: us-east-1
           AWS_EKS_CLUSTER_NAME: plg-staging
         run: |-
