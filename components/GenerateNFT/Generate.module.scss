@@ -4,8 +4,7 @@
   grid-template-columns: 360px 1fr;
   grid-column-gap: 20px;
   padding: 20px 0;
-  height: 100%;
-  overflow: hidden;
+  // overflow: hidden;
   // padding: 0 340px;
   //   margin-top: -15%;
 }
@@ -178,4 +177,9 @@
   margin-bottom: 12px;
   padding: 7px 0;
   outline: none;
+}
+
+.secondTab{
+  max-height: calc(100vh - 250px);
+  overflow-y: scroll;
 }
