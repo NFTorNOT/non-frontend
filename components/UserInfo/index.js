@@ -48,7 +48,7 @@ export default function UserInfo() {
       if (defaultProfile) {
         setUserProfile(defaultProfile);
       } else {
-        createLensProfile();
+        // createLensProfile();
       }
       setQueryInProgress(false);
     } catch (error) {
