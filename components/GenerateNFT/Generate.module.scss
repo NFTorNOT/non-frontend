@@ -110,9 +110,7 @@
   min-width: 512px;
   background-position: center;
   background-size: cover;
-  border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .generatedTitle {
   height: 52px;
@@ -182,4 +180,6 @@
 
 .secondTab{  
   overflow-y: scroll;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
