@@ -229,34 +229,34 @@ export default function GenerateNFT() {
                 <div className="grid gap-5 overflow-y-auto h-full grid-cols-2">
                   <div className={styles.emptyImageCell}>
                     <Image
-                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
                       alt="Lens Icon"
-                      width="20"
-                      height="20"
+                      width="60"
+                      height="60"
                     />
                   </div>
                   <div className={styles.emptyImageCell}>
                     <Image
-                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
                       alt="Lens Icon"
-                      width="20"
-                      height="20"
+                      width="60"
+                      height="60"
                     />
                   </div>
                   <div className={styles.emptyImageCell}>
                     <Image
-                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
                       alt="Lens Icon"
-                      width="20"
-                      height="20"
+                      width="60"
+                      height="60"
                     />
                   </div>
                   <div className={styles.emptyImageCell}>
                     <Image
-                      src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
                       alt="Lens Icon"
-                      width="20"
-                      height="20"
+                      width="60"
+                      height="60"
                     />
                   </div>
                 </div>
