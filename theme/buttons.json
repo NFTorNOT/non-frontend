@@ -4,7 +4,8 @@
     "fontWeight": "700",
     "fontSize": "16px",
     "lineHeight": "20px",
-    "cursor": "pointer"
+    "cursor": "pointer",
+    "transition": "all .5s ease-in"
   },
   ".btn-green": {
     "borderRadius": "9999px",
@@ -17,10 +18,9 @@
     }
   },
   ".btn-primary": {
-    "borderRadius": "50px",
     "color": "#ffffff !important",
     "boxShadow": "0px 8px 32px rgba(250, 92, 0, 0.32), inset 0px -4px 8px rgba(249, 155, 1, 0.6), inset 0px -8px 16px #C75C00",
-    "background": "radial-gradient(107.14% 107.14% at 50% 80.95%, #FA5C00 0%, #FFB800 100%)",
+    "background": "radial-gradient(107.14% 107.14% at 50% 80.95%, #FA5C00 100%, #FFB800 100%)",
     "&:hover": {
       "color": "#ffffff !important",
       "background": "linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(107.14% 107.14% at 50% 80.95%, #FA5C00 0%, #FFB800 100%)"

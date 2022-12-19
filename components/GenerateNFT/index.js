@@ -147,57 +147,59 @@ export default function GenerateNFT() {
     <>
       <div className={`${styles.generateNFT}`}>
         <div className={styles.enter_prompt_container}>
-          <div>Themes</div>
-          <div className={styles.generateText}>
-            Select a theme that the prompt describes
-          </div>
-          <select
-            className={styles.dropdown}
-            name="cars"
-            id="cars"
-            onChange={(e) => {
-              setfilter(e.target.value);
-            }}
-          >
-            {filterOptions.map((style) => {
-              return (
-                <option key={style} value={style}>
-                  {style}
-                </option>
-              );
-            })}
-          </select>
-          <div>Enter Prompt</div>
-          <textarea
-            placeholder="Dramatic sky and buildings painting"
-            className={styles.prompt_area}
-            onChange={(e) => {
-              setPromt(e.target.value);
-            }}
-          ></textarea>
-          <div>Filter</div>
-          <div className={styles.generateText}>
-            Explore various stylistic filters you can apply
-          </div>
-          <select
-            className={styles.dropdown}
-            name="cars"
-            id="cars"
-            onChange={(e) => {
-              setfilter(e.target.value);
-            }}
-          >
-            {filterOptions.map((style) => {
-              return (
-                <option key={style} value={style}>
-                  {style}
-                </option>
-              );
-            })}
-          </select>
+          <>
+            <div>Themes</div>
+            <div className={styles.generateText}>
+              Select a theme that the prompt describes
+            </div>
+            <select
+              className={styles.dropdown}
+              name="cars"
+              id="cars"
+              onChange={(e) => {
+                setfilter(e.target.value);
+              }}
+            >
+              {filterOptions.map((style) => {
+                return (
+                  <option key={style} value={style}>
+                    {style}
+                  </option>
+                );
+              })}
+            </select>
+            <div>Enter Prompt</div>
+            <textarea
+              placeholder="Dramatic sky and buildings painting"
+              className={styles.prompt_area}
+              onChange={(e) => {
+                setPromt(e.target.value);
+              }}
+            ></textarea>
+            <div>Filter</div>
+            <div className={styles.generateText}>
+              Explore various stylistic filters you can apply
+            </div>
+            <select
+              className={styles.dropdown}
+              name="cars"
+              id="cars"
+              onChange={(e) => {
+                setfilter(e.target.value);
+              }}
+            >
+              {filterOptions.map((style) => {
+                return (
+                  <option key={style} value={style}>
+                    {style}
+                  </option>
+                );
+              })}
+            </select>
+          </>
 
           <button
-            className={`${styles.button} btn btn-primary`}
+            className={`mt-auto btn btn-primary w-full`}
             onClick={() => {
               submitForGeneration();
             }}
