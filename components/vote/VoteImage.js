@@ -3,10 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
-import { Constants } from "../../utils/Constants";
 import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "../../context/AuthContext";
-import NonCard from '../nonCard';
+import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
@@ -15,7 +14,6 @@ import axios from "axios";
 export default function VoteImage() {
   const ipfs = "0x34...2745";
   const { userProfile } = useUserContext();
-  // const provider = useProvider();
   const { getPostId } = useCurrentPublicationId();
 
   const [nftDetailsModal, setNftDetailsModal] = useState(false);
@@ -91,61 +89,6 @@ export default function VoteImage() {
       .map((i) => React.createRef());
   }
 
-  async function fetchImages() {
-    setIsApiInProgress(true);
-    try {
-      const postId = postIdRef.current;
-      console.log("fetching postId", { postId });
-      let nextPageCursor = null;
-      let imageDetails = [];
-      do {
-        const apiResponseData = (
-          await PublicationApi.fetchCommentsFromPostId({
-            postId,
-            cursor: nextPageCursor,
-            profileId: userProfile.id,
-          })
-        ).data;
-
-        const publications = apiResponseData.publications;
-        console.log("publications", publications);
-        const comments = publications.items;
-        nextPageCursor = publications.pageInfo.next;
-        console.log("comments ", { comments });
-        const filteredImageDetails = comments
-          .filter((comment) => comment.appId === Constants.LENS_APP_ID)
-          .filter((comment) => {
-            return comment.reaction == null;
-          })
-          .map((comment) => {
-            const publicationId = comment?.id;
-            const handle = comment.profile?.handle;
-            const cid = comment.metadata?.image?.split("ipfs://")?.[1];
-            const txHash = comment.metadata?.attributes?.filter(
-              (attribute) => attribute.traitType === "NFTtxHash"
-            )?.[0].value;
-            return {
-              publicationId,
-              url: `https://nftornot.infura-ipfs.io/ipfs/${cid}`,
-              title: "",
-              txHash: txHash,
-              handle,
-            };
-          });
-        imageDetails = [...imageDetails, ...filteredImageDetails];
-      } while (nextPageCursor);
-      imageDetailsListRef.current = imageDetails;
-    } catch (error) {
-      console.log({ error });
-    }
-    console.log({ arr: imageDetailsListRef.current });
-    setIsApiInProgress(false);
-    setImageIndex(imageDetailsListRef.current.length - 1);
-    childRefs.current = Array(imageDetailsListRef.current.length)
-      .fill(0)
-      .map((i) => React.createRef());
-  }
-
   async function fetchWordOfTheDay() {
     console.log("fetching word");
     setWordFetchInProgress(true);
@@ -156,17 +99,12 @@ export default function VoteImage() {
     const postDescription = response.data?.publication?.metadata?.description;
     setWordOfTheDay(postDescription);
     setWordFetchInProgress(false);
-    // fetchImages();
     fetchLensPost();
   }
 
   useEffect(() => {
     fetchWordOfTheDay();
   }, []);
-
-  var sectionStyle = {
-    // backgroundImage: `url(${imageDetailsListRef.current[imageIndex]?.url})`,
-  };
 
   function showNextImage() {
     if (!isUserLoggedIn) {
@@ -179,19 +117,6 @@ export default function VoteImage() {
     }
     setImageIndex((imageIndex) => imageIndex - 1);
   }
-
-  // async function onHot() {
-  //   if (!isUserLoggedIn) {
-  //     alert("Please sign in to vote");
-  //     return;
-  //   }
-  //   PublicationApi.addReaction({
-  //     profileId: userProfile?.id,
-  //     reactionType: ReactionType.UPVOTE,
-  //     publicationId: imageDetailsListRef.current[imageIndex]?.publicationId,
-  //   });
-  //   showNextImage();
-  // }
 
   async function upvoteImage({ publicationId }) {
     try {
@@ -264,7 +189,7 @@ export default function VoteImage() {
               >
                 <div
                   className={`${styles.card}`}
-                  style={{ backgroundImage: `url(${character.url})`} }
+                  style={{ backgroundImage: `url(${character.url})` }}
                 >
                   <div className={styles.card_title_overlay}>
                     <div className={styles.card_title}>
