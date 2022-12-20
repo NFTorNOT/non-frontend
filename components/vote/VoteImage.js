@@ -30,7 +30,7 @@ export default function VoteImage() {
 
   async function fetchLensPost() {
     setIsApiInProgress(true);
-    const lensPostData = await axios.get("/api/dummy/nfts", {
+    const lensPostData = await axios.get("https://nftornot.quick-poc.com/api/nfts", {
       params: {
         pagination_identifier: imagePaginationIdentifier,
       },
@@ -49,7 +49,7 @@ export default function VoteImage() {
     imagePaginationIdentifier =
       nextPagePayload && nextPagePayload.pagination_identifier;
 
-    const lensPostIdsArr = lensPostResponseData.lens_post_ids;
+    const lensPostIdsArr = lensPostResponseData.lens_posts_ids;
     const lenstPostsMap = lensPostResponseData.lens_posts;
     const lensPostImagesMap = lensPostResponseData.images;
     const lensPostTextMap = lensPostResponseData.texts;
@@ -132,15 +132,18 @@ export default function VoteImage() {
     }
   }
 
-  const swiped = (dir) => {
+  const submitVote = (dir) => {
     const publicationId =
       imageDetailsListRef.current[imageIndex]?.publicationId;
     axios.post("/api/dummy/reaction", {
       reaction: dir == "right" ? "UPVOTED" : "IGNORED",
       lens_publication_id: publicationId,
     });
-
     upvoteImage({ publicationId });
+  }
+
+  const swiped = (dir) => {
+    submitVote(dir);
     swipeAnimation(dir);
     showNextImage();
     // if (imageIndex <= 2){
@@ -152,7 +155,7 @@ export default function VoteImage() {
 
   const swipeAnimation = async (dir) => {
     if (canSwipe && imageIndex < imageDetailsListRef.current.length) {
-      await childRefs.current[imageIndex].swipe(dir); // Swipe the card!
+      await childRefs.current[imageIndex].swipe(dir);
     }
   };
 
@@ -182,7 +185,7 @@ export default function VoteImage() {
             imageDetailsListRef.current.map((character, index) => (
               <NonCard
                 ref={(ref) => (childRefs.current[index] = ref)}
-                // onSwipe={(dir) => swiped(dir)}    TODO: DS - enable it later
+                onSwipe={(dir) => submitVote(dir)}
                 className={`absolute pressable`}
                 preventSwipe={["up", "down"]}
                 key={index}
