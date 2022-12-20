@@ -41,7 +41,7 @@ const animateOut = async (gesture, setSpringTarget) => {
   const finalX = diagonal * gesture.x;
   const finalY = diagonal * gesture.y;
   const finalRotation = gesture.x * 45;
-  const duration = 3000;
+  const duration = 1500;
 
   setSpringTarget.start({
     xyrot: [finalX, finalY, finalRotation],
