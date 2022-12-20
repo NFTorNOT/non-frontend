@@ -10,9 +10,11 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
+import ShareSVG from "./svg/ShareSVG";
 import NotClickSVG from "./svg/NotClickSVG";
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
+import ShareModal from "./shareModal";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -27,6 +29,7 @@ export default function VoteImage() {
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
+  const [socialShareModal, setSocialShareModal] = useState(false);
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
@@ -183,6 +186,7 @@ export default function VoteImage() {
     }
   };
 
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className={`${styles.secondTab}`}>
@@ -218,10 +222,33 @@ export default function VoteImage() {
                   className={`${styles.card}`}
                   style={{ backgroundImage: `url(${character.url})` }}
                 >
-                  <div className={styles.card_title_overlay}>
-                    <div className={styles.card_title}>
-                      <div className={styles.card_title_text}>
+                  <div className={`${styles.card_title_overlay}`}>
+                    <div
+                      className={`${styles.card_title} flex justify-between items-start pt-[15px]`}
+                    >
+                      <ShareModal
+                        visible={socialShareModal}
+                        onClose={() => setSocialShareModal(false)}
+                      />
+                      <div className={`${styles.card_title_text} mr-[25px]`}>
                         {character.title}
+                        {/* The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight  */}
+                      </div>
+                      <div className="text-[#ffffff] flex items-center">
+                        <div
+                          className={`cursor-pointer mr-[20px]`}
+                          onClick={() => setSocialShareModal(true)}
+                        >
+                          <ShareSVG />
+                        </div>
+                        <div className="cursor-pointer">
+                          <Image
+                            src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
+                            alt="contract icon"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className={styles.nftInfo}>
