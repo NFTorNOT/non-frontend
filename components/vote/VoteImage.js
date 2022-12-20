@@ -10,6 +10,7 @@ import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
 import axios from "axios";
+import { ReactionTypes } from "../../utils/Constants";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -30,7 +31,7 @@ export default function VoteImage() {
 
   async function fetchLensPost() {
     setIsApiInProgress(true);
-    const lensPostData = await axios.get("https://nftornot.quick-poc.com/api/nfts", {
+    const lensPostData = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`, {
       params: {
         pagination_identifier: imagePaginationIdentifier,
       },
@@ -80,12 +81,11 @@ export default function VoteImage() {
         handle: userObj.lens_profile_username
       });
     }
-    imageDetailsListRef.current = lensPostDetails;
+    // imageDetailsListRef.current = lensPostDetails;
 
-    // imageDetailsListRef.current = imageDetailsListRef.current || [];
-    // imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
+    imageDetailsListRef.current = imageDetailsListRef.current || [];
+    imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
 
-    console.log("lensPostDetails", lensPostDetails);
     setIsApiInProgress(false);
     setImageIndex(imageDetailsListRef.current.length - 1);
     childRefs.current = Array(imageDetailsListRef.current.length)
@@ -142,8 +142,8 @@ export default function VoteImage() {
     const publicationId =
       imageDetailsListRef.current[imageIndex]?.publicationId;
 
-    axios.post("https://nftornot.quick-poc.com/api/reaction", {
-      reaction: dir == "right" ? "VOTED" : "IGNORED",
+    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
+      reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
       lens_post_id: lensPostId,
     });
     upvoteImage({ publicationId });
@@ -153,9 +153,9 @@ export default function VoteImage() {
     submitVote(dir);
     swipeAnimation(dir);
     showNextImage();
-    // if (imageIndex <= 2){
-    //   fetchLensPost()
-    // }
+    if (imageIndex <= 2) {
+      fetchLensPost()
+    }
   };
 
   const canSwipe = imageIndex >= 0;
