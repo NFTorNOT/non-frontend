@@ -53,6 +53,7 @@ export default function VoteImage() {
     const lenstPostsMap = lensPostResponseData.lens_posts;
     const lensPostImagesMap = lensPostResponseData.images;
     const lensPostTextMap = lensPostResponseData.texts;
+    const usersMap = lensPostResponseData.users;
     const lensPostDetails = [];
 
     for (let cnt = 0; cnt < lensPostIdsArr.length; cnt++) {
@@ -64,16 +65,19 @@ export default function VoteImage() {
 
       const descriptionTextId = lensPost.description_text_id,
         imageId = lensPost.image_id,
+        owneUserId = lensPost.owner_user_id,
         imageObj = lensPostImagesMap && lensPostImagesMap[imageId],
-        textObj = lensPostTextMap && lensPostTextMap[descriptionTextId];
+        textObj = lensPostTextMap && lensPostTextMap[descriptionTextId],
+        userObj = usersMap && usersMap[owneUserId];
 
       lensPostDetails.push({
         publicationId: lensPost.lens_publication_id,
+        lensPostId: lensPostIdsArr[cnt],
         url: imageObj.url,
         title: lensPost.title,
         txHash: lensPost.nft_mint_transaction_hash,
         description: textObj.text,
-        handle: "@non.dummy.hardCoded", // TODO:DS -  Please removew hard coded value
+        handle: userObj.lens_profile_username
       });
     }
     imageDetailsListRef.current = lensPostDetails;
@@ -133,11 +137,14 @@ export default function VoteImage() {
   }
 
   const submitVote = (dir) => {
+    const lensPostId =
+      imageDetailsListRef.current[imageIndex]?.lensPostId;
     const publicationId =
       imageDetailsListRef.current[imageIndex]?.publicationId;
-    axios.post("/api/dummy/reaction", {
-      reaction: dir == "right" ? "UPVOTED" : "IGNORED",
-      lens_publication_id: publicationId,
+
+    axios.post("https://nftornot.quick-poc.com/api/reaction", {
+      reaction: dir == "right" ? "VOTED" : "IGNORED",
+      lens_post_id: lensPostId,
     });
     upvoteImage({ publicationId });
   }
