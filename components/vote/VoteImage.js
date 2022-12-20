@@ -24,73 +24,76 @@ export default function VoteImage() {
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
   const { isUserLoggedIn } = useAuthContext();
+  const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
   const childRefs = useRef();
 
-  let imagePaginationIdentifier = null;
 
   async function fetchLensPost() {
-    setIsApiInProgress(true);
-    const lensPostData = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`, {
-      params: {
-        pagination_identifier: imagePaginationIdentifier,
-      },
-    });
+    let imagePaginationIdentifier = null;
+    do {
+      setIsApiInProgress(true);
+      const lensPostData = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`, {
+        params: {
+          pagination_identifier: imagePaginationIdentifier,
+        },
+      });
 
-    const lensPostResponseData =
-      lensPostData && lensPostData.data && lensPostData.data.data;
+      const lensPostResponseData =
+        lensPostData && lensPostData.data && lensPostData.data.data;
 
-    if (!lensPostResponseData) {
-      // TODO:DS : Show Response Err
-      return;
-    }
-
-    const nextPagePayload =
-      lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
-    imagePaginationIdentifier =
-      nextPagePayload && nextPagePayload.pagination_identifier;
-
-    const lensPostIdsArr = lensPostResponseData.lens_posts_ids;
-    const lenstPostsMap = lensPostResponseData.lens_posts;
-    const lensPostImagesMap = lensPostResponseData.images;
-    const lensPostTextMap = lensPostResponseData.texts;
-    const usersMap = lensPostResponseData.users;
-    const lensPostDetails = [];
-
-    for (let cnt = 0; cnt < lensPostIdsArr.length; cnt++) {
-      const lensPost = lenstPostsMap[lensPostIdsArr[cnt]];
-
-      if (!lensPost) {
-        continue;
+      if (!lensPostResponseData) {
+        // TODO:DS : Show Response Err
+        return;
       }
 
-      const descriptionTextId = lensPost.description_text_id,
-        imageId = lensPost.image_id,
-        owneUserId = lensPost.owner_user_id,
-        imageObj = lensPostImagesMap && lensPostImagesMap[imageId],
-        textObj = lensPostTextMap && lensPostTextMap[descriptionTextId],
-        userObj = usersMap && usersMap[owneUserId];
+      const nextPagePayload =
+        lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
+      imagePaginationIdentifier =
+        nextPagePayload && nextPagePayload.pagination_identifier;
 
-      lensPostDetails.push({
-        publicationId: lensPost.lens_publication_id,
-        lensPostId: lensPostIdsArr[cnt],
-        url: imageObj.url,
-        title: lensPost.title,
-        txHash: lensPost.nft_mint_transaction_hash,
-        description: textObj.text,
-        handle: userObj.lens_profile_username
-      });
-    }
-    // imageDetailsListRef.current = lensPostDetails;
+      const lensPostIdsArr = lensPostResponseData.lens_posts_ids;
+      const lenstPostsMap = lensPostResponseData.lens_posts;
+      const lensPostImagesMap = lensPostResponseData.images;
+      const lensPostTextMap = lensPostResponseData.texts;
+      const usersMap = lensPostResponseData.users;
+      const lensPostDetails = [];
 
-    imageDetailsListRef.current = imageDetailsListRef.current || [];
-    imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
+      for (let cnt = 0; cnt < lensPostIdsArr.length; cnt++) {
+        const lensPost = lenstPostsMap[lensPostIdsArr[cnt]];
 
-    setIsApiInProgress(false);
-    setImageIndex(imageDetailsListRef.current.length - 1);
-    childRefs.current = Array(imageDetailsListRef.current.length)
-      .fill(0)
-      .map((i) => React.createRef());
+        if (!lensPost) {
+          continue;
+        }
+
+        const descriptionTextId = lensPost.description_text_id,
+          imageId = lensPost.image_id,
+          owneUserId = lensPost.owner_user_id,
+          imageObj = lensPostImagesMap && lensPostImagesMap[imageId],
+          textObj = lensPostTextMap && lensPostTextMap[descriptionTextId],
+          userObj = usersMap && usersMap[owneUserId];
+
+        lensPostDetails.push({
+          publicationId: lensPost.lens_publication_id,
+          lensPostId: lensPostIdsArr[cnt],
+          url: imageObj.url,
+          title: lensPost.title,
+          txHash: lensPost.nft_mint_transaction_hash,
+          description: textObj.text,
+          handle: userObj.lens_profile_username
+        });
+      }
+      // imageDetailsListRef.current = lensPostDetails;
+      imageDetailsListRef.current = imageDetailsListRef.current || [];
+      imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
+
+      setIsApiInProgress(false);
+      setImageIndex(imageDetailsListRef.current.length - 1);
+      childRefs.current = Array(imageDetailsListRef.current.length)
+        .fill(0)
+        .map((i) => React.createRef());
+    } while (imagePaginationIdentifier);
+
   }
 
   async function fetchWordOfTheDay() {
@@ -137,6 +140,13 @@ export default function VoteImage() {
   }
 
   const submitVote = (dir) => {
+    
+    if(isVoteInProgress.current){
+      return
+    }
+
+    isVoteInProgress.current = true;
+
     const lensPostId =
       imageDetailsListRef.current[imageIndex]?.lensPostId;
     const publicationId =
@@ -145,6 +155,9 @@ export default function VoteImage() {
     axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
       reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
       lens_post_id: lensPostId,
+    })
+    .finally(() => {
+      isVoteInProgress.current = false;
     });
     upvoteImage({ publicationId });
   }
