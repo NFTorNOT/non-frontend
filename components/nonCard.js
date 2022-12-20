@@ -7,7 +7,7 @@ const width = window.innerWidth;
 const settings = {
   maxTilt: 15, // in deg
   rotationPower: 50,
-  swipeThreshold: 0.5, // need to update this threshold for RN (1.5 seems reasonable...?)
+  swipeThreshold: 5, // need to update this threshold for RN (1.5 seems reasonable...?)
 };
 
 // physical properties of the spring
@@ -41,7 +41,7 @@ const animateOut = async (gesture, setSpringTarget) => {
   const finalX = diagonal * gesture.x;
   const finalY = diagonal * gesture.y;
   const finalRotation = gesture.x * 45;
-  const duration = 300;
+  const duration = 3000;
 
   setSpringTarget.start({
     xyrot: [finalX, finalY, finalRotation],
@@ -313,8 +313,12 @@ const NonCard = React.forwardRef(
       style: {
         opacity: xyrot.to((x, y, rot) => {
           if (x != 0) {
-            console.log("x", x);
-            return "0.5";
+            let valX = Math.abs(x) / 100;
+            let opacity = 1/valX
+              if(valX >= 5) {
+                return '0';
+              }
+            return `${opacity}`;
           }
         }),
         transform: xyrot.to(

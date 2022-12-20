@@ -1,5 +1,6 @@
 import styles from "./Vote.module.scss";
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
@@ -9,6 +10,7 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
+import NotClickSVG from "./svg/NotClickSVG";
 import axios from "axios";
 
 export default function VoteImage() {
@@ -22,6 +24,8 @@ export default function VoteImage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
+  const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
+  const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
   const { isUserLoggedIn } = useAuthContext();
   const postIdRef = useRef();
   const childRefs = useRef();
@@ -212,18 +216,53 @@ export default function VoteImage() {
             ))}
         </div>
         <button
-          className={`absolute md:relative left-0 ${styles.buttonClass}`}
-          onClick={() => swiped("left")}
+          className={`absolute md:relative left-0`}
+          disabled={isNotButtonClicked}
+          onClick={() => {
+            swiped("left");
+            setIsNotButtonClicked(true);
+            setTimeout(() => {
+              setIsNotButtonClicked(false);
+            }, 2000);
+          }}
         >
-          <Not />
+          <div
+            className={`${styles.buttonClassNot} ${
+              !isNotButtonClicked ? `block` : `hidden`
+            } m-[8px]`}
+          >
+            <Not />
+          </div>
+          <div className={`${isNotButtonClicked ? `block` : `hidden`}`}>
+            <NotClickSVG />
+          </div>
         </button>
 
         <button
-          className={`absolute md:relative right-0 order-last ${styles.buttonClass}`}
-          onClick={() => swiped("right")}
+          className={`absolute md:relative right-0 order-last`}
+          disabled={isHotButtonClicked}
+          onClick={() => {
+            swiped("right");
+            setIsHotButtonClicked(true);
+            setTimeout(() => {
+              setIsHotButtonClicked(false);
+            }, 2000);
+          }}
         >
-          <div className={`relative`}>
+          <div
+            className={`${styles.buttonClassHot} ${
+              !isHotButtonClicked ? `block` : `hidden`
+            } m-[8px]`}
+          >
             <Hot />
+          </div>
+          <div className={`${isHotButtonClicked ? `block` : `hidden`}`}>
+            <Image
+              src="https://static.plgworks.com/assets/images/non/vote/hotButtonClick.png"
+              alt="Lens Icon"
+              width="72"
+              height="72"
+            />
           </div>
         </button>
       </div>
