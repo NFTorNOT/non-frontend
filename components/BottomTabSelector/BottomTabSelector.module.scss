@@ -1,3 +1,6 @@
+@import './svg/twitterIcon.module.scss';
+$twitter-fill-color: #1da1f2;
+
 .container {
   border-radius: 100px;
   gap: 8px;
@@ -46,3 +49,32 @@
     background: rgba(0, 0, 0, 0.6);
   }
 }
+.twitterText {
+  opacity: 0;
+  height: 20px;
+  overflow: hidden;
+  z-index: 10;
+}
+.twitterShare:hover .twitterText {
+  opacity: 1;
+  transition: opacity 1s;
+}
+.twitterShare:hover path{
+  fill: $twitter-fill-color;
+}
+.hiwSpace{
+  width: 0px;
+}
+.hiwText{
+  opacity: 0;
+}
+.howItWorks:hover .hiwText{
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+.howItWorks:hover .hiwSpace{
+  width: 90px;
+  transition: width 1s;
+}
+
