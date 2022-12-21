@@ -24,8 +24,7 @@ export default function VoteImage() {
   const [apiInProgress, setIsApiInProgress] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [selectedTheme, setSelectedTheme] = useState('');
-  const [wordOfTheDay, setWordOfTheDay] = useState();
-  const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
+  const [shouldShowUi, setShouldShowUi] = useState(false);
   const [themesData, setThemesData] = useState([]);
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
@@ -67,13 +66,13 @@ export default function VoteImage() {
       const themesMap = lensPostResponseData.themes
       const lensPostDetails = [];
 
- 
 
-      for (let i = 1; i <= 3 && themes.length <= 3 ; i++) {
-        
+
+      for (let i = 1; i <= 3 && themes.length <= 3; i++) {
+
         const isAlreadyPresent = themes.some(el => el.themeName === themesMap[i]?.name);
 
-        if(!isAlreadyPresent && themesMap[i]?.id && themesMap[i]?.name){
+        if (!isAlreadyPresent && themesMap[i]?.id && themesMap[i]?.name) {
           themes.push({
             id: themesMap[i]?.id,
             themeName: themesMap[i]?.name
@@ -124,7 +123,15 @@ export default function VoteImage() {
   }
 
   useEffect(() => {
-    fetchLensPost();
+
+    setTimeout(() => {
+      fetchLensPost();
+    }, 2000);
+
+    setTimeout(() => {
+      setShouldShowUi(true);
+    }, 5000);
+
   }, []);
 
   function showNextImage() {
@@ -198,24 +205,28 @@ export default function VoteImage() {
   return (
     <div>
       <div className={`${styles.secondTab}`}>
-        <div className={`${styles.yellow} flex items-center justify-center gap-[5px]`}>
-          <span>Trending Themes</span>
-          <span><TrendingThemes /></span>
-        </div>
-        <div className={`${styles.wordOfDay} flex items-center justify-center`}>
-          {imageDetailsListRef.current.length > 0 && themesData.map((item, index) => (
-            <div className={`${selectedTheme === item.themeName ? 'text-[#ffffff] font-bold' : 'text-[#ffffff99]'} flex items-center`} key={index}>
-              <span>
-                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="0.5" width="5" height="5" rx="2.5" fill="white" fillOpacity="0.6" />
-                </svg>
-              </span>
-              #{item.themeName}
+        <TrendingThemeDefault />
+        {shouldShowUi ?
+          <> <div className={`${styles.yellow} flex items-center justify-center gap-[5px]`}>
+            <span>Trending Themes</span>
+            <span><TrendingThemes /></span>
+          </div>
+            <div className={`${styles.wordOfDay} flex items-center justify-center`}>
+              {imageDetailsListRef.current.length > 0 && themesData.map((item, index) => (
+                <div className={`${selectedTheme === item.themeName ? 'text-[#ffffff] font-bold' : 'text-[#ffffff99]'} flex items-center`} key={index}>
+                  #{item.themeName}
+                  {index < 2 && <span className='px-[10px]'>
+                    <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0.5" width="5" height="5" rx="2.5" fill="white" fillOpacity="0.6" />
+                    </svg>
+                  </span>}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </> : <div className='h-[53px]'></div>
+        }
       </div>
-      <div className="relative md:flex justify-center mt-[10px] md:items-center">
+      <div className="relative md:flex justify-center mt-[10px] md:items-center mt-[40px]">
         <NFTContractInfoModal
           visible={nftDetailsModal}
           onClose={() => setNftDetailsModal(false)}
@@ -223,7 +234,7 @@ export default function VoteImage() {
           txHash={imageDetailsListRef.current[imageIndex]?.txHash}
         />
         <div
-          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512]`}
+          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px]`}
         >
           {imageDetailsListRef.current.length > 0 &&
             imageDetailsListRef.current.map((character, index) => (
@@ -256,27 +267,25 @@ export default function VoteImage() {
                   </div>
                 </div>
               </NonCard>
-            ))}:{
-            <div className='text-[#fff] font-bold mt-[100px]'>
-              You have voted all lens post.
-              </div>
-          }
+            ))}
         </div>
-        <button
-          className={`absolute md:relative left-0 ${styles.buttonClass}`}
-          onClick={() => swiped("left")}
-        >
-          <Not />
-        </button>
+        {imageDetailsListRef.current.length > 0 ? <>
+          <button
+            className={`absolute md:relative left-0 ${styles.buttonClass}`}
+            onClick={() => swiped("left")}
+          >
+            <Not />
+          </button>
 
-        <button
-          className={`absolute md:relative right-0 order-last ${styles.buttonClass}`}
-          onClick={() => swiped("right")}
-        >
-          <div className={`relative`}>
-            <Hot />
-          </div>
-        </button>
+          <button
+            className={`absolute md:relative right-0 order-last ${styles.buttonClass}`}
+            onClick={() => swiped("right")}
+          >
+            <div className={`relative`}>
+              <Hot />
+            </div>
+          </button>
+        </> : null}
       </div>
     </div>
   );

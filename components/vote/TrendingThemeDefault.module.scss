@@ -1,0 +1,23 @@
+.themesNameAnimation {
+    transform: translateY(50%);
+    position: absolute;
+    animation-iteration-count: 1;
+    animation-duration: 3s;
+    animation-direction: alternate;
+    animation-delay: 2s;
+    animation-name: transformThemes;
+    opacity: 0;
+    font-size: 16px;
+}
+
+@keyframes transformThemes {
+    from {
+        transform:  translate(0%, -10%) scale(1);    
+        opacity: 1;
+    }
+    to {
+        transform: translate(0%, -46%) scale(.37);
+        opacity: 1;
+        
+    }
+}
