@@ -1,6 +1,6 @@
 import React from "react";
 
-function NotClickSVG(props) {
+function ClickOnHot(props) {
   return (
     <svg
       width="73"
@@ -174,4 +174,4 @@ function NotClickSVG(props) {
   );
 }
 
-export default NotClickSVG;
+export default ClickOnHot;

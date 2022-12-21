@@ -10,8 +10,8 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
-import ShareSVG from "./svg/ShareSVG";
-import NotClickSVG from "./svg/NotClickSVG";
+import SocialShare from "./svg/socialShare";
+import ClickOnHot from "./svg/clickOnHot";
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
 import ShareModal from "./shareModal";
@@ -35,16 +35,18 @@ export default function VoteImage() {
   const postIdRef = useRef();
   const childRefs = useRef();
 
-
   async function fetchLensPost() {
     let imagePaginationIdentifier = null;
     do {
       setIsApiInProgress(true);
-      const lensPostData = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`, {
-        params: {
-          pagination_identifier: imagePaginationIdentifier,
-        },
-      });
+      const lensPostData = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`,
+        {
+          params: {
+            pagination_identifier: imagePaginationIdentifier,
+          },
+        }
+      );
 
       const lensPostResponseData =
         lensPostData && lensPostData.data && lensPostData.data.data;
@@ -55,7 +57,8 @@ export default function VoteImage() {
       }
 
       const nextPagePayload =
-        lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
+        lensPostResponseData.meta &&
+        lensPostResponseData.meta.next_page_payload;
       imagePaginationIdentifier =
         nextPagePayload && nextPagePayload.pagination_identifier;
 
@@ -87,12 +90,13 @@ export default function VoteImage() {
           title: lensPost.title,
           txHash: lensPost.nft_mint_transaction_hash,
           description: textObj.text,
-          handle: userObj.lens_profile_username
+          handle: userObj.lens_profile_username,
         });
       }
       // imageDetailsListRef.current = lensPostDetails;
       imageDetailsListRef.current = imageDetailsListRef.current || [];
-      imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
+      imageDetailsListRef.current =
+        imageDetailsListRef.current.concat(lensPostDetails);
 
       setIsApiInProgress(false);
       setImageIndex(imageDetailsListRef.current.length - 1);
@@ -100,7 +104,6 @@ export default function VoteImage() {
         .fill(0)
         .map((i) => React.createRef());
     } while (imagePaginationIdentifier);
-
   }
 
   async function fetchWordOfTheDay() {
@@ -147,34 +150,33 @@ export default function VoteImage() {
   }
 
   const submitVote = (dir) => {
-    
-    if(isVoteInProgress.current){
-      return
+    if (isVoteInProgress.current) {
+      return;
     }
 
     isVoteInProgress.current = true;
 
-    const lensPostId =
-      imageDetailsListRef.current[imageIndex]?.lensPostId;
+    const lensPostId = imageDetailsListRef.current[imageIndex]?.lensPostId;
     const publicationId =
       imageDetailsListRef.current[imageIndex]?.publicationId;
 
-    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
-      reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
-      lens_post_id: lensPostId,
-    })
-    .finally(() => {
-      isVoteInProgress.current = false;
-    });
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
+        reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
+        lens_post_id: lensPostId,
+      })
+      .finally(() => {
+        isVoteInProgress.current = false;
+      });
     upvoteImage({ publicationId });
-  }
+  };
 
   const swiped = (dir) => {
     submitVote(dir);
     swipeAnimation(dir);
     showNextImage();
     if (imageIndex <= 2) {
-      fetchLensPost()
+      fetchLensPost();
     }
   };
 
@@ -185,7 +187,6 @@ export default function VoteImage() {
       await childRefs.current[imageIndex].swipe(dir);
     }
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -239,7 +240,7 @@ export default function VoteImage() {
                           className={`cursor-pointer mr-[20px]`}
                           onClick={() => setSocialShareModal(true)}
                         >
-                          <ShareSVG />
+                          <SocialShare />
                         </div>
                         <div className="cursor-pointer">
                           <Image
@@ -284,7 +285,7 @@ export default function VoteImage() {
             <Not />
           </div>
           <div className={`${isNotButtonClicked ? `block` : `hidden`}`}>
-            <NotClickSVG />
+            <ClickOnHot />
           </div>
         </button>
 
