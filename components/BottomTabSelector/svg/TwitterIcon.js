@@ -2,7 +2,7 @@ import React from "react";
 
 function TwitterIcon(props) {
   return (
-    <dv>
+    <div>
       <svg
         width="20"
         height="20"
@@ -16,7 +16,7 @@ function TwitterIcon(props) {
           fillOpacity="0.8"
         />
       </svg>
-    </dv>
+    </div>
   );
 }
 
