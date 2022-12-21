@@ -30,21 +30,31 @@ export default function VoteImage() {
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
   const [socialShareModal, setSocialShareModal] = useState(false);
+  const [wrapperTransY, setWrapperTransY] = useState(0);
+  const [titleTransY, setTitleTransY] = useState(0);
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
   const childRefs = useRef();
 
+  const hoverWrapperRef = useRef();
+  const bioParentWrapperRef = useRef();
+  const titleWrapperRef = useRef();
+  const handleWrapperRef = useRef();
+  const descriptionWrapperRef = useRef();
 
   async function fetchLensPost() {
     let imagePaginationIdentifier = null;
     do {
       setIsApiInProgress(true);
-      const lensPostData = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`, {
-        params: {
-          pagination_identifier: imagePaginationIdentifier,
-        },
-      });
+      const lensPostData = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`,
+        {
+          params: {
+            pagination_identifier: imagePaginationIdentifier,
+          },
+        }
+      );
 
       const lensPostResponseData =
         lensPostData && lensPostData.data && lensPostData.data.data;
@@ -55,7 +65,8 @@ export default function VoteImage() {
       }
 
       const nextPagePayload =
-        lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
+        lensPostResponseData.meta &&
+        lensPostResponseData.meta.next_page_payload;
       imagePaginationIdentifier =
         nextPagePayload && nextPagePayload.pagination_identifier;
 
@@ -87,12 +98,13 @@ export default function VoteImage() {
           title: lensPost.title,
           txHash: lensPost.nft_mint_transaction_hash,
           description: textObj.text,
-          handle: userObj.lens_profile_username
+          handle: userObj.lens_profile_username,
         });
       }
       // imageDetailsListRef.current = lensPostDetails;
       imageDetailsListRef.current = imageDetailsListRef.current || [];
-      imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
+      imageDetailsListRef.current =
+        imageDetailsListRef.current.concat(lensPostDetails);
 
       setIsApiInProgress(false);
       setImageIndex(imageDetailsListRef.current.length - 1);
@@ -100,7 +112,6 @@ export default function VoteImage() {
         .fill(0)
         .map((i) => React.createRef());
     } while (imagePaginationIdentifier);
-
   }
 
   async function fetchWordOfTheDay() {
@@ -147,34 +158,33 @@ export default function VoteImage() {
   }
 
   const submitVote = (dir) => {
-    
-    if(isVoteInProgress.current){
-      return
+    if (isVoteInProgress.current) {
+      return;
     }
 
     isVoteInProgress.current = true;
 
-    const lensPostId =
-      imageDetailsListRef.current[imageIndex]?.lensPostId;
+    const lensPostId = imageDetailsListRef.current[imageIndex]?.lensPostId;
     const publicationId =
       imageDetailsListRef.current[imageIndex]?.publicationId;
 
-    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
-      reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
-      lens_post_id: lensPostId,
-    })
-    .finally(() => {
-      isVoteInProgress.current = false;
-    });
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
+        reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
+        lens_post_id: lensPostId,
+      })
+      .finally(() => {
+        isVoteInProgress.current = false;
+      });
     upvoteImage({ publicationId });
-  }
+  };
 
   const swiped = (dir) => {
     submitVote(dir);
     swipeAnimation(dir);
     showNextImage();
     if (imageIndex <= 2) {
-      fetchLensPost()
+      fetchLensPost();
     }
   };
 
@@ -186,6 +196,38 @@ export default function VoteImage() {
     }
   };
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    if (bioParentWrapperRef && bioParentWrapperRef.current) {
+      setWrapperTransY(bioParentWrapperRef.current.clientHeight);
+    }
+  });
+
+  useEffect(() => {
+    const curr = hoverWrapperRef.current;
+    if (!curr) {
+      return;
+    }
+    curr.addEventListener("mouseover", cardTransHover);
+    curr.addEventListener("mouseout", cardTransOut);
+
+    return () => {
+      curr.removeEventListener("mouseover", cardTransHover);
+      curr.removeEventListener("mouseout", cardTransOut);
+    };
+  }, [hoverWrapperRef.current]);
+
+  let cardTransHover = () => {
+    setInterval(() => {
+      setTitleTransY(titleWrapperRef.current.clientHeight);
+    }, 200);
+  };
+
+  let cardTransOut = () => {
+    console.log("cardTransOut");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -200,12 +242,6 @@ export default function VoteImage() {
         </div>
       </div>
       <div className="relative md:flex justify-center mt-[10px] md:items-center">
-        <NFTContractInfoModal
-          visible={nftDetailsModal}
-          onClose={() => setNftDetailsModal(false)}
-          ipfsCid={ipfs}
-          txHash={imageDetailsListRef.current[imageIndex]?.txHash}
-        />
         <ShareModal
           visible={socialShareModal}
           onClose={() => setSocialShareModal(false)}
@@ -214,7 +250,7 @@ export default function VoteImage() {
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512]`}
         >
           {imageDetailsListRef.current.length > 0 &&
-            imageDetailsListRef.current.map((character, index) => (
+            imageDetailsListRef.current.slice(0, 3).map((character, index) => (
               <NonCard
                 ref={(ref) => (childRefs.current[index] = ref)}
                 onSwipe={(dir) => submitVote(dir)}
@@ -225,14 +261,20 @@ export default function VoteImage() {
                 <div
                   className={`${styles.card}`}
                   style={{ backgroundImage: `url(${character.url})` }}
+                  ref={hoverWrapperRef}
                 >
-                  <div className={`${styles.card_title_overlay}`}>
+                  <div
+                    className={`${styles.card_title_overlay}`}
+                    ref={bioParentWrapperRef}
+                    style={{ transform: `translateY(${wrapperTransY}px)` }}
+                  >
                     <div
-                      className={`${styles.card_title} flex justify-between items-start pt-[15px]`}
+                      className={`${styles.card_title} flex justify-between items-start`}
+                      ref={titleWrapperRef}
+                      style={{ transform: `translateY(${titleTransY}px)` }}
                     >
                       <div className={`${styles.card_title_text} mr-[25px]`}>
                         {character.title}
-                        {/* The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight  */}
                       </div>
                       <div className="text-[#ffffff] flex items-center">
                         <div
@@ -244,21 +286,27 @@ export default function VoteImage() {
                         <div className="cursor-pointer">
                           <Image
                             src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
-                            alt="contract icon"
+                            alt="Lens icon"
                             width="20"
                             height="20"
                           />
                         </div>
                       </div>
                     </div>
-                    <div className={styles.nftInfo}>
-                      <div className={styles.id}>{character.handle}</div>
-                      <button
-                        className={`${styles.nftButton} pb-[30px]`}
-                        onClick={() => setNftDetailsModal(true)}
-                      >
-                        NFT contract info
-                      </button>
+
+                    <div
+                      className={`${styles.showPrompt}`}
+                      ref={handleWrapperRef}
+                    >
+                      <div className={styles.id}>@{character.handle}</div>
+                      <div className="text-white">Show Prompt</div>
+                    </div>
+
+                    <div
+                      className={`${styles.description}`}
+                      ref={descriptionWrapperRef}
+                    >
+                      {character.description}
                     </div>
                   </div>
                 </div>
