@@ -206,6 +206,10 @@ export default function VoteImage() {
           ipfsCid={ipfs}
           txHash={imageDetailsListRef.current[imageIndex]?.txHash}
         />
+        <ShareModal
+          visible={socialShareModal}
+          onClose={() => setSocialShareModal(false)}
+        />
         <div
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512]`}
         >
@@ -226,10 +230,6 @@ export default function VoteImage() {
                     <div
                       className={`${styles.card_title} flex justify-between items-start pt-[15px]`}
                     >
-                      <ShareModal
-                        visible={socialShareModal}
-                        onClose={() => setSocialShareModal(false)}
-                      />
                       <div className={`${styles.card_title_text} mr-[25px]`}>
                         {character.title}
                         {/* The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight  */}
