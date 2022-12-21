@@ -10,11 +10,10 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
-import ShareSVG from "./svg/ShareSVG";
 import NotClickSVG from "./svg/NotClickSVG";
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
-import ShareModal from "./shareModal";
+import VoteCard from "./voteCard";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -29,26 +28,15 @@ export default function VoteImage() {
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
-  const [socialShareModal, setSocialShareModal] = useState(false);
-  const [wrapperTransY, setWrapperTransY] = useState(0);
+  
+  
   
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
   const childRefs = useRef();
 
-  const hoverWrapperRef = useRef();
-  const bioParentWrapperRef = useRef();
 
-  const titleWrapperRef = useRef();
-  const [titleShowAnimationTimeout, setTitleShowAnimationTimeout] = useState(0);
-  const [titleHideAnimationTimeout, setTitleHideAnimationTimeout] = useState(0);
-
-  const handleWrapperRef = useRef();
-  const [handleShowAnimationTimeout, setHandleShowAnimationTimeout] = useState(0); 
-  const [handleHideAnimationTimeout, setHandleHideAnimationTimeout] = useState(0); 
-
-  const descriptionWrapperRef = useRef();
 
   async function fetchLensPost() {
     let imagePaginationIdentifier = null;
@@ -203,52 +191,7 @@ export default function VoteImage() {
     }
   };
 
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    if (bioParentWrapperRef && bioParentWrapperRef.current) {
-      console.log("Setting setWrapperTransY back to wrap height");
-      setWrapperTransY(bioParentWrapperRef.current.clientHeight);
-    }
-  }, []);
-
-  let cardTransHover = () => {
-    console.log("Show title.");
-    showTitle();
-  };
-
-  let cardTransOut = () => {
-    console.log("Title Hide");
-    hideTitle();
-    
-  };
-
-  const hideTitle = () => {
-    // title hide Animation
-    const wrapHeight  = bioParentWrapperRef.current.clientHeight;
-    // Do we really need to do anything?
-    if ( wrapperTransY < wrapHeight ) {
-      setWrapperTransY( wrapHeight );
-    } else {
-      console.log("condition false");
-    }
-  };
-
-  const showTitle = () => {
-    // title Show Animation
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight  = bioParentWrapperRef.current.clientHeight;
-    
-    // Do we really need to do anything?
-    console.log("Setting wrapperTransY to ",wrapperTransY, (wrapHeight - titleHeight));
-    if ( wrapperTransY >= (wrapHeight - titleHeight) ) {
-      console.log("Setting wrapperTransY to ", (wrapHeight - titleHeight));
-      setWrapperTransY( (wrapHeight - titleHeight) );
-    } else {
-      console.log("condition false");
-    }
-  };
+ 
 
 
   return (
@@ -264,10 +207,7 @@ export default function VoteImage() {
         </div>
       </div>
       <div className="relative md:flex justify-center mt-[10px] md:items-center">
-        <ShareModal
-          visible={socialShareModal}
-          onClose={() => setSocialShareModal(false)}
-        />
+        
         <div
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512]`}
         >
@@ -280,59 +220,7 @@ export default function VoteImage() {
                 preventSwipe={["up", "down"]}
                 key={index}
               >
-                <div
-                  className={`${styles.card}`}
-                  style={{ backgroundImage: `url(${character.url})` }}
-                  ref={hoverWrapperRef}
-                  onMouseOver={cardTransHover}
-                  onMouseOut={cardTransOut}
-                >
-                  <div
-                    className={`${styles.card_title_overlay}`}
-                    ref={bioParentWrapperRef}
-                    style={{ transform: `translateY(${wrapperTransY}px)` }}
-                  >
-                    <div
-                      className={`${styles.card_title} flex justify-between items-start`}
-                      ref={titleWrapperRef}
-                    >
-                      <div className={`${styles.card_title_text} mr-[25px]`}>
-                        {character.title}
-                      </div>
-                      <div className="text-[#ffffff] flex items-center">
-                        <div
-                          className={`cursor-pointer mr-[20px]`}
-                          onClick={() => setSocialShareModal(true)}
-                        >
-                          <ShareSVG />
-                        </div>
-                        <div className="cursor-pointer">
-                          <Image
-                            src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
-                            alt="Lens icon"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div
-                      className={`${styles.showPrompt}`}
-                      ref={handleWrapperRef}
-                    >
-                      <div className={styles.id}>@{character.handle}</div>
-                      <div className="text-white">Show Prompt</div>
-                    </div>
-
-                    <div
-                      className={`${styles.description}`}
-                      ref={descriptionWrapperRef}
-                    >
-                      {character.description}
-                    </div>
-                  </div>
-                </div>
+                <VoteCard character={character}></VoteCard>
               </NonCard>
             ))}
         </div>
