@@ -10,6 +10,7 @@ import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
 import TrendingThemes from './svg/trendingThemes';
+import TrendingThemeDefault from './TrendingThemeDefault'
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
 
@@ -193,7 +194,6 @@ export default function VoteImage() {
     }
   };
 
-  console.log("themes",themesData);
 
   return (
     <div>
