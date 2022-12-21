@@ -46,19 +46,8 @@ export default function BottomTabSelector() {
           );
         })}
       </div>
-      <div className="hidden md:flex items-center justify-end gap-[20px] pr-[20px]">
-        <TelegramShareButton
-          url={"https://plgworks.com/"}
-          title={"Sharing text goes Here"}
-        >
-          <TelegramIcon />
-        </TelegramShareButton>
-        <TwitterShareButton
-          url={"https://plgworks.com/"}
-          title={"Sharing text goes Here"}
-        >
-          <TwitterIcon />
-        </TwitterShareButton>
+      <div className="font-medium text-[16px] leading-[26px] text-[#ffffff99]">
+        Made with <span className="text-[#FA5C00]">🧡</span> by PLG
       </div>
     </div>
   );
