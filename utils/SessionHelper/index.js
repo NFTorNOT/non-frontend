@@ -55,6 +55,10 @@ class SessionHelper {
       
     }
   }
+  clearSession(){
+    localStorage.clear();
+    sessionStorage.clear();
+  }
 }
 
 export default new SessionHelper();
