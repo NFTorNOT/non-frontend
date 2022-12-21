@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./logout.module.scss";
 import Logout from "./svg/logout";
+import SessionHelper from "../../utils/SessionHelper";
+import { useAuthContext } from "../../context/AuthContext";
+import { useRouter } from "next/router";
 
 function LogoutModal({ shown, close }) {
+  const { setIsUserLoggedIn, isUserLoggedIn } = useAuthContext();
+  const router = useRouter();
+  const logout = () => {
+    console.log("helper check");
+    SessionHelper.clearSession();
+    setIsUserLoggedIn(false);
+    router.reload();
+  }
   return shown ? (
     <div
       className={styles.modalBackdrop}
@@ -17,7 +28,7 @@ function LogoutModal({ shown, close }) {
         }}
       >
         <div className="py-[16px] px-[15px]">
-          <div className="flex items-center cursor-pointer">
+          <div className="flex items-center cursor-pointer" onClick={() => {logout()}}>
             <span>
               <Logout />
             </span>
