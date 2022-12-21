@@ -3,12 +3,14 @@ import { useAccount } from "wagmi";
 import { useUserContext } from "../../context/UserContext";
 import UserApi from "../../graphql/UserApi";
 import LensHelper from "../../utils/LensHelper";
+import LogoutModal from "./logoutModal";
 import styles from "./Userinfo.module.scss";
 
 export default function UserInfo() {
   const [queryInProgress, setQueryInProgress] = useState(false);
   const { userProfile, setUserProfile } = useUserContext();
   const { address } = useAccount();
+  const [modalShown, toggleModal] = useState(false);
 
   async function createLensProfile() {
     let handle = prompt("Enter your handle to create Lens profile");
@@ -69,7 +71,19 @@ export default function UserInfo() {
       <span className={styles.nameContainer}>
         {queryInProgress ? "..." : userProfile.handle}
       </span>
-      <img className={styles.lens} src="/lens-logo.png" alt="lens" />
+      <div className="cursor-pointer"
+        onClick={() => {
+          toggleModal(!modalShown);
+        }}
+      >
+        <img className={styles.lens} src="/lens-logo.png" alt="lens" />
+      </div>
+      <LogoutModal 
+        shown={modalShown}
+        close={() => {
+          toggleModal(false);
+        }}
+      />
     </div>
   );
 }
