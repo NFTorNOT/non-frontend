@@ -10,7 +10,7 @@ function ClickOnHot(props) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <g filter="url(#filter0_b_1392_5308)">
-        <g clip-path="url(#clip0_1392_5308)">
+        <g clipPath="url(#clip0_1392_5308)">
           <rect
             x="0.00390625"
             width="72"
@@ -20,11 +20,11 @@ function ClickOnHot(props) {
           />
           <g filter="url(#filter1_dii_1392_5308)">
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M26.1677 20.5072C25.3866 19.7261 24.1203 19.7261 23.3393 20.5072L20.5108 23.3356C19.7298 24.1166 19.7298 25.383 20.5108 26.164L30.3466 35.9998L20.5108 45.8356C19.7298 46.6167 19.7298 47.883 20.5108 48.664L23.3393 51.4925C24.1203 52.2735 25.3866 52.2735 26.1677 51.4925L36.0035 41.6567L45.8393 51.4925C46.6203 52.2735 47.8866 52.2735 48.6677 51.4925L51.4961 48.664C52.2772 47.883 52.2772 46.6166 51.4961 45.8356L41.6603 35.9998L51.4961 26.164C52.2772 25.383 52.2772 24.1166 51.4961 23.3356L48.6677 20.5072C47.8866 19.7261 46.6203 19.7261 45.8393 20.5072L36.0035 30.343L26.1677 20.5072Z"
               fill="url(#paint1_radial_1392_5308)"
-              shape-rendering="crispEdges"
+              shapeRendering="crispEdges"
             />
           </g>
         </g>
@@ -35,7 +35,7 @@ function ClickOnHot(props) {
           height="71"
           rx="35.5"
           stroke="url(#paint2_linear_1392_5308)"
-          stroke-opacity="0.2"
+          strokeOpacity="0.2"
         />
       </g>
       <defs>
@@ -46,9 +46,9 @@ function ClickOnHot(props) {
           width="104"
           height="104"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feGaussianBlur in="BackgroundImageFix" stdDeviation="8" />
           <feComposite
             in2="SourceAlpha"
@@ -69,9 +69,9 @@ function ClickOnHot(props) {
           width="96.1567"
           height="96.1567"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -141,8 +141,8 @@ function ClickOnHot(props) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(36.0046 23.6854) rotate(90) scale(138.82)"
         >
-          <stop stop-color="#E8132A" />
-          <stop offset="1" stop-color="#E8132A" stop-opacity="0" />
+          <stop stopColor="#E8132A" />
+          <stop offset="1" stopColor="#E8132A" stopOpacity="0" />
         </radialGradient>
         <radialGradient
           id="paint1_radial_1392_5308"
@@ -152,8 +152,8 @@ function ClickOnHot(props) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(36.0038 30.4998) rotate(90) scale(62)"
         >
-          <stop stop-color="#E8132A" />
-          <stop offset="1" stop-color="#E8132A" stop-opacity="0" />
+          <stop stopColor="#E8132A" />
+          <stop offset="1" stopColor="#E8132A" stopOpacity="0" />
         </radialGradient>
         <linearGradient
           id="paint2_linear_1392_5308"
@@ -163,7 +163,7 @@ function ClickOnHot(props) {
           y2="72"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
+          <stop stopColor="white" />
           <stop offset="1" />
         </linearGradient>
         <clipPath id="clip0_1392_5308">
