@@ -12,9 +12,9 @@ function ShareModal({ visible, onClose }) {
     <div className={`${styles.modalBackdrop}`} onClick={onClose}>
       <div className={`${styles.popup}`}>
         <div className="cursor-default relative" onClick={(e) => e.stopPropagation()}>
-          <div className="text-[#ffffff99] bg-[#00000099] pl-[16px] py-[19px] rounded-[8px] min-w-[160px] text-[16px] font-medium">
+          <div className="text-[#ffffff99] bg-[#00000099] px-[16px] py-[19px] rounded-[8px] min-w-[160px] text-[16px] font-medium">
             <TwitterShareButton
-              className="mb-[20px] flex cursor-pointer"
+              className="mb-[20px] flex cursor-pointer w-full"
               url={"https://plgworks.com/"}
               title={"Sharing text goes Here"}
             >
@@ -26,7 +26,7 @@ function ShareModal({ visible, onClose }) {
               </div>
             </TwitterShareButton>
             <TelegramShareButton
-              className="flex items-center cursor-pointer"
+              className="flex items-center cursor-pointer w-full"
               url={"https://plgworks.com/"}
               title={"Sharing text goes Here"}
             >
