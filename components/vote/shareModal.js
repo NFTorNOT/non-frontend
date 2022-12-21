@@ -11,7 +11,7 @@ function ShareModal({ visible, onClose }) {
   return (
     <div className={`${styles.modalBackdrop}`} onClick={onClose}>
       <div className={`${styles.popup}`}>
-        <div className="cursor-default relative">
+        <div className="cursor-default relative" onClick={(e) => e.stopPropagation()}>
           <div className="text-[#ffffff99] bg-[#00000099] pl-[16px] py-[19px] rounded-[8px] min-w-[160px] text-[16px] font-medium">
             <TwitterShareButton
               className="mb-[20px] flex cursor-pointer"
