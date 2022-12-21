@@ -16,15 +16,26 @@ export default function BottomTabSelector() {
   };
 
   return (
-    <div className="flex items-center self-end justify-between">
-      <div className="flex items-center mt-[12px] md:mt-0">
-        <QuestionMarkIcon />
-        <span className="pl-[10px] text-[16px] text-[#fff]">
-          How does this work?
-        </span>
+    <div className="grid grid-cols-5 items-center">
+      <div className="flex items-center mt-[12px] md:mt-0 justify-items-start">
+        <div className={`${styles.howItWorks} flex items-center justify-start cursor-pointer relative`}>
+          <QuestionMarkIcon />
+          <div className={`${styles.hiwText} text-[#ffffff] font-medium absolute w-[100px] left-[25px] top-0`}>How it works</div>
+          <div className={styles.hiwSpace}></div>
+        </div>
+        <TwitterShareButton
+          className={`${styles.twitterShare} cursor-pointer ml-[15px] flex`}
+          url={"https://plgworks.com/"}
+          title={"Sharing text goes Here"}
+        >
+          <span className="z-10 pl-[5px]">
+            <TwitterIcon/>
+          </span>
+          <span className={`${styles.twitterText} pl-[5px] text-[#ffffff] font-medium`}>Share on Twitter</span>
+        </TwitterShareButton>
       </div>
       <div
-        className={`${styles.container} grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] w-2/3`}
+        className={`${styles.container} grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] w-full col-span-3`}
       >
         {Object.values(TabItems).map((tab) => {
           const isSelected = tab.id === currentTab.id;
@@ -46,7 +57,7 @@ export default function BottomTabSelector() {
           );
         })}
       </div>
-      <div className="font-medium text-[16px] leading-[26px] text-[#ffffff99]">
+      <div className="font-medium text-[16px] leading-[26px] text-[#ffffff99] text-end items-center">
         Made with <span className="text-[#FA5C00]">🧡</span> by PLG
       </div>
     </div>
