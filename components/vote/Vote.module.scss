@@ -83,13 +83,13 @@
 
 .showPrompt {
   display: flex;
-  padding-top: 12px;
+  padding-bottom: 12px;
   align-items: center;
   justify-content: space-between;
 }
 .description {
   color: white;
-  padding-top: 12px;
+  padding-bottom: 15px;
 }
 .id {
   font-weight: 500;
@@ -216,7 +216,6 @@
 }
 .card_title_overlay {
   width: 100%;
-  padding: 15px;
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 0%,
@@ -231,6 +230,8 @@
 }
 
 .card_title {
+  padding-top: 15px;
+  padding-bottom: 12px;
   text-align: left;
 }
 

@@ -31,7 +31,7 @@ export default function VoteImage() {
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
   const [socialShareModal, setSocialShareModal] = useState(false);
   const [wrapperTransY, setWrapperTransY] = useState(0);
-  const [titleTransY, setTitleTransY] = useState(0);
+  
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
@@ -39,8 +39,15 @@ export default function VoteImage() {
 
   const hoverWrapperRef = useRef();
   const bioParentWrapperRef = useRef();
+
   const titleWrapperRef = useRef();
+  const [titleShowAnimationTimeout, setTitleShowAnimationTimeout] = useState(0);
+  const [titleHideAnimationTimeout, setTitleHideAnimationTimeout] = useState(0);
+
   const handleWrapperRef = useRef();
+  const [handleShowAnimationTimeout, setHandleShowAnimationTimeout] = useState(0); 
+  const [handleHideAnimationTimeout, setHandleHideAnimationTimeout] = useState(0); 
+
   const descriptionWrapperRef = useRef();
 
   async function fetchLensPost() {
@@ -201,33 +208,48 @@ export default function VoteImage() {
       return;
     }
     if (bioParentWrapperRef && bioParentWrapperRef.current) {
+      console.log("Setting setWrapperTransY back to wrap height");
       setWrapperTransY(bioParentWrapperRef.current.clientHeight);
     }
-  });
-
-  useEffect(() => {
-    const curr = hoverWrapperRef.current;
-    if (!curr) {
-      return;
-    }
-    curr.addEventListener("mouseover", cardTransHover);
-    curr.addEventListener("mouseout", cardTransOut);
-
-    return () => {
-      curr.removeEventListener("mouseover", cardTransHover);
-      curr.removeEventListener("mouseout", cardTransOut);
-    };
-  }, [hoverWrapperRef.current]);
+  }, []);
 
   let cardTransHover = () => {
-    setInterval(() => {
-      setTitleTransY(titleWrapperRef.current.clientHeight);
-    }, 200);
+    console.log("Show title.");
+    showTitle();
   };
 
   let cardTransOut = () => {
-    console.log("cardTransOut");
+    console.log("Title Hide");
+    hideTitle();
+    
   };
+
+  const hideTitle = () => {
+    // title hide Animation
+    const wrapHeight  = bioParentWrapperRef.current.clientHeight;
+    // Do we really need to do anything?
+    if ( wrapperTransY < wrapHeight ) {
+      setWrapperTransY( wrapHeight );
+    } else {
+      console.log("condition false");
+    }
+  };
+
+  const showTitle = () => {
+    // title Show Animation
+    const titleHeight = titleWrapperRef.current.clientHeight;
+    const wrapHeight  = bioParentWrapperRef.current.clientHeight;
+    
+    // Do we really need to do anything?
+    console.log("Setting wrapperTransY to ",wrapperTransY, (wrapHeight - titleHeight));
+    if ( wrapperTransY >= (wrapHeight - titleHeight) ) {
+      console.log("Setting wrapperTransY to ", (wrapHeight - titleHeight));
+      setWrapperTransY( (wrapHeight - titleHeight) );
+    } else {
+      console.log("condition false");
+    }
+  };
+
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -250,7 +272,7 @@ export default function VoteImage() {
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512]`}
         >
           {imageDetailsListRef.current.length > 0 &&
-            imageDetailsListRef.current.slice(0, 3).map((character, index) => (
+            imageDetailsListRef.current.slice(0, 1).map((character, index) => (
               <NonCard
                 ref={(ref) => (childRefs.current[index] = ref)}
                 onSwipe={(dir) => submitVote(dir)}
@@ -262,6 +284,8 @@ export default function VoteImage() {
                   className={`${styles.card}`}
                   style={{ backgroundImage: `url(${character.url})` }}
                   ref={hoverWrapperRef}
+                  onMouseOver={cardTransHover}
+                  onMouseOut={cardTransOut}
                 >
                   <div
                     className={`${styles.card_title_overlay}`}
@@ -271,7 +295,6 @@ export default function VoteImage() {
                     <div
                       className={`${styles.card_title} flex justify-between items-start`}
                       ref={titleWrapperRef}
-                      style={{ transform: `translateY(${titleTransY}px)` }}
                     >
                       <div className={`${styles.card_title_text} mr-[25px]`}>
                         {character.title}
