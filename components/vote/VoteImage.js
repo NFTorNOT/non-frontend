@@ -207,11 +207,11 @@ export default function VoteImage() {
       <div className={`${styles.secondTab}`}>
         <TrendingThemeDefault />
         {shouldShowUi ?
-          <> <div className={`${styles.yellow} flex items-center justify-center gap-[5px]`}>
+          <> <div className={`${styles.yellow} flex items-center justify-center gap-[5px] md:pl-16`}>
             <span>Trending Themes</span>
             <span><TrendingThemes /></span>
           </div>
-            <div className={`${styles.wordOfDay} flex items-center justify-center`}>
+            <div className={`${styles.wordOfDay} flex items-center justify-center md:pl-16`}>
               {imageDetailsListRef.current.length > 0 && themesData.map((item, index) => (
                 <div className={`${selectedTheme === item.themeName ? 'text-[#ffffff] font-bold' : 'text-[#ffffff99]'} flex items-center`} key={index}>
                   #{item.themeName}
