@@ -9,6 +9,7 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
+import TrendingThemes from './svg/trendingThemes';
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
 
@@ -21,16 +22,19 @@ export default function VoteImage() {
   const imageDetailsListRef = useRef([]);
   const [apiInProgress, setIsApiInProgress] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [selectedTheme, setSelectedTheme] = useState('');
   const [wordOfTheDay, setWordOfTheDay] = useState();
   const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
+  const [themesData, setThemesData] = useState([]);
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
   const childRefs = useRef();
 
-
+  let themes = [];
   async function fetchLensPost() {
     let imagePaginationIdentifier = null;
+    let canMakeNewRequest = null;
     do {
       setIsApiInProgress(true);
       const lensPostData = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`, {
@@ -52,12 +56,31 @@ export default function VoteImage() {
       imagePaginationIdentifier =
         nextPagePayload && nextPagePayload.pagination_identifier;
 
+      canMakeNewRequest = imagePaginationIdentifier && imageDetailsListRef.current.length <= 20;
+
       const lensPostIdsArr = lensPostResponseData.lens_posts_ids;
       const lenstPostsMap = lensPostResponseData.lens_posts;
       const lensPostImagesMap = lensPostResponseData.images;
       const lensPostTextMap = lensPostResponseData.texts;
       const usersMap = lensPostResponseData.users;
+      const themesMap = lensPostResponseData.themes
       const lensPostDetails = [];
+
+ 
+
+      for (let i = 1; i <= 3 && themes.length <= 3 ; i++) {
+        
+        const isAlreadyPresent = themes.some(el => el.themeName === themesMap[i]?.name);
+
+        if(!isAlreadyPresent && themesMap[i]?.id && themesMap[i]?.name){
+          themes.push({
+            id: themesMap[i]?.id,
+            themeName: themesMap[i]?.name
+          });
+        }
+      }
+
+      setThemesData(themes);
 
       for (let cnt = 0; cnt < lensPostIdsArr.length; cnt++) {
         const lensPost = lenstPostsMap[lensPostIdsArr[cnt]];
@@ -69,13 +92,16 @@ export default function VoteImage() {
         const descriptionTextId = lensPost.description_text_id,
           imageId = lensPost.image_id,
           owneUserId = lensPost.owner_user_id,
+          themeId = lensPost.theme_id,
           imageObj = lensPostImagesMap && lensPostImagesMap[imageId],
           textObj = lensPostTextMap && lensPostTextMap[descriptionTextId],
+          themesObj = themesMap && themesMap[themeId],
           userObj = usersMap && usersMap[owneUserId];
 
         lensPostDetails.push({
           publicationId: lensPost.lens_publication_id,
           lensPostId: lensPostIdsArr[cnt],
+          themeName: themesObj.name,
           url: imageObj.url,
           title: lensPost.title,
           txHash: lensPost.nft_mint_transaction_hash,
@@ -83,34 +109,21 @@ export default function VoteImage() {
           handle: userObj.lens_profile_username
         });
       }
-      // imageDetailsListRef.current = lensPostDetails;
       imageDetailsListRef.current = imageDetailsListRef.current || [];
       imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
 
       setIsApiInProgress(false);
       setImageIndex(imageDetailsListRef.current.length - 1);
+      setSelectedTheme(imageDetailsListRef.current[imageIndex]?.themeName);
       childRefs.current = Array(imageDetailsListRef.current.length)
         .fill(0)
         .map((i) => React.createRef());
-    } while (imagePaginationIdentifier);
+    } while (canMakeNewRequest);
 
-  }
-
-  async function fetchWordOfTheDay() {
-    console.log("fetching word");
-    setWordFetchInProgress(true);
-    postIdRef.current = await getPostId();
-    console.log("post id", { pid: postIdRef.current });
-    const response = await PublicationApi.fetchPublication(postIdRef.current);
-    console.log({ response });
-    const postDescription = response.data?.publication?.metadata?.description;
-    setWordOfTheDay(postDescription);
-    setWordFetchInProgress(false);
-    fetchLensPost();
   }
 
   useEffect(() => {
-    fetchWordOfTheDay();
+    fetchLensPost();
   }, []);
 
   function showNextImage() {
@@ -140,10 +153,11 @@ export default function VoteImage() {
   }
 
   const submitVote = (dir) => {
-    
-    if(isVoteInProgress.current){
+
+    if (isVoteInProgress.current) {
       return
     }
+    setSelectedTheme(imageDetailsListRef.current[imageIndex]?.themeName);
 
     isVoteInProgress.current = true;
 
@@ -156,9 +170,9 @@ export default function VoteImage() {
       reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
       lens_post_id: lensPostId,
     })
-    .finally(() => {
-      isVoteInProgress.current = false;
-    });
+      .finally(() => {
+        isVoteInProgress.current = false;
+      });
     upvoteImage({ publicationId });
   }
 
@@ -179,16 +193,26 @@ export default function VoteImage() {
     }
   };
 
+  console.log("themes",themesData);
+
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div>
       <div className={`${styles.secondTab}`}>
-        <div className={styles.yellow}>Word of the day</div>
-        <div className={styles.generatedTitle}>
-          {wordFetchInProgress ? (
-            <ClipLoader color={"#fff"} loading={true} size={15} />
-          ) : (
-            <div className={styles.wordOfDay}>{wordOfTheDay}</div>
-          )}
+        <div className={`${styles.yellow} flex items-center justify-center gap-[5px]`}>
+          <span>Trending Themes</span>
+          <span><TrendingThemes /></span>
+        </div>
+        <div className={`${styles.wordOfDay} flex items-center justify-center`}>
+          {imageDetailsListRef.current.length > 0 && themesData.map((item, index) => (
+            <div className={`${selectedTheme === item.themeName ? 'text-[#ffffff] font-bold' : 'text-[#ffffff99]'} flex items-center`} key={index}>
+              <span>
+                <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0.5" width="5" height="5" rx="2.5" fill="white" fillOpacity="0.6" />
+                </svg>
+              </span>
+              #{item.themeName}
+            </div>
+          ))}
         </div>
       </div>
       <div className="relative md:flex justify-center mt-[10px] md:items-center">
@@ -232,7 +256,11 @@ export default function VoteImage() {
                   </div>
                 </div>
               </NonCard>
-            ))}
+            ))}:{
+            <div className='text-[#fff] font-bold mt-[100px]'>
+              You have voted all lens post.
+              </div>
+          }
         </div>
         <button
           className={`absolute md:relative left-0 ${styles.buttonClass}`}
