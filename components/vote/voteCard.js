@@ -24,18 +24,15 @@ export default function VoteCard(props) {
       return;
     }
     if (bioParentWrapperRef && bioParentWrapperRef.current) {
-      console.log("Setting setWrapperTransY back to wrap height");
       setWrapperTransY(bioParentWrapperRef.current.clientHeight);
     }
   }, []);
 
   let cardTransHover = () => {
-    console.log("Show title.");
     showTitle();
   };
 
   let cardTransOut = () => {
-    console.log("cardTransOut");
     clearTimeout(showHandleTimeout);
     hideAll();
   };
@@ -70,14 +67,7 @@ export default function VoteCard(props) {
     const titleHeight = titleWrapperRef.current.clientHeight;
     const wrapHeight = bioParentWrapperRef.current.clientHeight;
     const handleHeight = handleWrapperRef.current.clientHeight;
-    const descriptionHeight = descriptionWrapperRef.current.clientHeight;
 
-    // console.log(
-    //   "(wrapHeight - titleHeight - handleHeight)",
-    //   wrapHeight - titleHeight - handleHeight
-    // );
-    // console.log("(wrapHeight - titleHeight)", wrapHeight - titleHeight);
-    // console.log("wrapperTransY", wrapperTransY);
     if (wrapperTransY <= wrapHeight - titleHeight) {
       //Check if handle is visible.
       if (wrapperTransY >= wrapHeight - titleHeight - handleHeight) {
@@ -91,7 +81,6 @@ export default function VoteCard(props) {
   };
 
   useEffect(() => {
-    console.log("wrapperTransY updated to", wrapperTransY);
     const titleHeight = titleWrapperRef.current.clientHeight;
     const wrapHeight = bioParentWrapperRef.current.clientHeight;
 
@@ -115,7 +104,6 @@ export default function VoteCard(props) {
     const handleHeight = handleWrapperRef.current.clientHeight;
     const descriptionHeight = descriptionWrapperRef.current.clientHeight;
 
-    console.log("showPrompt", showPrompt);
     if (showPrompt) {
       setWrapperTransY(0);
     } else if (wrapperTransY < wrapHeight - descriptionHeight) {
