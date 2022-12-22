@@ -217,10 +217,6 @@ export default function VoteImage() {
           ipfsCid={ipfs}
           txHash={imageDetailsListRef.current[imageIndex]?.txHash}
         />
-        <ShareModal
-          visible={socialShareModal}
-          onClose={() => setSocialShareModal(false)}
-        />
         <div
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px]`}
         >

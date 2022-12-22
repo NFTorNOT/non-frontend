@@ -16,6 +16,7 @@ export default function(props) {
 
   const [wrapperTransY, setWrapperTransY] = useState(0);
   const [socialShareModal, setSocialShareModal] = useState(false);
+  const [showHandleTimeout, setShowHandleTimeout] = useState(0);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -33,6 +34,7 @@ export default function(props) {
   };
 
   let cardTransOut = () => {
+    clearTimeout(showHandleTimeout);
     hideAll();
   };
 
@@ -81,9 +83,9 @@ export default function(props) {
 
     if ( wrapperTransY == (wrapHeight - titleHeight) ) {
       // Showing title, show handle soon.
-      setTimeout(() => {
+      setShowHandleTimeout(setTimeout(() => {
         showHandle();
-      }, 1500);
+      }, 1500));
     }
 
   }, [wrapperTransY])
