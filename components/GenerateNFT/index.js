@@ -42,7 +42,6 @@ export default function GenerateNFT() {
   var filterOptions = [];
   const [imageGenerationInProgress, setImageGenerationInProgress] = useState(false);
   const [putImageToVoteInProgress, setPutImageToVoteInProgress] = useState(false);
-  const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
 
   for (var key in FilterToText) {
     filterOptions.push(key);
@@ -78,7 +77,7 @@ export default function GenerateNFT() {
         }
         const imageUrl = image.image_url;
 
-        if (!selectedPrompt.current.includes(prompt)) {  
+        if (!selectedPrompt.current.includes(prompt)) {
           generatedImagesData.current = [];
           selectedPrompt.current.push(prompt);
         }
@@ -129,22 +128,6 @@ export default function GenerateNFT() {
     // }
     setPutImageToVoteInProgress(false);
   }
-
-  async function fetchWordOfTheDay() {
-    console.log("fetching word");
-    setWordFetchInProgress(true);
-    postIdRef.current = await getPostId();
-    console.log("post id", { pid: postIdRef.current });
-    const response = await PublicationApi.fetchPublication(postIdRef.current);
-    console.log({ response });
-    const postDescription = response.data?.publication?.metadata?.description;
-    setWordOfTheDay(postDescription);
-    setWordFetchInProgress(false);
-  }
-
-  useEffect(() => {
-    fetchWordOfTheDay();
-  }, [userProfile?.id]);
 
   return (
     <>
@@ -233,22 +216,31 @@ export default function GenerateNFT() {
                 </div>
                 <div className="grid gap-5 overflow-y-auto h-full grid-cols-2">
                   <div className={styles.emptyImageCell}>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                      alt="Lens Icon"
-                      width="60"
-                      height="60"
-                    />
-                  </div>
-                  <div className={styles.emptyImageCell}>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                      alt="Lens Icon"
-                      width="60"
-                      height="60"
-                    />
+                    {imageGenerationInProgress ? (
+                      <ClipLoader color={"#fff"} loading={true} size={15} />
+                    ) : (
+                      <Image
+                        src="https://static.plgworks.com/assets/images/non/generate-default.png"
+                        alt="Lens Icon"
+                        width="60"
+                        height="60"
+                      />
+                    )}
                   </div>
 
+                  <div className={styles.emptyImageCell}>
+                    {imageGenerationInProgress ? (
+                      <ClipLoader color={"#fff"} loading={true} size={15} />
+                    ) : (
+                      <Image
+                        src="https://static.plgworks.com/assets/images/non/generate-default.png"
+                        alt="Lens Icon"
+                        width="60"
+                        height="60"
+                      />
+                    )}
+                  </div>
+                  
                   <div className={styles.emptyImageCell}>
                     <Image
                       src="https://static.plgworks.com/assets/images/non/generate-default.png"
