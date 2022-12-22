@@ -142,7 +142,7 @@ export default function VoteCard(props) {
         style={{ transform: `translateY(${wrapperTransY}px)` }}
       >
         <div
-          className={`${styles.card_title} flex justify-between items-start`}
+          className={`${styles.card_title} flex justify-between items-center`}
           ref={titleWrapperRef}
         >
           <div className={`${styles.card_title_text} mr-[25px]`}>
@@ -168,7 +168,10 @@ export default function VoteCard(props) {
 
         <div className={`${styles.showPrompt}`} ref={handleWrapperRef}>
           <div className={styles.id}>@{character.handle}</div>
-          <div className="text-white" onClick={togglePrompt}>
+          <div
+            className="text-white cursor-pointer transition"
+            onClick={togglePrompt}
+          >
             {showPrompt ? "Hide Prompt" : "Show Prompt"}
           </div>
         </div>

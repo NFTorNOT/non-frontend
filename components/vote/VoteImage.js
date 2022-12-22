@@ -30,9 +30,7 @@ export default function VoteImage() {
   const [themesData, setThemesData] = useState([]);
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
-  
-  
-  
+
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
@@ -208,7 +206,7 @@ export default function VoteImage() {
   return (
     <div>
       <div className={`${styles.secondTab}`}>
-        <TrendingThemeDefault selectedTheme={selectedTheme}/>
+        <TrendingThemeDefault selectedTheme={selectedTheme} />
       </div>
       <div className="relative md:flex justify-center md:items-center mt-[40px]">
         <NFTContractInfoModal
@@ -221,7 +219,7 @@ export default function VoteImage() {
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px]`}
         >
           {imageDetailsListRef.current.length > 0 &&
-            imageDetailsListRef.current.slice(0, 1).map((character, index) => (
+            imageDetailsListRef.current.map((character, index) => (
               <NonCard
                 ref={(ref) => (childRefs.current[index] = ref)}
                 onSwipe={(dir) => submitVote(dir)}
@@ -235,57 +233,58 @@ export default function VoteImage() {
         </div>
         {imageDetailsListRef.current.length > 0 ? (
           <>
-        <button
-          className={`absolute md:relative left-0`}
-          disabled={isNotButtonClicked}
-          onClick={() => {
-            swiped("left");
-            setIsNotButtonClicked(true);
-            setTimeout(() => {
-              setIsNotButtonClicked(false);
-            }, 2000);
-          }}
-        >
-          <div
-            className={`${styles.buttonClassNot} ${
-              !isNotButtonClicked ? `block` : `hidden`
-            } m-[8px]`}
-          >
-            <Not />
-          </div>
-          <div className={`${isNotButtonClicked ? `block` : `hidden`}`}>
-            <ClickOnHot />
-          </div>
-        </button>
+            <button
+              className={`absolute md:relative left-0`}
+              disabled={isNotButtonClicked}
+              onClick={() => {
+                swiped("left");
+                setIsNotButtonClicked(true);
+                setTimeout(() => {
+                  setIsNotButtonClicked(false);
+                }, 2000);
+              }}
+            >
+              <div
+                className={`${styles.buttonClassNot} ${
+                  !isNotButtonClicked ? `block` : `hidden`
+                } m-[8px]`}
+              >
+                <Not />
+              </div>
+              <div className={`${isNotButtonClicked ? `block` : `hidden`}`}>
+                <ClickOnHot />
+              </div>
+            </button>
 
-        <button
-          className={`absolute md:relative right-0 order-last`}
-          disabled={isHotButtonClicked}
-          onClick={() => {
-            swiped("right");
-            setIsHotButtonClicked(true);
-            setTimeout(() => {
-              setIsHotButtonClicked(false);
-            }, 2000);
-          }}
-        >
-          <div
-            className={`${styles.buttonClassHot} ${
-              !isHotButtonClicked ? `block` : `hidden`
-            } m-[8px]`}
-          >
-            <Hot />
-          </div>
-          <div className={`${isHotButtonClicked ? `block` : `hidden`}`}>
-            <Image
-              src="https://static.plgworks.com/assets/images/non/vote/hotButtonClick.png"
-              alt="Lens Icon"
-              width="72"
-              height="72"
-            />
-          </div>
-        </button>
-        </>):null}
+            <button
+              className={`absolute md:relative right-0 order-last`}
+              disabled={isHotButtonClicked}
+              onClick={() => {
+                swiped("right");
+                setIsHotButtonClicked(true);
+                setTimeout(() => {
+                  setIsHotButtonClicked(false);
+                }, 2000);
+              }}
+            >
+              <div
+                className={`${styles.buttonClassHot} ${
+                  !isHotButtonClicked ? `block` : `hidden`
+                } m-[8px]`}
+              >
+                <Hot />
+              </div>
+              <div className={`${isHotButtonClicked ? `block` : `hidden`}`}>
+                <Image
+                  src="https://static.plgworks.com/assets/images/non/vote/hotButtonClick.png"
+                  alt="Lens Icon"
+                  width="72"
+                  height="72"
+                />
+              </div>
+            </button>
+          </>
+        ) : null}
       </div>
     </div>
   );
