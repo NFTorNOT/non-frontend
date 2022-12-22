@@ -9,8 +9,8 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
-import TrendingThemes from './svg/trendingThemes';
-import TrendingThemeDefault from './TrendingThemeDefault'
+import TrendingThemes from "./svg/trendingThemes";
+import TrendingThemeDefault from "./TrendingThemeDefault";
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
 
@@ -23,7 +23,7 @@ export default function VoteImage() {
   const imageDetailsListRef = useRef([]);
   const [apiInProgress, setIsApiInProgress] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
-  const [selectedTheme, setSelectedTheme] = useState('');
+  const [selectedTheme, setSelectedTheme] = useState("");
   const [shouldShowUi, setShouldShowUi] = useState(false);
   const [themesData, setThemesData] = useState([]);
   const { isUserLoggedIn } = useAuthContext();
@@ -37,11 +37,14 @@ export default function VoteImage() {
     let canMakeNewRequest = null;
     do {
       setIsApiInProgress(true);
-      const lensPostData = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`, {
-        params: {
-          pagination_identifier: imagePaginationIdentifier,
-        },
-      });
+      const lensPostData = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`,
+        {
+          params: {
+            pagination_identifier: imagePaginationIdentifier,
+          },
+        }
+      );
 
       const lensPostResponseData =
         lensPostData && lensPostData.data && lensPostData.data.data;
@@ -52,30 +55,31 @@ export default function VoteImage() {
       }
 
       const nextPagePayload =
-        lensPostResponseData.meta && lensPostResponseData.meta.next_page_payload;
+        lensPostResponseData.meta &&
+        lensPostResponseData.meta.next_page_payload;
       imagePaginationIdentifier =
         nextPagePayload && nextPagePayload.pagination_identifier;
 
-      canMakeNewRequest = imagePaginationIdentifier && imageDetailsListRef.current.length <= 20;
+      canMakeNewRequest =
+        imagePaginationIdentifier && imageDetailsListRef.current.length <= 20;
 
       const lensPostIdsArr = lensPostResponseData.lens_posts_ids;
       const lenstPostsMap = lensPostResponseData.lens_posts;
       const lensPostImagesMap = lensPostResponseData.images;
       const lensPostTextMap = lensPostResponseData.texts;
       const usersMap = lensPostResponseData.users;
-      const themesMap = lensPostResponseData.themes
+      const themesMap = lensPostResponseData.themes;
       const lensPostDetails = [];
 
-
-
       for (let i = 1; i <= 3 && themes.length <= 3; i++) {
-
-        const isAlreadyPresent = themes.some(el => el.themeName === themesMap[i]?.name);
+        const isAlreadyPresent = themes.some(
+          (el) => el.themeName === themesMap[i]?.name
+        );
 
         if (!isAlreadyPresent && themesMap[i]?.id && themesMap[i]?.name) {
           themes.push({
             id: themesMap[i]?.id,
-            themeName: themesMap[i]?.name
+            themeName: themesMap[i]?.name,
           });
         }
       }
@@ -106,11 +110,12 @@ export default function VoteImage() {
           title: lensPost.title,
           txHash: lensPost.nft_mint_transaction_hash,
           description: textObj.text,
-          handle: userObj.lens_profile_username
+          handle: userObj.lens_profile_username,
         });
       }
       imageDetailsListRef.current = imageDetailsListRef.current || [];
-      imageDetailsListRef.current = imageDetailsListRef.current.concat(lensPostDetails);
+      imageDetailsListRef.current =
+        imageDetailsListRef.current.concat(lensPostDetails);
 
       setIsApiInProgress(false);
       setImageIndex(imageDetailsListRef.current.length - 1);
@@ -119,11 +124,9 @@ export default function VoteImage() {
         .fill(0)
         .map((i) => React.createRef());
     } while (canMakeNewRequest);
-
   }
 
   useEffect(() => {
-
     setTimeout(() => {
       fetchLensPost();
     }, 2000);
@@ -131,7 +134,6 @@ export default function VoteImage() {
     setTimeout(() => {
       setShouldShowUi(true);
     }, 5000);
-
   }, []);
 
   function showNextImage() {
@@ -161,35 +163,34 @@ export default function VoteImage() {
   }
 
   const submitVote = (dir) => {
-
     if (isVoteInProgress.current) {
-      return
+      return;
     }
     setSelectedTheme(imageDetailsListRef.current[imageIndex]?.themeName);
 
     isVoteInProgress.current = true;
 
-    const lensPostId =
-      imageDetailsListRef.current[imageIndex]?.lensPostId;
+    const lensPostId = imageDetailsListRef.current[imageIndex]?.lensPostId;
     const publicationId =
       imageDetailsListRef.current[imageIndex]?.publicationId;
 
-    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
-      reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
-      lens_post_id: lensPostId,
-    })
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
+        reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
+        lens_post_id: lensPostId,
+      })
       .finally(() => {
         isVoteInProgress.current = false;
       });
     upvoteImage({ publicationId });
-  }
+  };
 
   const swiped = (dir) => {
     submitVote(dir);
     swipeAnimation(dir);
     showNextImage();
     if (imageIndex <= 2) {
-      fetchLensPost()
+      fetchLensPost();
     }
   };
 
@@ -201,30 +202,10 @@ export default function VoteImage() {
     }
   };
 
-
   return (
     <div>
       <div className={`${styles.secondTab}`}>
         <TrendingThemeDefault />
-        {shouldShowUi ?
-          <> <div className={`${styles.yellow} flex items-center justify-center gap-[5px] md:pl-16`}>
-            <span>Trending Themes</span>
-            <span><TrendingThemes /></span>
-          </div>
-            <div className={`${styles.wordOfDay} flex items-center justify-center md:pl-16`}>
-              {imageDetailsListRef.current.length > 0 && themesData.map((item, index) => (
-                <div className={`${selectedTheme === item.themeName ? 'text-[#ffffff] font-bold' : 'text-[#ffffff99]'} flex items-center`} key={index}>
-                  #{item.themeName}
-                  {index < 2 && <span className='px-[10px]'>
-                    <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="0.5" width="5" height="5" rx="2.5" fill="white" fillOpacity="0.6" />
-                    </svg>
-                  </span>}
-                </div>
-              ))}
-            </div>
-          </> : <div className='h-[53px]'></div>
-        }
       </div>
       <div className="relative md:flex justify-center mt-[10px] md:items-center mt-[40px]">
         <NFTContractInfoModal
@@ -269,23 +250,25 @@ export default function VoteImage() {
               </NonCard>
             ))}
         </div>
-        {imageDetailsListRef.current.length > 0 ? <>
-          <button
-            className={`absolute md:relative left-0 ${styles.buttonClass}`}
-            onClick={() => swiped("left")}
-          >
-            <Not />
-          </button>
+        {imageDetailsListRef.current.length > 0 ? (
+          <>
+            <button
+              className={`absolute md:relative left-0 ${styles.buttonClass}`}
+              onClick={() => swiped("left")}
+            >
+              <Not />
+            </button>
 
-          <button
-            className={`absolute md:relative right-0 order-last ${styles.buttonClass}`}
-            onClick={() => swiped("right")}
-          >
-            <div className={`relative`}>
-              <Hot />
-            </div>
-          </button>
-        </> : null}
+            <button
+              className={`absolute md:relative right-0 order-last ${styles.buttonClass}`}
+              onClick={() => swiped("right")}
+            >
+              <div className={`relative`}>
+                <Hot />
+              </div>
+            </button>
+          </>
+        ) : null}
       </div>
     </div>
   );
