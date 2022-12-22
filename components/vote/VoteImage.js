@@ -28,10 +28,7 @@ export default function VoteImage() {
   const [apiInProgress, setIsApiInProgress] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [selectedTheme, setSelectedTheme] = useState("");
-  const [shouldShowUi, setShouldShowUi] = useState(false);
   const [themesData, setThemesData] = useState([]);
-  const [wordOfTheDay, setWordOfTheDay] = useState();
-  const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
   const [socialShareModal, setSocialShareModal] = useState(false);
@@ -139,10 +136,6 @@ export default function VoteImage() {
     setTimeout(() => {
       fetchLensPost();
     }, 2000);
-
-    setTimeout(() => {
-      setShouldShowUi(true);
-    }, 5000);
   }, []);
 
   function showNextImage() {
