@@ -1,0 +1,8 @@
+$twitter-fill-color: #1da1f2;
+
+.iconFillColor{
+    fill: white;
+}
+.twitterIconWrap :hover .iconFillColor{
+    fill: $twitter-fill-color;
+}

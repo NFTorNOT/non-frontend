@@ -1,0 +1,24 @@
+.themesNameAnimation {
+  position: absolute;
+  animation-iteration-count: 1;
+  animation-duration: 3s;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+  animation-delay: 2s;
+  animation-name: transformThemes;
+  font-size: 16px;
+  transform-origin: center;
+  left: 50%;
+  transform: translate(-50%, 0%) scale(0.35);
+}
+
+@keyframes transformThemes {
+  0% {
+    margin-top: 40%;
+    transform: translate(-50%, 0) scale(1.5);
+  }
+  100% {
+    // top: 0%;
+    transform: translate(-50%, 0%) scale(0.35);
+  }
+}
