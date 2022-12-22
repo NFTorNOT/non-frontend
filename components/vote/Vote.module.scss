@@ -208,11 +208,6 @@
     max-width: 512px;
     height: 512px;
   }
-  &:hover {
-    .card_title_overlay {
-      // transform: translateY(0);
-    }
-  }
 }
 .card_title_overlay {
   width: 100%;
@@ -226,6 +221,7 @@
   left: 0;
   right: 0;
   z-index: 1;
+  padding: 0 15px;
   transition: 0.5s ease-in-out;
 }
 
