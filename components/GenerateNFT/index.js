@@ -32,6 +32,8 @@ export default function GenerateNFT() {
   const [imagesData, setImagesData] = useState([]);
 
   const postIdRef = useRef(null);
+  const selectedPrompt = useRef([]);
+  const generatedImagesData = useRef([]);
 
   const isSubmitDisabled =
     !isUserLoggedIn || (isUserLoggedIn && imageTitle === "");
@@ -61,13 +63,10 @@ export default function GenerateNFT() {
     }).then((response) => {
       console.log(response.data);
       const generatedImagesResponseData = response.data.data;
-      // setImage(response.data.data.image.url);
       if (!generatedImagesResponseData) {
         // TODO:DS : Show Response Err
         return;
       }
-      let generatedImagesData = [];
-
       const suggestionsIdsArr = generatedImagesResponseData.suggestion_ids;
       const suggestionsMap = generatedImagesResponseData.suggestions;
 
@@ -78,15 +77,21 @@ export default function GenerateNFT() {
           continue;
         }
         const imageUrl = image.image_url;
-        generatedImagesData.push({
+
+        if (!selectedPrompt.current.includes(prompt)) {  
+          generatedImagesData.current = [];
+          selectedPrompt.current.push(prompt);
+        }
+
+        generatedImagesData.current.push({
           image_url: imageUrl
         });
       }
       setImagesData(generatedImagesData);
     })
-    .finally(() => {
-      setImageGenerationInProgress(false);
-    });
+      .finally(() => {
+        setImageGenerationInProgress(false);
+      });
   };
 
   async function onSubmitToVote() {
@@ -141,7 +146,6 @@ export default function GenerateNFT() {
     fetchWordOfTheDay();
   }, [userProfile?.id]);
 
-  console.log("imge data", imagesData);
   return (
     <>
       <div className={`${styles.generateNFT}`}>
@@ -266,8 +270,8 @@ export default function GenerateNFT() {
             ) : (
               <div style={sectionStyle}>
                 <div className="grid gap-5 overflow-y-auto h-full grid-cols-2">
-                  {imagesData.map((image, index) => (
-                    <div className={`${styles.bottom} relative`}>
+                  {generatedImagesData.current.length > 0 && generatedImagesData.current.map((image, index) => (
+                    <div className={`${styles.bottom} relative`} key={index}>
                       <img src={image.image_url} alt='hello' />
                       <div className='absolute w-full'>
                         <input
