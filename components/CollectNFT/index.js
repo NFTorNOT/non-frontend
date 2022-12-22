@@ -53,7 +53,7 @@ export default function NFTOfTheDay() {
         <CircleLoader />
       ) : (
         <div className="flex justify-center mt-[40px]">
-            <div className='mx-[50px]'>
+            <div className='mx-[50px] relative'>
                 <HallOfFlame />
                 <CollectNFT />
             </div>

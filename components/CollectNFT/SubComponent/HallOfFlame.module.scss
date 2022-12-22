@@ -1,5 +1,6 @@
 .container {
   margin: auto;
+  width: calc(100vw - 500px);
 }
 .carousel {
   width: 100%;
@@ -29,4 +30,25 @@
   height: 100%;
   object-fit: cover;
   border-radius: 16px;
+}
+.prev{
+  position: absolute;
+  z-index: 99;
+  left: -25px;
+  top: 100px;
+  color: #ffffff;
+}
+.next{
+  color: #ffffff;
+  z-index: 99;
+  position: absolute;
+  right: -25px;
+  top: 100px;
+}
+.trending{
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  top: 5px;
+  right: -10px;
 }
