@@ -1,5 +1,6 @@
 import styles from "./Vote.module.scss";
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
@@ -11,8 +12,11 @@ import Not from "./svg/not";
 import Hot from "./svg/hot";
 import TrendingThemes from "./svg/trendingThemes";
 import TrendingThemeDefault from "./TrendingThemeDefault";
+import SocialShare from "./svg/socialShare";
+import ClickOnHot from "./svg/clickOnHot";
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
+import ShareModal from "./shareModal";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -26,6 +30,11 @@ export default function VoteImage() {
   const [selectedTheme, setSelectedTheme] = useState("");
   const [shouldShowUi, setShouldShowUi] = useState(false);
   const [themesData, setThemesData] = useState([]);
+  const [wordOfTheDay, setWordOfTheDay] = useState();
+  const [wordFetchInProgress, setWordFetchInProgress] = useState(false);
+  const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
+  const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
+  const [socialShareModal, setSocialShareModal] = useState(false);
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
@@ -214,6 +223,10 @@ export default function VoteImage() {
           ipfsCid={ipfs}
           txHash={imageDetailsListRef.current[imageIndex]?.txHash}
         />
+        <ShareModal
+          visible={socialShareModal}
+          onClose={() => setSocialShareModal(false)}
+        />
         <div
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px]`}
         >
@@ -230,10 +243,29 @@ export default function VoteImage() {
                   className={`${styles.card}`}
                   style={{ backgroundImage: `url(${character.url})` }}
                 >
-                  <div className={styles.card_title_overlay}>
-                    <div className={styles.card_title}>
-                      <div className={styles.card_title_text}>
+                  <div className={`${styles.card_title_overlay}`}>
+                    <div
+                      className={`${styles.card_title} flex justify-between items-start pt-[15px]`}
+                    >
+                      <div className={`${styles.card_title_text} mr-[25px]`}>
                         {character.title}
+                        {/* The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight  */}
+                      </div>
+                      <div className="text-[#ffffff] flex items-center">
+                        <div
+                          className={`cursor-pointer mr-[20px]`}
+                          onClick={() => setSocialShareModal(true)}
+                        >
+                          <SocialShare />
+                        </div>
+                        <div className="cursor-pointer">
+                          <Image
+                            src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
+                            alt="contract icon"
+                            width="20"
+                            height="20"
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className={styles.nftInfo}>
@@ -252,23 +284,57 @@ export default function VoteImage() {
         </div>
         {imageDetailsListRef.current.length > 0 ? (
           <>
-            <button
-              className={`absolute md:relative left-0 ${styles.buttonClass}`}
-              onClick={() => swiped("left")}
-            >
-              <Not />
-            </button>
+        <button
+          className={`absolute md:relative left-0`}
+          disabled={isNotButtonClicked}
+          onClick={() => {
+            swiped("left");
+            setIsNotButtonClicked(true);
+            setTimeout(() => {
+              setIsNotButtonClicked(false);
+            }, 2000);
+          }}
+        >
+          <div
+            className={`${styles.buttonClassNot} ${
+              !isNotButtonClicked ? `block` : `hidden`
+            } m-[8px]`}
+          >
+            <Not />
+          </div>
+          <div className={`${isNotButtonClicked ? `block` : `hidden`}`}>
+            <ClickOnHot />
+          </div>
+        </button>
 
-            <button
-              className={`absolute md:relative right-0 order-last ${styles.buttonClass}`}
-              onClick={() => swiped("right")}
-            >
-              <div className={`relative`}>
-                <Hot />
-              </div>
-            </button>
-          </>
-        ) : null}
+        <button
+          className={`absolute md:relative right-0 order-last`}
+          disabled={isHotButtonClicked}
+          onClick={() => {
+            swiped("right");
+            setIsHotButtonClicked(true);
+            setTimeout(() => {
+              setIsHotButtonClicked(false);
+            }, 2000);
+          }}
+        >
+          <div
+            className={`${styles.buttonClassHot} ${
+              !isHotButtonClicked ? `block` : `hidden`
+            } m-[8px]`}
+          >
+            <Hot />
+          </div>
+          <div className={`${isHotButtonClicked ? `block` : `hidden`}`}>
+            <Image
+              src="https://static.plgworks.com/assets/images/non/vote/hotButtonClick.png"
+              alt="Lens Icon"
+              width="72"
+              height="72"
+            />
+          </div>
+        </button>
+        </>):null}
       </div>
     </div>
   );
