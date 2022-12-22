@@ -12,11 +12,10 @@ import Not from "./svg/not";
 import Hot from "./svg/hot";
 import TrendingThemes from "./svg/trendingThemes";
 import TrendingThemeDefault from "./TrendingThemeDefault";
-import SocialShare from "./svg/socialShare";
 import ClickOnHot from "./svg/clickOnHot";
 import axios from "axios";
 import { ReactionTypes } from "../../utils/Constants";
-import ShareModal from "./shareModal";
+import VoteCard from "./voteCard";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -31,7 +30,9 @@ export default function VoteImage() {
   const [themesData, setThemesData] = useState([]);
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
-  const [socialShareModal, setSocialShareModal] = useState(false);
+  
+  
+  
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
   const postIdRef = useRef();
@@ -209,7 +210,7 @@ export default function VoteImage() {
       <div className={`${styles.secondTab}`}>
         <TrendingThemeDefault selectedTheme={selectedTheme}/>
       </div>
-      <div className="relative md:flex justify-center mt-[10px] md:items-center mt-[40px]">
+      <div className="relative md:flex justify-center md:items-center mt-[40px]">
         <NFTContractInfoModal
           visible={nftDetailsModal}
           onClose={() => setNftDetailsModal(false)}
@@ -224,7 +225,7 @@ export default function VoteImage() {
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px]`}
         >
           {imageDetailsListRef.current.length > 0 &&
-            imageDetailsListRef.current.map((character, index) => (
+            imageDetailsListRef.current.slice(0, 1).map((character, index) => (
               <NonCard
                 ref={(ref) => (childRefs.current[index] = ref)}
                 onSwipe={(dir) => submitVote(dir)}
@@ -232,46 +233,7 @@ export default function VoteImage() {
                 preventSwipe={["up", "down"]}
                 key={index}
               >
-                <div
-                  className={`${styles.card}`}
-                  style={{ backgroundImage: `url(${character.url})` }}
-                >
-                  <div className={`${styles.card_title_overlay}`}>
-                    <div
-                      className={`${styles.card_title} flex justify-between items-start pt-[15px]`}
-                    >
-                      <div className={`${styles.card_title_text} mr-[25px]`}>
-                        {character.title}
-                        {/* The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight The Forgotten Prince of The Kingdom of Eternal Sunlight  */}
-                      </div>
-                      <div className="text-[#ffffff] flex items-center">
-                        <div
-                          className={`cursor-pointer mr-[20px]`}
-                          onClick={() => setSocialShareModal(true)}
-                        >
-                          <SocialShare />
-                        </div>
-                        <div className="cursor-pointer">
-                          <Image
-                            src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
-                            alt="contract icon"
-                            width="20"
-                            height="20"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.nftInfo}>
-                      <div className={styles.id}>{character.handle}</div>
-                      <button
-                        className={`${styles.nftButton} pb-[30px]`}
-                        onClick={() => setNftDetailsModal(true)}
-                      >
-                        NFT contract info
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <VoteCard character={character}></VoteCard>
               </NonCard>
             ))}
         </div>

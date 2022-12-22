@@ -81,16 +81,15 @@
   outline: none;
 }
 
-.nftInfo {
-  align-self: end;
-  display: grid;
-  grid-template-columns: auto auto;
-  margin: 7px 24px;
+.showPrompt {
+  display: flex;
+  padding-bottom: 12px;
   align-items: center;
-  @media screen and (max-width: 586px) {
-    display: block;
-    margin: 7px 12px;
-  }
+  justify-content: space-between;
+}
+.description {
+  color: white;
+  padding-bottom: 15px;
 }
 .id {
   font-weight: 500;
@@ -209,27 +208,31 @@
     max-width: 512px;
     height: 512px;
   }
+  &:hover {
+    .card_title_overlay {
+      // transform: translateY(0);
+    }
+  }
 }
 .card_title_overlay {
-  position: absolute;
   width: 100%;
-  height: 100px;
-  bottom: 0;
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0.8) 41.15%
   );
-  @media screen and (max-width: 586px) {
-    height: 40%;
-  }
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  transition: 0.5s ease-in-out;
 }
 
 .card_title {
-  text-align: center;
-  padding: 0 15px;
-  bottom: 0;
-  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 12px;
+  text-align: left;
 }
 
 .card_title_text {
@@ -261,7 +264,7 @@
   @media screen and (min-width: 568px) {
     padding: 12px;
   }
-  &:hover{
+  &:hover {
     background: rgba(0, 0, 0, 0.4);
   }
 }
@@ -277,7 +280,7 @@
   @media screen and (min-width: 568px) {
     padding: 12px;
   }
-  &:hover{
+  &:hover {
     background: rgba(0, 0, 0, 0.4);
   }
 }
