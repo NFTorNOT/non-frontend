@@ -1,0 +1,32 @@
+.container {
+  margin: auto;
+}
+.carousel {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.carouselItems {
+  display: flex;
+  transition: transform 0.5s ease;
+  margin: 0 -10px;
+}
+.carouselItem {
+  display: flex;
+  flex: 0 0 calc(13.337% - 20px);
+  width: 125px;
+  height: 125px;
+  margin: 0 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 16px;
+  text-align: center;
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+.carouselImage{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+}
