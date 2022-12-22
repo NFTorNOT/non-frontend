@@ -197,7 +197,7 @@ export default function VoteImage() {
 
   const submitVote = (dir) => {
     if (!isUserLoggedIn) {
-      alert("Please sign in to vote");
+      alertUserToSignIn();
       return;
     }
     if (isVoteInProgress.current) {
@@ -222,9 +222,13 @@ export default function VoteImage() {
     upvoteImage({ publicationId });
   };
 
+  function alertUserToSignIn() {
+    alert("Please sign in to vote");
+  }
+
   const swiped = async (dir) => {
     if (!isUserLoggedIn) {
-      alert("Please sign in to vote");
+      alertUserToSignIn();
       return;
     }
     submitVote(dir);
@@ -276,6 +280,10 @@ export default function VoteImage() {
               className={`absolute md:relative left-0`}
               disabled={isNotButtonClicked}
               onClick={() => {
+                if (!isUserLoggedIn) {
+                  alertUserToSignIn();
+                  return;
+                }
                 swiped("left");
                 setIsNotButtonClicked(true);
                 setTimeout(() => {
@@ -299,6 +307,10 @@ export default function VoteImage() {
               className={`absolute md:relative right-0 order-last`}
               disabled={isHotButtonClicked}
               onClick={() => {
+                if (!isUserLoggedIn) {
+                  alertUserToSignIn();
+                  return;
+                }
                 swiped("right");
                 setIsHotButtonClicked(true);
                 setTimeout(() => {
