@@ -205,7 +205,7 @@ export default function VoteImage() {
   return (
     <div>
       <div className={`${styles.secondTab}`}>
-        <TrendingThemeDefault />
+        <TrendingThemeDefault selectedTheme={selectedTheme}/>
       </div>
       <div className="relative md:flex justify-center mt-[10px] md:items-center mt-[40px]">
         <NFTContractInfoModal

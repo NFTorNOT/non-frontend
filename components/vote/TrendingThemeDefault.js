@@ -3,7 +3,8 @@ import styles from "./Vote.module.scss";
 import style from "./TrendingThemeDefault.module.scss";
 import ThrendingThemeSvg from "./svg/ThrendingThemeSvg";
 
-function TrendingThemeDefault() {
+function TrendingThemeDefault(props) {
+  const selectedTheme =  props.selectedTheme;
   const themesData = [
     {
       id: "1",
@@ -36,7 +37,7 @@ function TrendingThemeDefault() {
           <div className="flex items-center justify-center mt-[10px]">
             {themesData.map((item, index) => (
               <div className="flex items-center" key={index}>
-                <span className="text-[30px] md:text-[54px] text-[#fff] font-bold">
+                <span className={`text-[30px] md:text-[54px] font-bold ${selectedTheme === item.themeName ? 'text-[#fff]' : 'text-[#ffffff99]'}`}>
                   {" "}
                   #{item.themeName}
                 </span>
