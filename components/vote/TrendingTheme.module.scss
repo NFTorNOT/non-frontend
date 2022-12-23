@@ -1,0 +1,38 @@
+.themesNameAnimation {
+  position: absolute;
+  animation-iteration-count: 1;
+  animation-duration: 3s;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+  animation-delay: 1s;
+  animation-name: transformThemes;
+  font-size: 16px;
+  transform-origin: center;
+  left: 50%;
+  transform: translate(-50%, 0%) scale(50%);
+}
+
+.themeHeading {
+  text-align: center;
+  font-weight: 600;
+  background: radial-gradient(
+      107.14% 107.14% at 50% 80.95%,
+      #fa5c00 0%,
+      #ffb800 100%
+    ),
+    #fa5c00;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+@keyframes transformThemes {
+  0% {
+    margin-top: 30%;
+    transform: translate(-50%, 0) scale(1.5);
+  }
+  100% {
+    transform: translate(-50%, 0%) scale(50%);
+  }
+}

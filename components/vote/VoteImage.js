@@ -10,7 +10,6 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
-import TrendingThemes from "./svg/trendingThemes";
 import TrendingThemeDefault from "./TrendingThemeDefault";
 import ClickOnHot from "./svg/clickOnHot";
 import axios, { all } from "axios";
@@ -246,10 +245,8 @@ export default function VoteImage() {
   };
 
   return (
-    <div>
-      <div className={`${styles.secondTab}`}>
-        <TrendingThemeDefault selectedTheme={selectedTheme} />
-      </div>
+    <div className="flex items-center justify-center flex-col">
+      <TrendingThemeDefault selectedTheme={selectedTheme} />
       <div className="relative md:flex justify-center md:items-center mt-[40px]">
         <NFTContractInfoModal
           visible={nftDetailsModal}
