@@ -43,24 +43,29 @@ function SubmitForVoteModal({
           Submit your generations
         </div>
         {infoMap.map((item, index) => (
-          <div className="" key={index}>
-            {item.svgIcon}
-            <div className="text-[#fff] text-[16px]">{item.desc}</div>
-          </div>
+            <div className="my-[16px]" key={index}>
+                {item.svgIcon}
+                <div className="text-[#fff] text-[16px] mt-[10px]">{item.desc}</div>
+            </div>
         ))}
-        {submitToVoteApiInProgress ? (
-          <ClipLoader color={"#fff"} loading={true} size={15} />
-        ) : (
-          <button
-            className={`${styles.submitVote}`}
-            onClick={() => clickHandler()}
-          >
-            + Submit for voting{" "}
-          </button>
-        )}
-      </div>
+        <div>
+            <div className={`${styles.submitVote} mt-[30px]`}>
+                {submitToVoteApiInProgress ? (
+                    <div className='flex items-center justify-center gap-[6px]'>
+                        <ClipLoader color={"#fff"} loading={true} size={15} />
+                        <span>Submit for voting{" "}</span>
+                    </div>
+                ) : (
+                    <button
+                        onClick={() => clickHandler()}>
+                        + Submit for voting{" "}
+                    </button>
+                )}
+            </div>
+        </div>
     </div>
-  );
+</div>
+    );
 }
 
 export default SubmitForVoteModal;
