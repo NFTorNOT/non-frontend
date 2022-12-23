@@ -1,7 +1,13 @@
 import React, { useState } from "react";
+import { ClipLoader } from "react-spinners";
 import styles from "./Generate.module.scss";
 
-function UserInput({ onSubmit }) {
+function UserInput({
+  onSubmit,
+  image,
+  onSubmitToVote,
+  putImageToVoteInProgress,
+}) {
   const [imageTitle, setImageTitle] = useState("");
   return (
     <div>
@@ -15,6 +21,19 @@ function UserInput({ onSubmit }) {
         placeholder="Enter a title for your masterpiece..."
         className={styles.masterpeice}
       />
+      <button
+        disabled={!imageTitle}
+        onClick={() => onSubmitToVote(image.image_url)}
+        className={`${styles.submitVote} ${!imageTitle ? styles.disabled : {}}`}
+        type="submit"
+        title="Submit for voting"
+      >
+        {putImageToVoteInProgress ? (
+          <ClipLoader color={"#fff"} loading={true} size={15} />
+        ) : (
+          "Submit for voting"
+        )}
+      </button>
     </div>
   );
 }

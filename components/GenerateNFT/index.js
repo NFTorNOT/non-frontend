@@ -18,11 +18,9 @@ import UserInput from "./UserInput";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
-  const [wordOfTheDay, setWordOfTheDay] = useState();
   const { address } = useAccount();
   const { userProfile } = useUserContext();
   const { isUserLoggedIn } = useAuthContext();
-  const { getPostId } = useCurrentPublicationId();
   const { onTabChange } = useBottomTab();
   var sectionStyle = {
     backgroundImage: `url(${image})`,
@@ -32,8 +30,6 @@ export default function GenerateNFT() {
   const [theme, setTheme] = useState("Light");
   const [imageTitle, setImageTitle] = useState("");
   const [selectedImgUrl, setSelectedImgUrl] = useState("");
-  // const [imageIpfsObjectId, setImageIpfsObjectId] = useState("");
-  // const [lensMetadataIpfsObjectId, setLensMetadataIpfsObjectId] = useState("");
 
   const lensMetadataIpfsObjectId = useRef();
   const imageIpfsObjectId = useRef();
@@ -43,14 +39,10 @@ export default function GenerateNFT() {
   const [submitToVoteApiInProgress, setSubmitToVoteApiInProgress] =
     useState(false);
 
-  const postIdRef = useRef(null);
   const selectedPrompt = useRef([]);
   const generatedImagesData = useRef([]);
   const scrollRef = useRef();
   const submittedImagePublicationId = useRef();
-
-  const isSubmitDisabled =
-    !isUserLoggedIn || (isUserLoggedIn && imageTitle === "");
 
   var filterOptions = [];
   const [imageGenerationInProgress, setImageGenerationInProgress] =
@@ -356,32 +348,14 @@ export default function GenerateNFT() {
                         <div className="absolute w-full">
                           <UserInput
                             key={index}
+                            image={image}
+                            onSubmitToVote={onSubmitToVote}
                             style={styles.masterpeice}
+                            putImageToVoteInProgress={putImageToVoteInProgress}
                             onSubmit={(value) => {
-                              console.log("cvalue", value);
                               setImageTitle(value);
                             }}
                           />
-                          <button
-                            disabled={isSubmitDisabled}
-                            onClick={() => onSubmitToVote(image.image_url)}
-                            className={`${styles.submitVote} ${
-                              isSubmitDisabled ? styles.disabled : {}
-                            }`}
-                            type="submit"
-                            title="Submit for voting"
-                            id={index}
-                          >
-                            {putImageToVoteInProgress ? (
-                              <ClipLoader
-                                color={"#fff"}
-                                loading={true}
-                                size={15}
-                              />
-                            ) : (
-                              "Submit for voting"
-                            )}
-                          </button>
                         </div>
                       </div>
                     ))}
