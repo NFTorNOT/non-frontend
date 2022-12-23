@@ -31,16 +31,23 @@ export default function GenerateNFT() {
   const [filter, setfilter] = useState("volvo");
   const [theme, setTheme] = useState("Light");
   const [imageTitle, setImageTitle] = useState("");
-  const [selectedImgUrl, setSelectedImgUrl] = useState('');
-  const [imageIpfsObjectId, setImageIpfsObjectId] = useState('');
-  const [lensMetadataIpfsObjectId, setLensMetadataIpfsObjectId] = useState('');
+  const [selectedImgUrl, setSelectedImgUrl] = useState("");
+  // const [imageIpfsObjectId, setImageIpfsObjectId] = useState("");
+  // const [lensMetadataIpfsObjectId, setLensMetadataIpfsObjectId] = useState("");
+
+  const lensMetadataIpfsObjectId = useRef();
+  const imageIpfsObjectId = useRef();
+
   const [imagesData, setImagesData] = useState([]);
   const [submitToVoteModal, setsubmitToVoteModal] = useState(false);
+  const [submitToVoteApiInProgress, setSubmitToVoteApiInProgress] =
+    useState(false);
 
   const postIdRef = useRef(null);
   const selectedPrompt = useRef([]);
   const generatedImagesData = useRef([]);
   const scrollRef = useRef();
+  const submittedImagePublicationId = useRef();
 
   const isSubmitDisabled =
     !isUserLoggedIn || (isUserLoggedIn && imageTitle === "");
@@ -104,41 +111,10 @@ export default function GenerateNFT() {
   };
 
   async function onSubmitToVote(imgUrl) {
+    console.log("here here");
     setPutImageToVoteInProgress(true);
     setsubmitToVoteModal(true);
     setSelectedImgUrl(imgUrl);
-
-    // try {
-    //   const publicationId = postIdRef.current || (await getPostId());
-    //   // const response = await NFTApi.submitToVote({
-    //   //   receiverAddress: address,
-    //   //   imageUrl: image,
-    //   //   imageTitle: imageTitle,
-    //   // });
-    //   console.log("mint response", { response });
-    //   const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
-    //     response.data.data;
-    //   console.log("spliting imageUrl", {
-    //     imageCid,
-    //     transactionHash,
-    //     tokenId,
-    //     lensMetaDataCid,
-    //   });
-
-    //   const { txId } = await LensHelper.postCommentWithDispatcher({
-    //     commentMetadataCid: lensMetaDataCid,
-    //     profileId: userProfile?.id,
-    //     publicationId,
-    //   });
-
-    //   if (txId) {
-    //     const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
-    //   }
-
-    //   onTabChange(TabItems[TabNames.VoteImage]);
-    // } catch (error) {
-    //   console.log(error);
-    // }
     setPutImageToVoteInProgress(false);
   }
 
@@ -159,62 +135,80 @@ export default function GenerateNFT() {
     });
   };
 
-  const submitToVoteApi = () => {
+  const postOnLens = async () => {
+    try {
+      console.log("here here", lensMetadataIpfsObjectId.current);
+      const { txId, txHash } = await LensHelper.postWithDispatcher({
+        postMetadataCid: lensMetadataIpfsObjectId.current.cid,
+        profileId: userProfile.id,
+        profileAddress: address,
+      });
 
-    const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
-      response.data.data;
-    console.log("spliting imageUrl", {
-      imageCid,
-      transactionHash,
-      tokenId,
-      lensMetaDataCid,
-    });
+      let indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
 
-    const { txId } = await LensHelper.postCommentWithDispatcher({
-      commentMetadataCid: lensMetaDataCid,
-      profileId: userProfile?.id,
-      publicationId,
-    });
+      const publicationRes =
+        await PublicationApi.fetchPublicationWithTranscationHash(txHash);
 
-    if (txId) {
-      const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
+      submittedImagePublicationId.current =
+        publicationRes?.data?.publication?.id;
+
+      submitToVoteApi();
+
+      console.log({ indexedResult, publicationRes });
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-to-vote`, {
-      image_url: selectedImgUrl,
-      title: imageTitle,
-      description: prompt,
-      theme_name: theme,
-      image_ipfs_object_id: imageCid,
-      lens_metadata_ipfs_object_id: lensMetadataIpfsObjectId
-      // lens_publication_id : 1
-    }).then((response) => {
-      console.log("Response", response);
-    });
-  }
+  const submitToVoteApi = () => {
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-to-vote`, {
+        image_url: selectedImgUrl,
+        title: imageTitle,
+        description: prompt,
+        theme_name: theme,
+        image_ipfs_object_id: imageIpfsObjectId.current.id,
+        lens_metadata_ipfs_object_id: lensMetadataIpfsObjectId.current.id,
+        lens_publication_id: submittedImagePublicationId.current,
+      })
+      .then((response) => {
+        console.log("Response", response);
+        onTabChange(TabItems[TabNames.VoteImage]);
+      });
+    setSubmitToVoteApiInProgress(false);
+  };
 
   const submitVoteClickHandler = () => {
-    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/store-on-ipfs`, {
-      image_url: selectedImgUrl,
-      title: imageTitle,
-      description: prompt
-    }).then((response) => {
-      const apiResponseData = response.data.data;
-      const ipfsObjectIds = apiResponseData.ipfs_object_ids;
-      const ipfsObjectsMap = apiResponseData.ipfs_objects;
+    if (!address) {
+      alert("Please sign in to vote");
+      return;
+    }
+    setSubmitToVoteApiInProgress(true);
+    axios
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/store-on-ipfs`, {
+        image_url: selectedImgUrl,
+        title: imageTitle,
+        description: prompt,
+      })
+      .then((response) => {
+        const apiResponseData = response.data.data;
+        const ipfsObjectIds = apiResponseData.ipfs_object_ids;
+        const ipfsObjectsMap = apiResponseData.ipfs_objects;
 
-      for (let i = 0; i < ipfsObjectIds.length; i++) {
-        const ipfsObject = ipfsObjectsMap[ipfsObjectIds[i]];
+        for (let i = 0; i < ipfsObjectIds.length; i++) {
+          const ipfsObject = ipfsObjectsMap[ipfsObjectIds[i]];
 
-        if (ipfsObject.kind === 'IMAGE')
-          setImageIpfsObjectId(ipfsObject.cid)
+          if (ipfsObject.kind === "IMAGE") {
+            imageIpfsObjectId.current = ipfsObject;
+          }
 
-        if (ipfsObject.kind === 'LENS_PUBLICATION_METADATA')
-          setLensMetadataIpfsObjectId(ipfsObject.cid)
-      }
-      submitToVoteApi();
-    });
-  }
+          if (ipfsObject.kind === "LENS_PUBLICATION_METADATA") {
+            lensMetadataIpfsObjectId.current = ipfsObject;
+          }
+        }
+        postOnLens();
+      });
+  };
 
   return (
     <>
@@ -290,6 +284,7 @@ export default function GenerateNFT() {
           <div className={styles.generatedImagePrompts}>
             <SubmitForVoteModal
               visible={submitToVoteModal}
+              submitToVoteApiInProgress={submitToVoteApiInProgress}
               setsubmitToVoteModal={setsubmitToVoteModal}
               clickHandler={() => submitVoteClickHandler()}
             />
@@ -362,13 +357,17 @@ export default function GenerateNFT() {
                           <UserInput
                             key={index}
                             style={styles.masterpeice}
-                            onSubmit={(value) => setImageTitle(value)}
+                            onSubmit={(value) => {
+                              console.log("cvalue", value);
+                              setImageTitle(value);
+                            }}
                           />
                           <button
                             disabled={isSubmitDisabled}
                             onClick={() => onSubmitToVote(image.image_url)}
-                            className={`${styles.submitVote} ${isSubmitDisabled ? styles.disabled : {}
-                              }`}
+                            className={`${styles.submitVote} ${
+                              isSubmitDisabled ? styles.disabled : {}
+                            }`}
                             type="submit"
                             title="Submit for voting"
                             id={index}
