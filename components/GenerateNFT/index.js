@@ -10,10 +10,10 @@ import { TabItems, TabNames } from "../Main/TabItems";
 import { useUserContext } from "../../context/UserContext";
 import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 import PublicationApi from "../../graphql/PublicationApi";
-import FilterToText from './FilterToText';
-import ThemesData from './ThemesData';
+import FilterToText from "./FilterToText";
+import ThemesData from "./ThemesData";
 import { useAuthContext } from "../../context/AuthContext";
-import SubmitForVoteModal from './SubmitForVoteModal/SubmitForVoteModal';
+import SubmitForVoteModal from "./SubmitForVoteModal/SubmitForVoteModal";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -28,23 +28,24 @@ export default function GenerateNFT() {
   };
   const [prompt, setPromt] = useState("Dramatic sky and buildings painting");
   const [filter, setfilter] = useState("volvo");
-  const [theme, setTheme] = useState('Light');
+  const [theme, setTheme] = useState("Light");
   const [imageTitle, setImageTitle] = useState("");
   const [imagesData, setImagesData] = useState([]);
   const [submitToVoteModal, setsubmitToVoteModal] = useState(false);
 
-
   const postIdRef = useRef(null);
   const selectedPrompt = useRef([]);
   const generatedImagesData = useRef([]);
+  const scrollRef = useRef();
 
   const isSubmitDisabled =
     !isUserLoggedIn || (isUserLoggedIn && imageTitle === "");
 
-
   var filterOptions = [];
-  const [imageGenerationInProgress, setImageGenerationInProgress] = useState(false);
-  const [putImageToVoteInProgress, setPutImageToVoteInProgress] = useState(false);
+  const [imageGenerationInProgress, setImageGenerationInProgress] =
+    useState(false);
+  const [putImageToVoteInProgress, setPutImageToVoteInProgress] =
+    useState(false);
 
   for (var key in FilterToText) {
     filterOptions.push(key);
@@ -57,40 +58,42 @@ export default function GenerateNFT() {
     }
     setImageGenerationInProgress(true);
 
-    axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/image-suggestions`, {
-      params: {
-        prompt: prompt,
-        art_style: FilterToText[filter],
-      },
-    }).then((response) => {
-      console.log(response.data);
-      const generatedImagesResponseData = response.data.data;
-      if (!generatedImagesResponseData) {
-        // TODO:DS : Show Response Err
-        return;
-      }
-      const suggestionsIdsArr = generatedImagesResponseData.suggestion_ids;
-      const suggestionsMap = generatedImagesResponseData.suggestions;
-
-      for (let cnt = 0; cnt < suggestionsIdsArr.length; cnt++) {
-        const image = suggestionsMap[suggestionsIdsArr[cnt]];
-
-        if (!image) {
-          continue;
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/image-suggestions`, {
+        params: {
+          prompt: prompt,
+          art_style: FilterToText[filter],
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        const generatedImagesResponseData = response.data.data;
+        if (!generatedImagesResponseData) {
+          // TODO:DS : Show Response Err
+          return;
         }
-        const imageUrl = image.image_url;
+        const suggestionsIdsArr = generatedImagesResponseData.suggestion_ids;
+        const suggestionsMap = generatedImagesResponseData.suggestions;
 
-        if (!selectedPrompt.current.includes(prompt)) {
-          generatedImagesData.current = [];
-          selectedPrompt.current.push(prompt);
+        for (let cnt = 0; cnt < suggestionsIdsArr.length; cnt++) {
+          const image = suggestionsMap[suggestionsIdsArr[cnt]];
+
+          if (!image) {
+            continue;
+          }
+          const imageUrl = image.image_url;
+
+          if (!selectedPrompt.current.includes(prompt)) {
+            generatedImagesData.current = [];
+            selectedPrompt.current.push(prompt);
+          }
+
+          generatedImagesData.current.push({
+            image_url: imageUrl,
+          });
         }
-
-        generatedImagesData.current.push({
-          image_url: imageUrl
-        });
-      }
-      setImagesData(generatedImagesData);
-    })
+        setImagesData(generatedImagesData);
+      })
       .finally(() => {
         setImageGenerationInProgress(false);
       });
@@ -135,6 +138,23 @@ export default function GenerateNFT() {
     // }
     setPutImageToVoteInProgress(false);
   }
+
+  useEffect(() => {
+    if (imageGenerationInProgress) {
+      setTimeout(() => {
+        scrollToMyRef();
+      }, 500);
+    }
+  }, [imageGenerationInProgress]);
+
+  const scrollToMyRef = () => {
+    scrollRef.current?.scrollIntoView({
+      top: 0,
+      inline: "nearest",
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   return (
     <>
@@ -207,18 +227,10 @@ export default function GenerateNFT() {
         </div>
 
         <div className={`${styles.secondTab}`}>
-          {/* <div className={styles.yellow}>Word of the day</div>
-          <div className={styles.generatedTitle}>
-            {wordFetchInProgress ? (
-              <ClipLoader color={"#fff"} loading={true} size={15} />
-            ) : (
-              <div className={styles.wordOfDay}>"{wordOfTheDay}"</div>
-            )}
-          </div> */}
           <div className={styles.generatedImagePrompts}>
             <SubmitForVoteModal
               visible={submitToVoteModal}
-              setsubmitToVoteModal = {setsubmitToVoteModal}
+              setsubmitToVoteModal={setsubmitToVoteModal}
             />
 
             {imagesData.length <= 0 ? (
@@ -273,36 +285,51 @@ export default function GenerateNFT() {
               </div>
             ) : (
               <div style={sectionStyle}>
-                <div className="grid gap-5 overflow-y-auto h-full grid-cols-2">
-                  {generatedImagesData.current.length > 0 && generatedImagesData.current.map((image, index) => (
-                    <div className={`${styles.bottom} relative`} key={index}>
-                      <img src={image.image_url} alt='hello' />
-                      <div className='absolute w-full'>
-                        <input
-                          type="text"
-                          value={imageTitle}
-                          onChange={(event) => setImageTitle(event.target.value)}
-                          placeholder="Enter a title for your masterpiece..."
-                          className={styles.masterpeice}
-                        ></input>
+                <div
+                  id="generated-image-id"
+                  className="grid gap-5 overflow-y-auto h-full grid-cols-2"
+                >
+                  {generatedImagesData.current.length > 0 &&
+                    generatedImagesData.current.map((image, index) => (
+                      <div
+                        ref={scrollRef}
+                        className={`${styles.bottom} relative`}
+                        key={index}
+                      >
+                        <img src={image.image_url} alt="hello" />
+                        <div className="absolute w-full">
+                          <input
+                            type="text"
+                            value={imageTitle}
+                            onChange={(event) =>
+                              setImageTitle(event.target.value)
+                            }
+                            placeholder="Enter a title for your masterpiece..."
+                            className={styles.masterpeice}
+                          ></input>
 
-                        <button
-                          disabled={isSubmitDisabled}
-                          onClick={onSubmitToVote}
-                          className={`${styles.submitVote} ${isSubmitDisabled ? styles.disabled : {}
+                          <button
+                            disabled={isSubmitDisabled}
+                            onClick={onSubmitToVote}
+                            className={`${styles.submitVote} ${
+                              isSubmitDisabled ? styles.disabled : {}
                             }`}
-                          type="submit"
-                          title="Submit for voting"
-                        >
-                          {putImageToVoteInProgress ? (
-                            <ClipLoader color={"#fff"} loading={true} size={15} />
-                          ) : (
-                            "Submit for voting"
-                          )}
-                        </button>
+                            type="submit"
+                            title="Submit for voting"
+                          >
+                            {putImageToVoteInProgress ? (
+                              <ClipLoader
+                                color={"#fff"}
+                                loading={true}
+                                size={15}
+                              />
+                            ) : (
+                              "Submit for voting"
+                            )}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                   <div className={styles.emptyImageCell}>
                     <Image
                       src="https://static.plgworks.com/assets/images/non/generate-default.png"
@@ -319,7 +346,6 @@ export default function GenerateNFT() {
                       height="60"
                     />
                   </div>
-
                 </div>
               </div>
             )}
