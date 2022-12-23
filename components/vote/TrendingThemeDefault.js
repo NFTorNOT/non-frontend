@@ -21,7 +21,7 @@ function TrendingThemeDefault(props) {
 
   return (
     <>
-      <div className={`flex items-center justify-center w-full z-10 absolute`}>
+      <div className={`flex items-center justify-center w-full z-10`}>
         <div className={`${styles.themesNameAnimation}`}>
           <div className="flex items-center justify-center text-[20px] md:text-[40px] gap-[5px]">
             <div className={`${styles.themeHeading}`}>Trending Themes</div>
