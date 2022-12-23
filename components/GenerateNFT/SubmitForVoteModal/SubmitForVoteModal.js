@@ -4,8 +4,7 @@ import Collect from './svg/Collect';
 import MessageCircle from './svg/MessageCircle';
 import Wallet from './svg/Wallet';
 
-function SubmitForVoteModal({ visible,setsubmitToVoteModal }) {
-    console.log("hello");
+function SubmitForVoteModal({ visible,setsubmitToVoteModal, clickHandler }) {
     const infoMap = [
         {
             svgIcon: <MessageCircle />,
@@ -35,7 +34,7 @@ function SubmitForVoteModal({ visible,setsubmitToVoteModal }) {
                         <div className='text-[#fff] text-[16px]'>{item.desc}</div>
                     </div>
                 ))};
-                <button className={`${styles.submitVote}`}>+ Submit for voting </button>
+                <button className={`${styles.submitVote}`} onClick={() =>  clickHandler()}>+ Submit for voting </button>
             </div>
         </div>
     );

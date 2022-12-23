@@ -31,6 +31,9 @@ export default function GenerateNFT() {
   const [filter, setfilter] = useState("volvo");
   const [theme, setTheme] = useState("Light");
   const [imageTitle, setImageTitle] = useState("");
+  const [selectedImgUrl, setSelectedImgUrl] = useState('');
+  const [imageIpfsObjectId, setImageIpfsObjectId] = useState('');
+  const [lensMetadataIpfsObjectId, setLensMetadataIpfsObjectId] = useState('');
   const [imagesData, setImagesData] = useState([]);
   const [submitToVoteModal, setsubmitToVoteModal] = useState(false);
 
@@ -100,11 +103,10 @@ export default function GenerateNFT() {
       });
   };
 
-  async function onSubmitToVote() {
+  async function onSubmitToVote(imgUrl) {
     setPutImageToVoteInProgress(true);
     setsubmitToVoteModal(true);
-
-    console.log("Clicked");
+    setSelectedImgUrl(imgUrl);
 
     // try {
     //   const publicationId = postIdRef.current || (await getPostId());
@@ -156,6 +158,63 @@ export default function GenerateNFT() {
       block: "start",
     });
   };
+
+  const submitToVoteApi = () => {
+
+    const { imageCid, transactionHash, tokenId, lensMetaDataCid } =
+      response.data.data;
+    console.log("spliting imageUrl", {
+      imageCid,
+      transactionHash,
+      tokenId,
+      lensMetaDataCid,
+    });
+
+    const { txId } = await LensHelper.postCommentWithDispatcher({
+      commentMetadataCid: lensMetaDataCid,
+      profileId: userProfile?.id,
+      publicationId,
+    });
+
+    if (txId) {
+      const indexedResult = await LensHelper.pollUntilIndexed({ txId: txId });
+    }
+
+    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-to-vote`, {
+      image_url: selectedImgUrl,
+      title: imageTitle,
+      description: prompt,
+      theme_name: theme,
+      image_ipfs_object_id: imageCid,
+      lens_metadata_ipfs_object_id: lensMetadataIpfsObjectId
+      // lens_publication_id : 1
+    }).then((response) => {
+      console.log("Response", response);
+    });
+  }
+
+  const submitVoteClickHandler = () => {
+    axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/store-on-ipfs`, {
+      image_url: selectedImgUrl,
+      title: imageTitle,
+      description: prompt
+    }).then((response) => {
+      const apiResponseData = response.data.data;
+      const ipfsObjectIds = apiResponseData.ipfs_object_ids;
+      const ipfsObjectsMap = apiResponseData.ipfs_objects;
+
+      for (let i = 0; i < ipfsObjectIds.length; i++) {
+        const ipfsObject = ipfsObjectsMap[ipfsObjectIds[i]];
+
+        if (ipfsObject.kind === 'IMAGE')
+          setImageIpfsObjectId(ipfsObject.cid)
+
+        if (ipfsObject.kind === 'LENS_PUBLICATION_METADATA')
+          setLensMetadataIpfsObjectId(ipfsObject.cid)
+      }
+      submitToVoteApi();
+    });
+  }
 
   return (
     <>
@@ -232,6 +291,7 @@ export default function GenerateNFT() {
             <SubmitForVoteModal
               visible={submitToVoteModal}
               setsubmitToVoteModal={setsubmitToVoteModal}
+              clickHandler={() => submitVoteClickHandler()}
             />
 
             {imagesData.length <= 0 ? (
@@ -297,7 +357,7 @@ export default function GenerateNFT() {
                         className={`${styles.bottom} relative`}
                         key={index}
                       >
-                        <img src={image.image_url} alt="hello" />
+                        <img src={image.image_url} alt="Generated image" />
                         <div className="absolute w-full">
                           <UserInput
                             key={index}
@@ -306,12 +366,12 @@ export default function GenerateNFT() {
                           />
                           <button
                             disabled={isSubmitDisabled}
-                            onClick={onSubmitToVote}
-                            className={`${styles.submitVote} ${
-                              isSubmitDisabled ? styles.disabled : {}
-                            }`}
+                            onClick={() => onSubmitToVote(image.image_url)}
+                            className={`${styles.submitVote} ${isSubmitDisabled ? styles.disabled : {}
+                              }`}
                             type="submit"
                             title="Submit for voting"
+                            id={index}
                           >
                             {putImageToVoteInProgress ? (
                               <ClipLoader
