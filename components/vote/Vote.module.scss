@@ -264,3 +264,35 @@
     background: rgba(0, 0, 0, 0.4);
   }
 }
+
+.lensSvg {
+  svg {
+    path {
+      fill-opacity: 0.6;
+    }
+  }
+  &:hover {
+    svg {
+      path {
+        fill: #adff00;
+        fill-opacity: 1;
+      }
+    }
+  }
+}
+
+.shareSvg {
+  svg {
+    path {
+      stroke-opacity: 0.6;
+    }
+  }
+  &:hover {
+    svg {
+      path {
+        stroke: #adff00;
+        stroke-opacity: 1;
+      }
+    }
+  }
+}
