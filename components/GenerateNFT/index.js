@@ -14,6 +14,7 @@ import FilterToText from "./FilterToText";
 import ThemesData from "./ThemesData";
 import { useAuthContext } from "../../context/AuthContext";
 import SubmitForVoteModal from "./SubmitForVoteModal/SubmitForVoteModal";
+import UserInput from "./UserInput";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -298,16 +299,11 @@ export default function GenerateNFT() {
                       >
                         <img src={image.image_url} alt="hello" />
                         <div className="absolute w-full">
-                          <input
-                            type="text"
-                            value={imageTitle}
-                            onChange={(event) =>
-                              setImageTitle(event.target.value)
-                            }
-                            placeholder="Enter a title for your masterpiece..."
-                            className={styles.masterpeice}
-                          ></input>
-
+                          <UserInput
+                            key={index}
+                            style={styles.masterpeice}
+                            onSubmit={(value) => setImageTitle(value)}
+                          />
                           <button
                             disabled={isSubmitDisabled}
                             onClick={onSubmitToVote}
