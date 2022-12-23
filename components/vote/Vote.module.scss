@@ -4,22 +4,6 @@
   justify-content: center;
   align-items: center;
 }
-.yellow {
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
-  text-align: center;
-  background: radial-gradient(
-      107.14% 107.14% at 50% 80.95%,
-      #fa5c00 0%,
-      #ffb800 100%
-    ),
-    #fa5c00;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-}
 .wordOfDay {
   font-weight: 500;
   line-height: 32px;
@@ -83,7 +67,7 @@
 
 .showPrompt {
   display: flex;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
   align-items: center;
   justify-content: space-between;
 }
@@ -227,7 +211,7 @@
 
 .card_title {
   padding-top: 15px;
-  padding-bottom: 12px;
+  padding-bottom: 4px;
   text-align: left;
 }
 
@@ -278,5 +262,37 @@
   }
   &:hover {
     background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.lensSvg {
+  svg {
+    path {
+      fill-opacity: 0.6;
+    }
+  }
+  &:hover {
+    svg {
+      path {
+        fill: #adff00;
+        fill-opacity: 1;
+      }
+    }
+  }
+}
+
+.shareSvg {
+  svg {
+    path {
+      stroke-opacity: 0.6;
+    }
+  }
+  &:hover {
+    svg {
+      path {
+        stroke: #adff00;
+        stroke-opacity: 1;
+      }
+    }
   }
 }
