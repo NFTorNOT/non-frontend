@@ -26,7 +26,7 @@ export default function GenerateNFT() {
     backgroundImage: `url(${image})`,
   };
   const [prompt, setPromt] = useState("Dramatic sky and buildings painting");
-  const [filter, setfilter] = useState("volvo");
+  const [filter, setfilter] = useState("CINEMATIC");
   const [theme, setTheme] = useState("Light");
   const [imageTitle, setImageTitle] = useState("");
   const [selectedImgUrl, setSelectedImgUrl] = useState("");
