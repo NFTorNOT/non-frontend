@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./HallOfFlame.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -6,103 +6,18 @@ import { Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import HallOfFlameModal from "./hallOfFlameModal";
 
 function HallOfFlame(props) {
+  const [modalShown, toggleModal] = useState(false);
   return (
-    // <div className={`${styles.container}`}>
-    // <div className="font-bold text-[20px] leading-[32px] text-[#ffffff]">
-    //   Hall of Flame
-    // </div>
-    //   <div className={`${styles.carousel} mt-[17px]`}>
-    //     {/* <button>prev</button>
-    //     <button>next</button> */}
-    //     <div className={styles.carouselItems}>
-    //       <div className={`${styles.carouselItem}`}>
-    //         <Image
-    //           className={styles.carouselImage}
-    //           src="https://static.plgworks.com/assets/images/hon/tree.jpg"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    //       <div className={styles.carouselItem}>
-    //         <Image
-    //           src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //           alt="Lens Icon"
-    //           width="30"
-    //           height="30"
-    //         />
-    //       </div>
-    // <div className={styles.carouselItem}>
-    //   <Image
-    //     src="https://static.plgworks.com/assets/images/non/generate-default.png"
-    //     alt="Lens Icon"
-    //     width="30"
-    //     height="30"
-    //   />
-    // </div>
-    //     </div>
-    //   </div>
-    // </div>
-
     <div className={`${styles.container}`}>
+      <HallOfFlameModal 
+        shown={modalShown}
+        close={() => {
+          toggleModal(false);
+        }}
+      />
       <div className="flex items-center">
         <div className="font-bold text-[20px] leading-[32px] text-[#ffffff] mr-[8px]">
           Hall of Flame
@@ -169,7 +84,11 @@ function HallOfFlame(props) {
           }}
         >
           <SwiperSlide>
-            <div className={`${styles.carouselItem}`}>
+            <div className={`${styles.carouselItem}`}
+              onClick={() => {
+                toggleModal(!modalShown);
+              }}
+            >
               <Image
                 className={styles.carouselImage}
                 src="https://static.plgworks.com/assets/images/hon/green.jpg"

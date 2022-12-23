@@ -24,6 +24,7 @@
   color: white;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 .carouselImage{
   width: 100%;
@@ -32,15 +33,13 @@
   border-radius: 16px;
 }
 .prev{
-  position: absolute;
-  z-index: 99;
+  position: absolute; 
   left: -25px;
   top: 100px;
   color: #ffffff;
 }
 .next{
   color: #ffffff;
-  z-index: 99;
   position: absolute;
   right: -25px;
   top: 100px;

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./CollectNFT.module.scss";
 import CollectNFTModal from "./collectNFTModal";
+import Collect from "./SVG/collect";
 
 function CollectNFT(props) {
   const [modalShown, toggleModal] = useState(false);
@@ -46,8 +47,10 @@ function CollectNFT(props) {
                 toggleModal(!modalShown);
               }}
             >
-              <span></span>
-              <span className="font-bold text-[16px] leading-[26px]">
+              <span>
+                <Collect />
+              </span>
+              <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
                 Collect Now
               </span>
             </button>
