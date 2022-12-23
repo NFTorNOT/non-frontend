@@ -13,6 +13,7 @@ import PublicationApi from "../../graphql/PublicationApi";
 import FilterToText from './FilterToText';
 import ThemesData from './ThemesData';
 import { useAuthContext } from "../../context/AuthContext";
+import SubmitForVoteModal from './SubmitForVoteModal/SubmitForVoteModal';
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -30,6 +31,8 @@ export default function GenerateNFT() {
   const [theme, setTheme] = useState('Light');
   const [imageTitle, setImageTitle] = useState("");
   const [imagesData, setImagesData] = useState([]);
+  const [submitToVoteModal, setsubmitToVoteModal] = useState(false);
+
 
   const postIdRef = useRef(null);
   const selectedPrompt = useRef([]);
@@ -95,6 +98,10 @@ export default function GenerateNFT() {
 
   async function onSubmitToVote() {
     setPutImageToVoteInProgress(true);
+    setsubmitToVoteModal(true);
+
+    console.log("Clicked");
+
     // try {
     //   const publicationId = postIdRef.current || (await getPostId());
     //   // const response = await NFTApi.submitToVote({
@@ -209,6 +216,10 @@ export default function GenerateNFT() {
             )}
           </div> */}
           <div className={styles.generatedImagePrompts}>
+            <SubmitForVoteModal
+              visible={submitToVoteModal}
+            />
+
             {imagesData.length <= 0 ? (
               <div className={styles.emptyImageContainer}>
                 <div className="text-skin-base font-semibold mb-[5px]">
@@ -240,7 +251,7 @@ export default function GenerateNFT() {
                       />
                     )}
                   </div>
-                  
+
                   <div className={styles.emptyImageCell}>
                     <Image
                       src="https://static.plgworks.com/assets/images/non/generate-default.png"
