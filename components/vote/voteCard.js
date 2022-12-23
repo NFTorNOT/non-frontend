@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import ShareSVG from "./svg/socialShare";
 import ShareModal from "./shareModal";
+import HidePromptSvg from "./svg/hidePromptSvg";
+import ShowPromptSvg from "./svg/showPromptSvg";
 
 export default function VoteCard(props) {
   const character = props.character;
@@ -18,6 +20,9 @@ export default function VoteCard(props) {
   const [showHandleTimeout, setShowHandleTimeout] = useState(0);
 
   const [showPrompt, setShowPrompt] = useState(false);
+
+  const promtStatusText = showPrompt ? "Hide Prompt" : "Show Prompt";
+  const promtStatusIcon = showPrompt ? <HidePromptSvg /> : <ShowPromptSvg />;
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -157,10 +162,10 @@ export default function VoteCard(props) {
         <div className={`${styles.showPrompt}`} ref={handleWrapperRef}>
           <div className={styles.id}>@{character.handle}</div>
           <div
-            className="text-white cursor-pointer transition"
+            className="text-white cursor-pointer transition flex items-center gap-1"
             onClick={togglePrompt}
           >
-            {showPrompt ? "Hide Prompt" : "Show Prompt"}
+            {promtStatusIcon} {promtStatusText}
           </div>
         </div>
 
