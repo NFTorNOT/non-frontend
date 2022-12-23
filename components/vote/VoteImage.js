@@ -10,7 +10,6 @@ import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
-import TrendingThemes from "./svg/trendingThemes";
 import TrendingThemeDefault from "./TrendingThemeDefault";
 import ClickOnHot from "./svg/clickOnHot";
 import axios, { all } from "axios";
