@@ -89,7 +89,7 @@ export default function VoteCard(props) {
       setShowHandleTimeout(
         setTimeout(() => {
           showHandle();
-        }, 1500)
+        }, 500)
       );
     }
   }, [wrapperTransY]);
