@@ -1,10 +1,9 @@
 import React from "react";
-import styles from "./Vote.module.scss";
-import style from "./TrendingThemeDefault.module.scss";
-import ThrendingThemeSvg from "./svg/ThrendingThemeSvg";
+import styles from "./TrendingTheme.module.scss";
+import TrendingThemeSvg from "./svg/TrendingThemeSvg";
 
 function TrendingThemeDefault(props) {
-  const selectedTheme =  props.selectedTheme;
+  const selectedTheme = props.selectedTheme;
   const themesData = [
     {
       id: "1",
@@ -23,21 +22,21 @@ function TrendingThemeDefault(props) {
   return (
     <>
       <div className={`flex items-center justify-center w-full z-10 absolute`}>
-        <div className={`${style.themesNameAnimation}`}>
-          <div className="flex items-center justify-center">
-            <div className={`${styles.yellow} gap-[5px]`}>
-              <span className="text-[25px] md:text-[35px]">
-                Trending Themes
-              </span>
-            </div>
-            <span className="pl-[10px]">
-              <ThrendingThemeSvg />
-            </span>
+        <div className={`${styles.themesNameAnimation}`}>
+          <div className="flex items-center justify-center text-[20px] md:text-[40px] gap-[5px]">
+            <div className={`${styles.themeHeading}`}>Trending Themes</div>
+            <TrendingThemeSvg />
           </div>
           <div className="flex items-center justify-center mt-[10px]">
             {themesData.map((item, index) => (
               <div className="flex items-center" key={index}>
-                <span className={`text-[30px] md:text-[54px] font-bold ${selectedTheme === item.themeName ? 'text-[#fff]' : 'text-[#ffffff99]'}`}>
+                <span
+                  className={`text-[30px] md:text-[48px] font-bold ${
+                    selectedTheme === item.themeName
+                      ? "text-[#fff]"
+                      : "text-[#ffffff99]"
+                  }`}
+                >
                   {" "}
                   #{item.themeName}
                 </span>
