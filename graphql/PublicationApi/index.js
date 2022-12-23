@@ -41,8 +41,8 @@ const Query = {
             }
           }
   `),
-  commentViaDispatcher: gql(`mutation($request:CreatePublicCommentRequest!){
-    createCommentViaDispatcher(request: $request){
+  postViaDispatcher: gql(`mutation($request:CreatePublicPostRequest!){
+    createPostViaDispatcher(request: $request){
       ... on RelayerResult{
         txId
         txHash
@@ -105,6 +105,7 @@ const Query = {
   publication: gql(`query($request:PublicationQueryRequest!){
   	publication(request: $request){
     	... on Post{
+        id
         metadata{
           description
         }
@@ -126,7 +127,7 @@ const Query = {
       __typename
     }
     __typename
-  }`)
+  }`),
 };
 
 class PublicationApi {
@@ -139,9 +140,9 @@ class PublicationApi {
     });
   }
 
-  createCommentViaDispatcher(request) {
+  createPostViaDispatcher(request) {
     return apolloClient.mutate({
-      mutation: Query.commentViaDispatcher,
+      mutation: Query.postViaDispatcher,
       variables: {
         request,
       },
@@ -180,28 +181,41 @@ class PublicationApi {
       query: Query.publication,
       variables: {
         request: {
-          publicationId
-        }
-      }
+          publicationId,
+        },
+      },
     });
   }
 
-  hasTxBeenIndexed({txId, txHash}){
+  fetchPublicationWithTranscationHash(txHash) {
+    return apolloClient.query({
+      query: Query.publication,
+      variables: {
+        request: {
+          txHash,
+        },
+      },
+    });
+  }
+
+  hasTxBeenIndexed({ txId, txHash }) {
     let request = {};
-    if(txId){
-      request.txId = txId
+    if (txId) {
+      request.txId = txId;
     }
-    if(txHash){
-      request.txHash = txHash
+    if (txHash) {
+      request.txHash = txHash;
     }
     return apolloClient.query({
       query: Query.index,
       variables: {
-        request
+        request,
       },
-      fetchPolicy: 'no-cache'
-    })
+      fetchPolicy: "no-cache",
+    });
   }
+
+  postWithDispatcher() {}
 }
 
 export default new PublicationApi();

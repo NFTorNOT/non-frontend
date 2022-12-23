@@ -1,17 +1,20 @@
 import PublicationApi from "../../graphql/PublicationApi/index";
 
 class LensHelper {
-  async postCommentWithDispatcher({
-    commentMetadataCid,
-    profileId,
-    publicationId,
-  }) {
+  async postWithDispatcher({ postMetadataCid, profileId, profileAddress }) {
     const postRequest = {
       profileId: profileId,
-      publicationId: publicationId,
-      contentURI: `ipfs://${commentMetadataCid}`,
+      contentURI: `ipfs://${postMetadataCid}`,
       collectModule: {
-        revertCollectModule: true,
+        feeCollectModule: {
+          amount: {
+            currency: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
+            value: "1.00",
+          },
+          recipient: profileAddress,
+          followerOnly: false,
+          referralFee: 0,
+        },
       },
       referenceModule: {
         degreesOfSeparationReferenceModule: {
@@ -22,10 +25,8 @@ class LensHelper {
       },
     };
 
-    const response = await PublicationApi.createCommentViaDispatcher(
-      postRequest
-    );
-    const { txHash, txId } = response.data.createCommentViaDispatcher || {};
+    const response = await PublicationApi.createPostViaDispatcher(postRequest);
+    const { txHash, txId } = response.data.createPostViaDispatcher || {};
     return { txHash, txId };
   }
 
