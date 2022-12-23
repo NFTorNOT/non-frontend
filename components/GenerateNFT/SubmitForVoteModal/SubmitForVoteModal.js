@@ -3,7 +3,6 @@ import { ClipLoader } from "react-spinners";
 import styles from "./SubmitForVoteModal.module.scss";
 import Collect from "./svg/Collect";
 import MessageCircle from "./svg/MessageCircle";
-import Wallet from "./svg/Wallet";
 
 function SubmitForVoteModal({
   visible,
@@ -43,29 +42,28 @@ function SubmitForVoteModal({
           Submit your generations
         </div>
         {infoMap.map((item, index) => (
-            <div className="my-[16px]" key={index}>
-                {item.svgIcon}
-                <div className="text-[#fff] text-[16px] mt-[10px]">{item.desc}</div>
-            </div>
+          <div className="my-[16px]" key={index}>
+            {item.svgIcon}
+            <div className="text-[#fff] text-[16px] mt-[10px]">{item.desc}</div>
+          </div>
         ))}
         <div>
-            <div className={`${styles.submitVote} mt-[30px]`}>
-                {submitToVoteApiInProgress ? (
-                    <div className='flex items-center justify-center gap-[6px]'>
-                        <ClipLoader color={"#fff"} loading={true} size={15} />
-                        <span>Submit for voting{" "}</span>
-                    </div>
-                ) : (
-                    <button
-                        onClick={() => clickHandler()}>
-                        + Submit for voting{" "}
-                    </button>
-                )}
-            </div>
+          <div className={`${styles.submitVote} mt-[30px]`}>
+            {submitToVoteApiInProgress ? (
+              <div className="flex items-center justify-center gap-[6px]">
+                <ClipLoader color={"#fff"} loading={true} size={15} />
+                <span>Submit for voting </span>
+              </div>
+            ) : (
+              <button onClick={() => clickHandler()}>
+                + Submit for voting{" "}
+              </button>
+            )}
+          </div>
         </div>
+      </div>
     </div>
-</div>
-    );
+  );
 }
 
 export default SubmitForVoteModal;
