@@ -4,8 +4,8 @@ import Collect from './svg/Collect';
 import MessageCircle from './svg/MessageCircle';
 import Wallet from './svg/Wallet';
 
-function SubmitForVoteModal({visible}) {
-console.log("hello");
+function SubmitForVoteModal({ visible,setsubmitToVoteModal }) {
+    console.log("hello");
     const infoMap = [
         {
             svgIcon: <MessageCircle />,
@@ -22,10 +22,11 @@ console.log("hello");
     ];
     if (!visible) {
         return null;
-      }
+    }
     return (
         <div className={styles.popup}>
-            <div className={`${styles.submitForVoteInfo} py-[40px] px-[30px]`}>
+            <div className={`${styles.submitForVoteInfo} py-[40px] px-[30px] relative`}>
+                <div className='absolute top-[20px] right-[10px] text-[#fff] text-[16px] cursor-pointer' onClick={()=> setsubmitToVoteModal(false)}>Close</div>
                 <div className='text-[#fff] font-bold text-[20px] leading-[32px]'>Submit your generations</div>
 
                 {infoMap.map((item, index) => (

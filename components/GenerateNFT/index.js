@@ -218,6 +218,7 @@ export default function GenerateNFT() {
           <div className={styles.generatedImagePrompts}>
             <SubmitForVoteModal
               visible={submitToVoteModal}
+              setsubmitToVoteModal = {setsubmitToVoteModal}
             />
 
             {imagesData.length <= 0 ? (
