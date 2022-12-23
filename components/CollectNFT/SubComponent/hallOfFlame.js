@@ -103,13 +103,32 @@ function HallOfFlame(props) {
     // </div>
 
     <div className={`${styles.container}`}>
-      <div className="font-bold text-[20px] leading-[32px] text-[#ffffff]">
-        Hall of Flame
+      <div className="flex items-center">
+        <div className="font-bold text-[20px] leading-[32px] text-[#ffffff] mr-[8px]">
+          Hall of Flame
+        </div>
+        <div>
+          <Image
+            src="https://static.plgworks.com/assets/images/non/flame-icon.png"
+            alt="Lens Icon"
+            width="19"
+            height="19"
+          />
+        </div>
       </div>
       <button className={`${styles.prev} prev`}>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z" fill="#666" />
-      </svg>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z"
+            fill="white"
+          />
+        </svg>
       </button>
       <button className={`${styles.next} next`}>
         <svg
@@ -128,9 +147,12 @@ function HallOfFlame(props) {
           />
         </svg>
       </button>
-      <div className={`${styles.carousel} mt-[17px]`} onClick={(e) => {
+      <div
+        className={`${styles.carousel} mt-[17px]`}
+        onClick={(e) => {
           e.stopPropagation();
-        }}>
+        }}
+      >
         <Swiper
           slidesPerView={9}
           spaceBetween={30}
@@ -150,14 +172,71 @@ function HallOfFlame(props) {
             <div className={`${styles.carouselItem}`}>
               <Image
                 className={styles.carouselImage}
+                src="https://static.plgworks.com/assets/images/hon/green.jpg"
+                alt="Lens Icon"
+                width="30"
+                height="30"
+              />
+              <div className={`${styles.trending} p-[5px] flex items-center`}>
+                <span>
+                  <Image
+                    src="https://static.plgworks.com/assets/images/non/flame-icon.png"
+                    alt="Lens Icon"
+                    width="19"
+                    height="19"
+                  />
+                </span>
+                <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
+                  43
+                </span>
+              </div>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className={`${styles.carouselItem}`}>
+              <Image
+                className={styles.carouselImage}
+                src="https://static.plgworks.com/assets/images/hon/green.jpg"
+                alt="Lens Icon"
+                width="30"
+                height="30"
+              />
+              <div className={`${styles.trending} p-[5px] flex items-center`}>
+                <span>
+                  <Image
+                    src="https://static.plgworks.com/assets/images/non/flame-icon.png"
+                    alt="Lens Icon"
+                    width="19"
+                    height="19"
+                  />
+                </span>
+                <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
+                  42
+                </span>
+              </div>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className={`${styles.carouselItem}`}>
+              <Image
+                className={styles.carouselImage}
                 src="https://static.plgworks.com/assets/images/hon/tree.jpg"
                 alt="Lens Icon"
                 width="30"
                 height="30"
               />
               <div className={`${styles.trending} p-[5px] flex items-center`}>
-                <span></span>
-                <span className="font-medium text-[16px] leading-[26px] text-[#ffffff]">40</span>
+                <span>
+                  <Image
+                    src="https://static.plgworks.com/assets/images/non/flame-icon.png"
+                    alt="Lens Icon"
+                    width="19"
+                    height="19"
+                  />
+                </span>
+                <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
+                  40
+                </span>
               </div>
             </div>
           </SwiperSlide>
@@ -205,17 +284,6 @@ function HallOfFlame(props) {
             <div className={styles.carouselItem}>
               <Image
                 src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                alt="Lens Icon"
-                width="30"
-                height="30"
-              />
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className={`${styles.carouselItem}`}>
-              <Image
-                className={styles.carouselImage}
-                src="https://static.plgworks.com/assets/images/hon/tree.jpg"
                 alt="Lens Icon"
                 width="30"
                 height="30"
