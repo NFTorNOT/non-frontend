@@ -5,7 +5,7 @@ import NFTOfTheDayAbis from "../../abis/NFTOfTheDayAbi.json";
 import { useEffect, useState } from "react";
 import { CircleLoader } from "react-spinners";
 import moment from "moment";
-import styles from './Collect.module.scss';
+import styles from "./Collect.module.scss";
 import HallOfFlame from "./SubComponent/hallOfFlame";
 import CollectNFT from "./SubComponent/CollectNFT";
 
@@ -52,11 +52,9 @@ export default function NFTOfTheDay() {
       {loading ? (
         <CircleLoader />
       ) : (
-        <div className="flex justify-center mt-[40px]">
-            <div className='mx-[50px] relative'>
-                <HallOfFlame />
-                <CollectNFT />
-            </div>
+        <div className={`${styles.collectionsContainer} my-[20px] min-w-full`}>
+          <HallOfFlame />
+          <CollectNFT />
         </div>
       )}
     </>

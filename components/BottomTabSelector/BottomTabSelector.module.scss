@@ -1,4 +1,4 @@
-@import './svg/twitterIcon.module.scss';
+@import "./svg/twitterIcon.module.scss";
 $twitter-fill-color: #1da1f2;
 
 .container {
@@ -25,7 +25,7 @@ $twitter-fill-color: #1da1f2;
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 14px 20px;
+  padding: 10.5px 20px;
   text-align: center;
   color: white;
   cursor: pointer;
@@ -59,22 +59,21 @@ $twitter-fill-color: #1da1f2;
   opacity: 1;
   transition: opacity 1s;
 }
-.twitterShare:hover path{
+.twitterShare:hover path {
   fill: $twitter-fill-color;
 }
-.hiwSpace{
+.hiwSpace {
   width: 0px;
 }
-.hiwText{
+.hiwText {
   opacity: 0;
 }
-.howItWorks:hover .hiwText{
+.howItWorks:hover .hiwText {
   opacity: 1;
   transition: opacity 1s;
 }
 
-.howItWorks:hover .hiwSpace{
+.howItWorks:hover .hiwSpace {
   width: 90px;
   transition: width 1s;
 }
-

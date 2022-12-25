@@ -9,7 +9,7 @@ function CollectNFT(props) {
 
   const url = "https://static.plgworks.com/assets/images/hon/vespa.jpg";
   return (
-    <div className={`${styles.collectNft} mt-[40px]`}>
+    <div className={`${styles.collectNft} mt-[40px] grid min-h-0`}>
       <div className="text-[#ffffff] font-bold text-[20px] leading-[32px]">
         Collect NFTs
       </div>
@@ -54,7 +54,7 @@ function CollectNFT(props) {
                 Collect Now
               </span>
             </button>
-            <CollectNFTModal 
+            <CollectNFTModal
               shown={modalShown}
               close={() => {
                 toggleModal(false);

@@ -1,3 +1,10 @@
-.container {
-  
+.collectionsContainer {
+  display: grid;
+  grid-template-rows: minmax(auto, 175px) 1fr;
+  overflow: hidden;
+}
+
+.nftsContainer {
+  min-height: 0;
+  display: grid;
 }

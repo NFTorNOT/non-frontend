@@ -1,11 +1,6 @@
 .container {
   margin: auto;
-  width: calc(100vw - 500px);
-}
-.carousel {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
+  width: calc(100% - 100px);
 }
 .carouselItems {
   display: flex;
@@ -14,10 +9,8 @@
 }
 .carouselItem {
   display: flex;
-  flex: 0 0 calc(13.337% - 20px);
   width: 125px;
   height: 125px;
-  margin: 0 10px;
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 16px;
   text-align: center;
@@ -25,29 +18,32 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  position: relative;
 }
-.carouselImage{
+.carouselImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 16px;
 }
-.prev{
-  position: absolute; 
-  left: -25px;
-  top: 100px;
+.prev {
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #ffffff;
 }
-.next{
+.next {
   color: #ffffff;
   position: absolute;
   right: -25px;
-  top: 100px;
+  top: 50%;
+  transform: translateY(-50%);
 }
-.trending{
+.trending {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 4px;
   top: 5px;
-  right: -10px;
+  right: 10px;
 }

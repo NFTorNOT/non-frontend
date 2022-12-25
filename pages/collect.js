@@ -1,11 +1,11 @@
-import React from 'react';
-import CollectNFT from '../components/CollectNFT'
+import React from "react";
+import CollectNFT from "../components/CollectNFT";
 
 function Collect(props) {
   return (
-    <div>
+    <>
       <CollectNFT />
-    </div>
+    </>
   );
 }
 
