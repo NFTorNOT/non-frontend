@@ -8,77 +8,78 @@ import styles from "./Userinfo.module.scss";
 
 export default function UserInfo() {
   const [queryInProgress, setQueryInProgress] = useState(false);
-  const { userProfile, setUserProfile } = useUserContext();
+  const { userProfile } = useUserContext();
   const { address } = useAccount();
   const [modalShown, toggleModal] = useState(false);
 
-  async function createLensProfile() {
-    let handle = prompt("Enter your handle to create Lens profile");
-    if (handle == null || handle == "") {
-      // user didn't enter anything in the prompt
-    } else {
-      try {
-        const lensProfileResonse = await UserApi.createProfile({
-          handle: handle,
-        });
+  // async function createLensProfile() {
+  //   let handle = prompt("Enter your handle to create Lens profile");
+  //   if (handle == null || handle == "") {
+  //     // user didn't enter anything in the prompt
+  //   } else {
+  //     try {
+  //       const lensProfileResonse = await UserApi.createProfile({
+  //         handle: handle,
+  //       });
 
-        if (lensProfileResonse.data.createProfile) {
-          let txHash = lensProfileResonse.data.createProfile.txHash;
+  //       if (lensProfileResonse.data.createProfile) {
+  //         let txHash = lensProfileResonse.data.createProfile.txHash;
 
-          console.log({ txHash });
+  //         console.log({ txHash });
 
-          const indexedResult = await LensHelper.pollUntilIndexed({
-            txHash,
-          });
-        }
-      } catch (error) {
-        console.log({ "create Profile Error": error });
-      }
-    }
-  }
+  //         const indexedResult = await LensHelper.pollUntilIndexed({
+  //           txHash,
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.log({ "create Profile Error": error });
+  //     }
+  //   }
+  // }
 
-  async function defaultProfile() {
-    try {
-      const defaultProfileResponse = await UserApi.defaultProfile({
-        walletAddress: address,
-      });
+  // async function defaultProfile() {
+  //   try {
+  //     const defaultProfileResponse = await UserApi.defaultProfile({
+  //       walletAddress: address,
+  //     });
 
-      const defaultProfile = defaultProfileResponse?.data?.defaultProfile;
+  //     const defaultProfile = defaultProfileResponse?.data?.defaultProfile;
 
-      console.log({ defaultProfile });
+  //     console.log({ defaultProfile });
 
-      if (defaultProfile) {
-        setUserProfile(defaultProfile);
-      } else {
-        // createLensProfile();
-      }
-      setQueryInProgress(false);
-    } catch (error) {
-      //TODO:handle error
-    }
-  }
+  //     if (defaultProfile) {
+  //       setUserProfile(defaultProfile);
+  //     } else {
+  //       // createLensProfile();
+  //     }
+  //     setQueryInProgress(false);
+  //   } catch (error) {
+  //     //TODO:handle error
+  //   }
+  // }
 
-  useEffect(() => {
-    if (address) {
-      setQueryInProgress(true);
+  // useEffect(() => {
+  //   if (address) {
+  //     setQueryInProgress(true);
 
-      defaultProfile();
-    }
-  }, [address]);
+  //     defaultProfile();
+  //   }
+  // }, [address]);
 
   return (
     <div className={styles.container}>
       <span className={styles.nameContainer}>
-        {queryInProgress ? "..." : userProfile.handle}
+        {queryInProgress ? "..." : userProfile?.lens_profile_username}
       </span>
-      <div className="cursor-pointer"
+      <div
+        className="cursor-pointer"
         onClick={() => {
           toggleModal(!modalShown);
         }}
       >
         <img className={styles.lens} src="/lens-logo.png" alt="lens" />
       </div>
-      <LogoutModal 
+      <LogoutModal
         shown={modalShown}
         close={() => {
           toggleModal(false);
