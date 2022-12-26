@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./SignInModal.module.css";
 import Modal from "react-modal";
 import CheckedCircle from "./CheckedCircle";
 import CustomConnectButton from "../TopBar/SignInButton/CustomConnectButton";
+import { useAccount } from "wagmi";
 Modal.setAppElement("*");
-const SignInModal = ({ onRequestClose, isOpen, onSignInComplete }) => {
+const SignInModal = ({
+  onRequestClose,
+  isOpen,
+  onSignInComplete,
+  onSignIn,
+}) => {
   const customStyles = {
     content: {
       background: "#FFFFFF",
@@ -20,7 +26,15 @@ const SignInModal = ({ onRequestClose, isOpen, onSignInComplete }) => {
     },
   };
 
-  console.log({ isOpen });
+  const { isConnected } = useAccount();
+
+  useEffect(() => {
+    if (isConnected) {
+      onSignIn();
+    }
+
+    return () => {};
+  }, [isConnected]);
 
   return (
     <Modal onRequestClose={onRequestClose} isOpen={isOpen} style={customStyles}>

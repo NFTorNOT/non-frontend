@@ -1,8 +1,13 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import styles from "./WalletConnect.module.scss";
 import Image from "next/image";
+import { SignIn } from "..";
 
-export default function WalletConnect({ openSignInModal }) {
+export default function WalletConnect({
+  openSignInModal,
+  onSignIn,
+  isLoading,
+}) {
   console.log("coming here");
   return (
     <ConnectButton.Custom>
@@ -59,17 +64,7 @@ export default function WalletConnect({ openSignInModal }) {
                 );
               }
 
-              return (
-                <div className={styles.chainInfoContainer}>
-                  <button
-                    style={{ color: "white" }}
-                    onClick={openAccountModal}
-                    type="button"
-                  >
-                    {account.displayName}
-                  </button>
-                </div>
-              );
+              return <SignIn onSignIn={onSignIn} isLoading={isLoading} />;
             })()}
           </div>
         );

@@ -13,12 +13,33 @@ import axios from "axios";
 import UserApi from "../../../graphql/UserApi";
 import { useUserContext } from "../../../context/UserContext";
 
-export const SignIn = ({ onSignInComplete }) => {
-  const { address } = useAccount();
-  const [isLoading, setIsLoading] = useState(false);
+export const SignIn = ({ onSignIn, isLoading }) => {
+  return (
+    <div
+      className={`${styles.btnContainer} btn btn-green px-[10px] md:px-[20px] transition`}
+    >
+      {isLoading ? (
+        <span>Signing in...</span>
+      ) : (
+        <>
+          <Image
+            src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+            alt="Lens Icon"
+            width="20"
+            height="20"
+          />
+          <button onClick={onSignIn}>Sign in with lens</button>
+        </>
+      )}
+    </div>
+  );
+};
+export default function SignInButton() {
+  const { isUserLoggedIn } = useAuthContext();
+  const { setIsSignInProcess } = useSignInModalContext();
+  const [open, setOpen] = useState(false);
   const { signMessageAsync } = useSignMessage();
   const { setIsUserLoggedIn } = useAuthContext();
-  const { isSignInProcess } = useSignInModalContext();
   const userProfileRef = useRef();
   const messageText = useRef();
   const signedMessageSignature = useRef();
@@ -26,14 +47,64 @@ export const SignIn = ({ onSignInComplete }) => {
   const accessTokenRef = useRef();
   const refreshTokenRef = useRef();
 
-  console.log({ isSignInProcess });
+  const { address, isConnected } = useAccount();
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (isSignInProcess) {
-      console.log("how many times");
-      onSignIn();
+  const handleClose = () => {
+    setOpen(false);
+    setIsSignInProcess(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+    setIsSignInProcess(true);
+  };
+
+  async function onSignIn() {
+    if (isLoading) {
+      return;
     }
-  }, []);
+
+    setIsLoading(true);
+    AuthApi.queryChallengeText({ address })
+      .then((challengeApiResponse) => {
+        if (challengeApiResponse.error) {
+          throw new Error(challengeApiResponse.error.message);
+        }
+        const text = challengeApiResponse.data.challenge.text;
+        messageText.current = text;
+        signMessageAsync({ message: text })
+          .then((signature) => {
+            signedMessageSignature.current = signature;
+            AuthApi.verifySignature({
+              signature,
+              address,
+            })
+              .then((verifyResponse) => {
+                const { accessToken, refreshToken } =
+                  verifyResponse.data.authenticate;
+                accessTokenRef.current = accessToken;
+                refreshTokenRef.current = refreshToken;
+                getDefaultProfile();
+              })
+              .catch((error) => {
+                console.log("error signing in: ", error);
+                setIsLoading(false);
+              })
+              .finally(() => {
+                setIsLoading(false);
+                handleClose();
+              });
+          })
+          .catch((error) => {
+            console.log("error signing in: ", error);
+            setIsLoading(false);
+          });
+      })
+      .catch((error) => {
+        console.log("error signing in: ", error);
+        setIsLoading(false);
+      });
+  }
 
   async function getDefaultProfile() {
     try {
@@ -64,15 +135,17 @@ export const SignIn = ({ onSignInComplete }) => {
           wallet_address: address,
           signed_message: signedMessageSignature.current,
           message: messageText.current,
+        },
+        {
+          withCredentials: true,
         }
       );
 
       console.log({ loginResponse });
 
       if (loginResponse.data.success) {
-        document.cookie = "keyofcookie=valueofcookie";
         const resposeData = loginResponse.data.data;
-        console.log("here", { resposeData });
+
         const users = resposeData.users;
         const currentUser = resposeData.current_user;
         const images = resposeData.images;
@@ -102,84 +175,6 @@ export const SignIn = ({ onSignInComplete }) => {
       setIsUserLoggedIn(false);
     }
   }
-  async function onSignIn() {
-    if (isLoading) {
-      return;
-    }
-    setIsLoading(true);
-    AuthApi.queryChallengeText({ address })
-      .then((challengeApiResponse) => {
-        if (challengeApiResponse.error) {
-          throw new Error(challengeApiResponse.error.message);
-        }
-        const text = challengeApiResponse.data.challenge.text;
-        messageText.current = text;
-        signMessageAsync({ message: text })
-          .then((signature) => {
-            signedMessageSignature.current = signature;
-            AuthApi.verifySignature({
-              signature,
-              address,
-            })
-              .then((verifyResponse) => {
-                const { accessToken, refreshToken } =
-                  verifyResponse.data.authenticate;
-                accessTokenRef.current = accessToken;
-                refreshTokenRef.current = refreshToken;
-                getDefaultProfile();
-              })
-              .catch((error) => {
-                console.log("error signing in: ", error);
-                setIsLoading(false);
-              })
-              .finally(() => {
-                setIsLoading(false);
-                onSignInComplete?.();
-              });
-          })
-          .catch((error) => {
-            console.log("error signing in: ", error);
-            setIsLoading(false);
-          });
-      })
-      .catch((error) => {
-        console.log("error signing in: ", error);
-        setIsLoading(false);
-      });
-  }
-  return (
-    <div
-      className={`${styles.btnContainer} btn btn-green px-[10px] md:px-[20px] transition`}
-    >
-      {isLoading ? (
-        <span>Signing in...</span>
-      ) : (
-        <>
-          <Image
-            src="https://static.plgworks.com/assets/images/non/lens-icon.png"
-            alt="Lens Icon"
-            width="20"
-            height="20"
-          />
-          <button onClick={onSignIn}>Sign in with lens</button>
-        </>
-      )}
-    </div>
-  );
-};
-export default function SignInButton() {
-  const { isUserLoggedIn } = useAuthContext();
-  const { setIsSignInProcess } = useSignInModalContext();
-  const { isConnected } = useAccount();
-  const [open, setOpen] = useState(false);
-  const handleClose = () => {
-    setOpen(false);
-    setIsSignInProcess(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-    setIsSignInProcess(true);
-  };
 
   console.log({ isConnected, isUserLoggedIn });
 
@@ -190,18 +185,21 @@ export default function SignInButton() {
           <UserInfo />
         ) : (
           <>
-            {isConnected ? (
-              <SignIn />
-            ) : (
-              <WalletConnect openSignInModal={handleOpen} />
-            )}
+            <WalletConnect
+              openSignInModal={handleOpen}
+              onSignIn={onSignIn}
+              isLoading={isLoading}
+            />
           </>
         )}
-        <SignInModal
-          onRequestClose={handleClose}
-          isOpen={open}
-          onSignInComplete={handleClose}
-        />
+        {open ? (
+          <SignInModal
+            onSignIn={onSignIn}
+            onRequestClose={handleClose}
+            isOpen={open}
+            onSignInComplete={handleClose}
+          />
+        ) : null}
       </>
     )
   );

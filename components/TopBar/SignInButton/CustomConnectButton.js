@@ -4,7 +4,6 @@ import Image from "next/image";
 import { SignIn } from ".";
 
 const CustomConnectButton = ({ onSignInComplete }) => {
-  console.log("coming here onSignInComplete");
   return (
     <ConnectButton.Custom>
       {({
@@ -40,7 +39,6 @@ const CustomConnectButton = ({ onSignInComplete }) => {
                 return (
                   <div
                     onClick={() => {
-                      console.log("here here");
                       openConnectModal();
                     }}
                   >
