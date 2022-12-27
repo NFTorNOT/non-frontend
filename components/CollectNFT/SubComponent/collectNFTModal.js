@@ -4,7 +4,8 @@ import Collect from "./SVG/collect";
 import Close from "./SVG/close";
 import Image from "next/image";
 
-function CollectNFTModal({ shown, close }) {
+function CollectNFTModal({ shown, close, modalData }) {
+  console.log({ modalData });
   return shown ? (
     <div
       className={styles.modalBackdrop}
@@ -33,12 +34,10 @@ function CollectNFTModal({ shown, close }) {
             <Close />
           </button>
         </div>
-        <div className={`${styles.nftTitle} mt-[8px]`}>
-          The Forgotten Prince of The Kingdom of Eternal Sunlight
-        </div>
+        <div className={`${styles.nftTitle} mt-[8px]`}>{modalData?.title}</div>
         <div className={`${styles.nftOwner} mt-[8px]`}>
           Proceeds from the Collect will go to{" "}
-          <span className="text-[#ffffff]">@harshit</span>
+          <span className="text-[#ffffff]">{modalData?.handle}</span>
         </div>
         <div className={`${styles.nftFee} mt-[14px] flex items-center`}>
           <span>
@@ -62,11 +61,13 @@ function CollectNFTModal({ shown, close }) {
           </span>
           <span className="ml-[12px]">2 Collectors</span>
         </div>
-        <button className={`${styles.collectButton} flex items-center justify-center py-[7px] mt-[20px]`}>
-            <span>
-                <Collect />
-            </span>
-            <span className="pl-[11px]">Collect Now</span>
+        <button
+          className={`${styles.collectButton} flex items-center justify-center py-[7px] mt-[20px]`}
+        >
+          <span>
+            <Collect />
+          </span>
+          <span className="pl-[11px]">Collect Now</span>
         </button>
       </div>
     </div>
