@@ -254,14 +254,14 @@ export default function VoteImage() {
         />
 
         <div
-          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px] cursor-grab`}
+          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px] cursor-grab ${styles.voteCards}`}
         >
           {data.length > 0 &&
             data.map((character, index) => (
               <NonCard
                 ref={(ref) => (childRefs.current[imageIndex] = ref)}
                 onSwipe={(dir) => submitVote(dir)}
-                className={`absolute pressable`}
+                className={`absolute pressable ${styles.voteCard}`}
                 preventSwipe={["up", "down"]}
                 key={character.publicationId}
               >

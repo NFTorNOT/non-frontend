@@ -296,3 +296,25 @@
     }
   }
 }
+
+.voteCards {
+  .voteCard {
+    &:last-child {
+      transform: rotate(0deg) scale(1) !important;
+      transition-delay: 0.25s;
+      transition-duration: 1s;
+    }
+    &:nth-last-child(2) {
+      transform: rotate(5deg) scale(0.92) !important;
+      transform-origin: bottom right;
+      transition-delay: 0.25s;
+      transition-duration: 1s;
+    }
+    &:nth-last-child(3) {
+      transform: rotate(-5deg) scale(0.92) !important;
+      transform-origin: bottom left;
+      transition-delay: 0.25s;
+      transition-duration: 1s;
+    }
+  }
+}
