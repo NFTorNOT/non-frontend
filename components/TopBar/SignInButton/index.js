@@ -125,23 +125,20 @@ export default function SignInButton() {
   }
 
   async function login() {
-    try {
-      const loginResponse = await axiosInstance.post(
-        `/connect`,
-        {
-          lens_profile_id: userProfileRef.current?.id,
-          lens_profile_username: userProfileRef.current?.handle,
-          lens_profile_image_url: userProfileRef.current?.picture,
-          wallet_address: address,
-          signed_message: signedMessageSignature.current,
-          message: messageText.current,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+    let loginParams = {
+      lens_profile_id: userProfileRef.current?.id,
+      lens_profile_username: userProfileRef.current?.handle,
+      wallet_address: address,
+      signed_message: signedMessageSignature.current,
+      message: messageText.current,
+    };
 
-      console.log({ loginResponse });
+    if (userProfileRef.current?.picture) {
+      loginParams.lens_profile_image_url = userProfileRef.current?.picture;
+    }
+
+    try {
+      const loginResponse = await axiosInstance.post(`/connect`, loginParams);
 
       if (loginResponse.data.success) {
         const resposeData = loginResponse.data.data;
