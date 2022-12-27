@@ -133,9 +133,9 @@ export default function SignInButton() {
       message: messageText.current,
     };
 
-    if (userProfileRef.current?.picture) {
-      loginParams.lens_profile_image_url = userProfileRef.current?.picture;
-    }
+    // if (userProfileRef.current?.picture) {
+    //   loginParams.lens_profile_image_url = userProfileRef.current?.picture;
+    // }
 
     try {
       const loginResponse = await axiosInstance.post(`/connect`, loginParams);
