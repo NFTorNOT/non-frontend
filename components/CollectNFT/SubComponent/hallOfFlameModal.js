@@ -87,7 +87,6 @@ function HallOfFlameModal({
                       <span className={`${styles.dot} mx-[10px]`}></span>
                       <span>#Magical</span>
                     </div>
-
                     <div
                       className={`${styles.card} flex items-center justify-center mt-[20px]`}
                       style={{

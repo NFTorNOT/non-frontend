@@ -24,61 +24,68 @@ function HallOfFlame(props) {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const hallOfFlameResponse = await axiosInstance.get(
-        "/hall-of-flame-nfts"
-      );
-      if (hallOfFlameResponse.data.success) {
-        const hallOfFlameData = hallOfFlameResponse.data.data;
-        const lensPosts = hallOfFlameData?.lens_posts_ids;
-        const lensPostDetails = hallOfFlameData?.lens_posts;
-        const lensPostDetailsImages = hallOfFlameData?.images;
-        const lensPostDetailsTexts = hallOfFlameData?.texts;
-        const currentUserLensPostRelations =
-          hallOfFlameData?.current_user_lens_post_relations;
-        const users = hallOfFlameData?.users;
-        paginationIdentifierRef.current =
-          hallOfFlameData?.meta?.next_page_payload;
-        let data = [];
-        console.log("here here", hallOfFlameData);
-        for (let i = 0; i < lensPosts.length; i++) {
-          const lensPostDetail = Object.values(lensPostDetails)?.find(
-            (post) => post.id == lensPosts[i]
-          );
-          console.log({ lensPostDetail });
-          const lensPostImageDetail = Object.values(
-            lensPostDetailsImages
-          )?.find((image) => image.id == lensPostDetail?.image_id);
-          const lensPostTextDetails = Object.values(lensPostDetailsTexts)?.find(
-            (text) => text.id == lensPostDetail?.description_text_id
-          );
+      do {
+        const hallOfFlameResponse = await axiosInstance.get(
+          "/hall-of-flame-nfts",
+          {
+            params: {
+              pagination_identifier: paginationIdentifierRef.current,
+            },
+          }
+        );
+        if (hallOfFlameResponse.data.success) {
+          const hallOfFlameData = hallOfFlameResponse.data.data;
+          const lensPosts = hallOfFlameData?.lens_posts_ids;
+          const lensPostDetails = hallOfFlameData?.lens_posts;
+          const lensPostDetailsImages = hallOfFlameData?.images;
+          const lensPostDetailsTexts = hallOfFlameData?.texts;
+          const currentUserLensPostRelations =
+            hallOfFlameData?.current_user_lens_post_relations;
+          const users = hallOfFlameData?.users;
+          paginationIdentifierRef.current =
+            hallOfFlameData?.meta?.next_page_payload;
+          let data = [];
+          console.log("here here", hallOfFlameData);
+          for (let i = 0; i < lensPosts.length; i++) {
+            const lensPostDetail = Object.values(lensPostDetails)?.find(
+              (post) => post.id == lensPosts[i]
+            );
+            console.log({ lensPostDetail });
+            const lensPostImageDetail = Object.values(
+              lensPostDetailsImages
+            )?.find((image) => image.id == lensPostDetail?.image_id);
+            const lensPostTextDetails = Object.values(
+              lensPostDetailsTexts
+            )?.find((text) => text.id == lensPostDetail?.description_text_id);
 
-          const currentUserLensPostRelation = currentUserLensPostRelations
-            ? Object.values(currentUserLensPostRelations)?.find(
-                (lensPost) =>
-                  lensPost.id ==
-                  lensPostDetail?.current_user_lens_post_relation_id
-              )
-            : null;
+            const currentUserLensPostRelation = currentUserLensPostRelations
+              ? Object.values(currentUserLensPostRelations)?.find(
+                  (lensPost) =>
+                    lensPost.id ==
+                    lensPostDetail?.current_user_lens_post_relation_id
+                )
+              : null;
 
-          const ownerUser = Object.values(users)?.find(
-            (user) => user.id == lensPostDetail?.owner_user_id
-          );
+            const ownerUser = Object.values(users)?.find(
+              (user) => user.id == lensPostDetail?.owner_user_id
+            );
 
-          let postData = {
-            title: lensPostDetail?.title,
-            description: lensPostTextDetails?.text,
-            image: lensPostImageDetail?.url,
-            totalVotes: lensPostDetail?.total_votes,
-            hasCollected:
-              !!currentUserLensPostRelation?.collect_nft_transaction_hash,
-            handle: ownerUser?.lens_profile_username,
-          };
+            let postData = {
+              title: lensPostDetail?.title,
+              description: lensPostTextDetails?.text,
+              image: lensPostImageDetail?.url,
+              totalVotes: lensPostDetail?.total_votes,
+              hasCollected:
+                !!currentUserLensPostRelation?.collect_nft_transaction_hash,
+              handle: ownerUser?.lens_profile_username,
+            };
 
-          data.push(postData);
+            data.push(postData);
+          }
+          setHallOfFlameData(data);
+          setIsLoading(false);
         }
-        setHallOfFlameData(data);
-        setIsLoading(false);
-      }
+      } while (paginationIdentifierRef.current);
     } catch (error) {
       setIsLoading(false);
       console.log("error", error);

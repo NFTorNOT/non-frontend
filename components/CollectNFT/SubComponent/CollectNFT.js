@@ -7,6 +7,7 @@ import Collect from "./SVG/collect";
 import { axiosInstance } from "../../../AxiosInstance";
 import { useAuthContext } from "../../../context/AuthContext";
 import { ClipLoader } from "react-spinners";
+import SignInButton from "../../TopBar/SignInButton";
 
 function CollectNFT(props) {
   const [modalShown, toggleModal] = useState(false);
@@ -72,7 +73,9 @@ function CollectNFT(props) {
           data.push(postData);
         }
         setCollectData(data);
-        setIsLoading(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       }
     } catch (error) {
       setIsLoading(false);
@@ -86,7 +89,19 @@ function CollectNFT(props) {
 
   useEffect(() => {
     fetchCollectData();
-  }, []);
+  }, [isUserLoggedIn]);
+
+  const handleScroll = (event) => {
+    console.log({ event });
+    const target = event.target;
+
+    if (target.scrollHeight - target.scrollTop === target.clientHeight) {
+      console.log("reached end", paginationIdentifierRef.current);
+      if (paginationIdentifierRef.current) {
+        fetchCollectData();
+      }
+    }
+  };
 
   return (
     <div className={`${styles.collectNft} mt-[40px]  min-h-0`}>
@@ -107,7 +122,7 @@ function CollectNFT(props) {
         </div>
       ) : null}
 
-      {!isUserLoggedIn ? (
+      {!isUserLoggedIn && !isLoading ? (
         <div className="bg-[#00000099] text-[#ffffff] text-[20px] mt-[16px] h-[512px] flex items-center justify-center">
           <div className="text-center font-medium text-[16px] ">
             <div>Oops! It's Empty</div>
@@ -123,7 +138,10 @@ function CollectNFT(props) {
               </span>
               <span className="leading-[26px]">NFT's </span>
             </div>
-            <button
+            <div className="mt-[20px]">
+              <SignInButton />
+            </div>
+            {/* <button
               className={`flex justify-center box-border items-center px-[24px] py-[7px] bg-[#ABFE2C] text-[#00501E] backdrop-blur rounded-[20px] gap-[8px] cursor-pointer border-[1px] border-solid border-black/20 mt-[20px]`}
             >
               <Image
@@ -133,12 +151,12 @@ function CollectNFT(props) {
                 height="20"
               />
               Sign in with Lens
-            </button>
+            </button> */}
           </div>
         </div>
       ) : null}
 
-      {collectData.length == 0 ? (
+      {collectData.length == 0 && !isLoading ? (
         <div className="bg-[#00000099] text-[#ffffff] text-[20px] mt-[16px] h-[512px] flex items-center justify-center">
           <div className="text-center font-medium text-[16px] ">
             <div>Oops! It's Empty</div>
@@ -164,8 +182,11 @@ function CollectNFT(props) {
         </div>
       ) : null}
 
-      {collectData.length > 0 && (
-        <div className="grid grid-cols-2 gap-5 max-h-[512px] overflow-y-scroll mt-[16px]">
+      {collectData.length > 0 && !isLoading && (
+        <div
+          className={`${styles.scroll} grid grid-cols-2 gap-5 max-h-[512px] overflow-y-scroll mt-[16px]`}
+          onScroll={handleScroll}
+        >
           {collectData.length > 0 &&
             collectData.map((ele, index) => {
               return (
