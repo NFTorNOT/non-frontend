@@ -1,11 +1,97 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./collectModal.module.scss";
 import Collect from "./SVG/collect";
 import Close from "./SVG/close";
 import Image from "next/image";
+import CollectApi from "../../../graphql/CollectApi";
+import { useContract, useSigner, useSignTypedData } from "wagmi";
+import { splitSignature } from "ethers/lib/utils.js";
+import LensHubAbi from "../../../abis/LensHubAbi.json";
+import { ERROR_TYPES } from "../../../utils/Constants";
 
 function CollectNFTModal({ shown, close, modalData }) {
-  console.log({ modalData });
+  const [isLoading, setIsLoading] = useState(false);
+  const { signTypedDataAsync } = useSignTypedData();
+  const { data: signer } = useSigner();
+  const contract = useContract({
+    address: process.env.NEXT_PUBLIC_LENS_HUB_CONTRACT_ADDRESS,
+    abi: LensHubAbi,
+    signerOrProvider: signer,
+  });
+
+  async function allowanceFlow() {
+    try {
+      const generateModuleCurrencyApprovalResponse =
+        await CollectApi.generateModuleCurrencyApprovalData();
+
+      const generateModuleCurrencyApprovalData =
+        generateModuleCurrencyApprovalResponse.data
+          .generateModuleCurrencyApprovalData;
+      console.log({ generateModuleCurrencyApprovalResponse });
+
+      const tx1 = await signer.sendTransaction({
+        to: generateModuleCurrencyApprovalData.to,
+        from: generateModuleCurrencyApprovalData.from,
+        data: generateModuleCurrencyApprovalData.data,
+      });
+      await tx1.wait(1);
+      collectPost();
+      console.log({ tx1 });
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  async function collectPost() {
+    try {
+      const collectTypedDataResponse = await CollectApi.createCollectTypedData({
+        publicationId: modalData.lensPublicationId,
+      });
+
+      console.log({ collectTypedDataResponse });
+
+      let createCollectTypedData =
+        collectTypedDataResponse.data.createCollectTypedData.typedData;
+      delete createCollectTypedData.domain.__typename;
+      delete createCollectTypedData.types.__typename;
+      delete createCollectTypedData.value.__typename;
+
+      console.log({ createCollectTypedData });
+
+      const signature = await signTypedDataAsync({
+        types: createCollectTypedData.types,
+        domain: createCollectTypedData.domain,
+        value: createCollectTypedData.value,
+      });
+
+      const { v, r, s } = splitSignature(signature);
+
+      const tx = await contract.collectWithSig(
+        {
+          collector: modalData.lensProfileOwnerAddress,
+          profileId: createCollectTypedData.value.profileId,
+          pubId: createCollectTypedData.value.pubId,
+          data: createCollectTypedData.value.data,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: createCollectTypedData.value.deadline,
+          },
+        },
+        { gasLimit: 1000000 }
+      );
+      const res = await tx.wait();
+      console.log({ res: res.transactionHash });
+      //collect with sig
+    } catch (error) {
+      if (error?.message == ERROR_TYPES.ALLOWANCE) {
+        allowanceFlow();
+      }
+      console.log("error", error);
+    }
+  }
+
   return shown ? (
     <div
       className={styles.modalBackdrop}
@@ -63,6 +149,7 @@ function CollectNFTModal({ shown, close, modalData }) {
         </div>
         <button
           className={`${styles.collectButton} flex items-center justify-center py-[7px] mt-[20px]`}
+          onClick={() => collectPost()}
         >
           <span>
             <Collect />

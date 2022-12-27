@@ -65,6 +65,8 @@ function CollectNFT(props) {
             title: lensPostDetail?.title,
             description: lensPostTextDetails?.text,
             image: lensPostImageDetail?.url,
+            lensPublicationId: lensPostDetail?.lens_publication_id,
+            lensProfileOwnerAddress: ownerUser.lens_profile_owner_address,
             hasCollected:
               !!currentUserLensPostRelation?.collect_nft_transaction_hash,
             handle: ownerUser?.lens_profile_username,
@@ -96,7 +98,6 @@ function CollectNFT(props) {
     const target = event.target;
 
     if (target.scrollHeight - target.scrollTop === target.clientHeight) {
-      console.log("reached end", paginationIdentifierRef.current);
       if (paginationIdentifierRef.current) {
         fetchCollectData();
       }
