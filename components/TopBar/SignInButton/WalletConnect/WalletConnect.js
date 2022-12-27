@@ -1,8 +1,14 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import styles from "./WalletConnect.module.scss";
 import Image from "next/image";
+import { SignIn } from "..";
 
-export default function WalletConnect() {
+export default function WalletConnect({
+  openSignInModal,
+  onSignIn,
+  isLoading,
+}) {
+  console.log("coming here");
   return (
     <ConnectButton.Custom>
       {({
@@ -11,10 +17,15 @@ export default function WalletConnect() {
         openAccountModal,
         openChainModal,
         openConnectModal,
+        authenticationStatus,
         mounted,
       }) => {
-        const ready = mounted;
-        const connected = ready && account && chain;
+        const ready = mounted && authenticationStatus !== "loading";
+        const connected =
+          ready &&
+          account &&
+          chain &&
+          (!authenticationStatus || authenticationStatus === "authenticated");
 
         return (
           <div
@@ -28,7 +39,7 @@ export default function WalletConnect() {
                 return (
                   <button
                     className={`${styles.connectButton} btn btn-green px-[10px] md:px-[20px] transition`}
-                    onClick={openConnectModal}
+                    onClick={openSignInModal}
                     type="button"
                     title="Sign in with lens"
                   >
@@ -53,17 +64,7 @@ export default function WalletConnect() {
                 );
               }
 
-              return (
-                <div className={styles.chainInfoContainer}>
-                  <button
-                    style={{ color: "white" }}
-                    onClick={openAccountModal}
-                    type="button"
-                  >
-                    {account.displayName}
-                  </button>
-                </div>
-              );
+              return <SignIn onSignIn={onSignIn} isLoading={isLoading} />;
             })()}
           </div>
         );

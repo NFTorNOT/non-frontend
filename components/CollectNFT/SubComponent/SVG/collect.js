@@ -18,7 +18,7 @@ function Collect(props) {
             height="4"
             rx="1.5"
             fill="white"
-            fill-opacity="0.01"
+            fillOpacity="0.01"
           />
           <rect
             x="5.25"
@@ -27,8 +27,8 @@ function Collect(props) {
             height="5.5"
             rx="2.25"
             stroke="white"
-            stroke-width="1.5"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
           />
         </g>
         <g filter="url(#filter1_b_2092_20203)">
@@ -39,7 +39,7 @@ function Collect(props) {
             height="6"
             rx="1.5"
             fill="white"
-            fill-opacity="0.01"
+            fillOpacity="0.01"
           />
           <rect
             x="3.75"
@@ -48,7 +48,7 @@ function Collect(props) {
             height="7.5"
             rx="2.25"
             stroke="white"
-            stroke-width="1.5"
+            strokeWidth="1.5"
           />
         </g>
         <g filter="url(#filter2_b_2092_20203)">
@@ -59,7 +59,7 @@ function Collect(props) {
             height="7"
             rx="1.5"
             fill="white"
-            fill-opacity="0.01"
+            fillOpacity="0.01"
           />
           <rect
             x="2.25"
@@ -68,7 +68,7 @@ function Collect(props) {
             height="8.5"
             rx="2.25"
             stroke="white"
-            stroke-width="1.5"
+            strokeWidth="1.5"
           />
         </g>
         <defs>
@@ -79,9 +79,9 @@ function Collect(props) {
             width="59"
             height="55"
             filterUnits="userSpaceOnUse"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           >
-            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feFlood floodOpacity="0" result="BackgroundImageFix" />
             <feGaussianBlur in="BackgroundImageFix" stdDeviation="12" />
             <feComposite
               in2="SourceAlpha"
@@ -102,9 +102,9 @@ function Collect(props) {
             width="62"
             height="57"
             filterUnits="userSpaceOnUse"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           >
-            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feFlood floodOpacity="0" result="BackgroundImageFix" />
             <feGaussianBlur in="BackgroundImageFix" stdDeviation="12" />
             <feComposite
               in2="SourceAlpha"
@@ -125,9 +125,9 @@ function Collect(props) {
             width="65"
             height="58"
             filterUnits="userSpaceOnUse"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           >
-            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feFlood floodOpacity="0" result="BackgroundImageFix" />
             <feGaussianBlur in="BackgroundImageFix" stdDeviation="12" />
             <feComposite
               in2="SourceAlpha"

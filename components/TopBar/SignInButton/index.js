@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useAuthContext } from "../../../context/AuthContext";
 import Image from "next/image";
@@ -7,53 +7,14 @@ import SessionHelper from "../../../utils/SessionHelper";
 import UserInfo from "../../UserInfo";
 import styles from "./SignInButton.module.scss";
 import WalletConnect from "./WalletConnect/WalletConnect";
+import SignInModal from "../../SignInModal";
+import { useSignInModalContext } from "../../../context/SignInModalContext";
+import axios from "axios";
+import UserApi from "../../../graphql/UserApi";
+import { useUserContext } from "../../../context/UserContext";
+import { axiosInstance } from "../../../AxiosInstance";
 
-const SignIn = () => {
-  const { address } = useAccount();
-  const [isLoading, setIsLoading] = useState(false);
-  const { signMessageAsync } = useSignMessage();
-  const { setIsUserLoggedIn } = useAuthContext();
-  async function onSignIn() {
-    setIsLoading(true);
-    AuthApi.queryChallengeText({ address })
-      .then((challengeApiResponse) => {
-        if (challengeApiResponse.error) {
-          throw new Error(challengeApiResponse.error.message);
-        }
-        const text = challengeApiResponse.data.challenge.text;
-        signMessageAsync({ message: text })
-          .then((signature) => {
-            AuthApi.verifySignature({
-              signature,
-              address,
-            })
-              .then((verifyResponse) => {
-                const { accessToken, refreshToken } =
-                  verifyResponse.data.authenticate;
-                setIsUserLoggedIn(true);
-                SessionHelper.handleSessionTokens({
-                  accessToken,
-                  refreshToken,
-                });
-              })
-              .catch((error) => {
-                console.log("error signing in: ", error);
-                setIsLoading(false);
-              })
-              .finally(() => {
-                setIsLoading(false);
-              });
-          })
-          .catch((error) => {
-            console.log("error signing in: ", error);
-            setIsLoading(false);
-          });
-      })
-      .catch((error) => {
-        console.log("error signing in: ", error);
-        setIsLoading(false);
-      });
-  }
+export const SignIn = ({ onSignIn, isLoading }) => {
   return (
     <div
       className={`${styles.btnContainer} btn btn-green px-[10px] md:px-[20px] transition`}
@@ -76,7 +37,144 @@ const SignIn = () => {
 };
 export default function SignInButton() {
   const { isUserLoggedIn } = useAuthContext();
-  const { isConnected } = useAccount();
+  const { setIsSignInProcess } = useSignInModalContext();
+  const [open, setOpen] = useState(false);
+  const { signMessageAsync } = useSignMessage();
+  const { setIsUserLoggedIn } = useAuthContext();
+  const userProfileRef = useRef();
+  const messageText = useRef();
+  const signedMessageSignature = useRef();
+  const { setUserProfile, userProfile } = useUserContext();
+  const accessTokenRef = useRef();
+  const refreshTokenRef = useRef();
+
+  const { address, isConnected } = useAccount();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+    setIsSignInProcess(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+    setIsSignInProcess(true);
+  };
+
+  async function onSignIn() {
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    AuthApi.queryChallengeText({ address })
+      .then((challengeApiResponse) => {
+        if (challengeApiResponse.error) {
+          throw new Error(challengeApiResponse.error.message);
+        }
+        const text = challengeApiResponse.data.challenge.text;
+        messageText.current = text;
+        signMessageAsync({ message: text })
+          .then((signature) => {
+            signedMessageSignature.current = signature;
+            AuthApi.verifySignature({
+              signature,
+              address,
+            })
+              .then((verifyResponse) => {
+                const { accessToken, refreshToken } =
+                  verifyResponse.data.authenticate;
+                accessTokenRef.current = accessToken;
+                refreshTokenRef.current = refreshToken;
+                getDefaultProfile();
+              })
+              .catch((error) => {
+                console.log("error signing in: ", error);
+                setIsLoading(false);
+              })
+              .finally(() => {
+                setIsLoading(false);
+                handleClose();
+              });
+          })
+          .catch((error) => {
+            console.log("error signing in: ", error);
+            setIsLoading(false);
+          });
+      })
+      .catch((error) => {
+        console.log("error signing in: ", error);
+        setIsLoading(false);
+      });
+  }
+
+  async function getDefaultProfile() {
+    try {
+      const defaultProfileResponse = await UserApi.defaultProfile({
+        walletAddress: address,
+      });
+
+      const defaultProfile = defaultProfileResponse?.data?.defaultProfile;
+      userProfileRef.current = defaultProfile;
+
+      if (defaultProfile) {
+        login();
+      } else {
+        // createLensProfile();
+      }
+    } catch (error) {}
+  }
+
+  async function login() {
+    try {
+      const loginResponse = await axiosInstance.post(
+        `/connect`,
+        {
+          lens_profile_id: userProfileRef.current?.id,
+          lens_profile_username: userProfileRef.current?.handle,
+          lens_profile_image_url: userProfileRef.current?.picture,
+          wallet_address: address,
+          signed_message: signedMessageSignature.current,
+          message: messageText.current,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log({ loginResponse });
+
+      if (loginResponse.data.success) {
+        const resposeData = loginResponse.data.data;
+
+        const users = resposeData.users;
+        const currentUser = resposeData.current_user;
+        const images = resposeData.images;
+
+        let userDetails = Object.values(users).find((user) => {
+          return user.id == currentUser.user_id;
+        });
+
+        let userImage = Object.values(images)?.find((image) => {
+          return image.id == userDetails.lens_profile_image_id;
+        });
+
+        console.log(typeof userDetails, userDetails);
+
+        userDetails.imageUrl = userImage?.url ? "" : userImage?.url;
+        SessionHelper.handleSessionTokens({
+          accessToken: accessTokenRef.current,
+          refreshToken: refreshTokenRef.current,
+        });
+        setUserProfile(userDetails);
+        setIsUserLoggedIn(true);
+      }
+    } catch (error) {
+      console.log("error", error);
+      setIsUserLoggedIn(false);
+    }
+  }
+
+  console.log({ isConnected, isUserLoggedIn, userProfile });
 
   return (
     isUserLoggedIn !== undefined && (
@@ -84,8 +182,22 @@ export default function SignInButton() {
         {isUserLoggedIn && isConnected ? (
           <UserInfo />
         ) : (
-          <>{isConnected ? <SignIn /> : <WalletConnect />}</>
+          <>
+            <WalletConnect
+              openSignInModal={handleOpen}
+              onSignIn={onSignIn}
+              isLoading={isLoading}
+            />
+          </>
         )}
+        {open ? (
+          <SignInModal
+            onSignIn={onSignIn}
+            onRequestClose={handleClose}
+            isOpen={open}
+            onSignInComplete={handleClose}
+          />
+        ) : null}
       </>
     )
   );

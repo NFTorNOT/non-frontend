@@ -4,15 +4,24 @@ import Logout from "./svg/logout";
 import SessionHelper from "../../utils/SessionHelper";
 import { useAuthContext } from "../../context/AuthContext";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { axiosInstance } from "../../AxiosInstance";
 
 function LogoutModal({ shown, close }) {
   const { setIsUserLoggedIn } = useAuthContext();
   const router = useRouter();
-  const logout = () => {
-    SessionHelper.clearSession();
-    setIsUserLoggedIn(false);
-    router.reload();
-  }
+  const logout = async () => {
+    try {
+      const logoutResponse = await axiosInstance.post(`/logout`);
+      if (logoutResponse.data.success) {
+        SessionHelper.clearSession();
+        setIsUserLoggedIn(false);
+        router.reload();
+      }
+    } catch (error) {
+      console.log("error in logout", error);
+    }
+  };
   return shown ? (
     <div
       className={styles.modalBackdrop}
@@ -27,7 +36,12 @@ function LogoutModal({ shown, close }) {
         }}
       >
         <div className="py-[10px] px-[5px]">
-          <div className="flex items-center cursor-pointer px-[10px] py-[6px] hover:bg-[#000000b3]" onClick={() => {logout()}}>
+          <div
+            className="flex items-center cursor-pointer px-[10px] py-[6px] hover:bg-[#000000b3]"
+            onClick={() => {
+              logout();
+            }}
+          >
             <span>
               <Logout />
             </span>

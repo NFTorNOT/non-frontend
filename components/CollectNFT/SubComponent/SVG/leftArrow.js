@@ -13,10 +13,10 @@ function LeftArrow(props) {
         <path
           d="M28.75 36.4167L15.3333 23L28.75 9.58334"
           stroke="white"
-          stroke-opacity="0.8"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeOpacity="0.8"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </div>

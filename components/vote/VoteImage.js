@@ -15,6 +15,7 @@ import ClickOnHot from "./svg/clickOnHot";
 import axios, { all } from "axios";
 import { ReactionTypes } from "../../utils/Constants";
 import VoteCard from "./voteCard";
+import { axiosInstance } from "../../AxiosInstance";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -46,14 +47,11 @@ export default function VoteImage() {
 
   let themes = [];
   async function fetchLensPost() {
-    const lensPostData = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/nfts`,
-      {
-        params: {
-          pagination_identifier: hasNextPageIdentifier.current,
-        },
-      }
-    );
+    const lensPostData = await axiosInstance.get(`/nfts`, {
+      params: {
+        pagination_identifier: hasNextPageIdentifier.current,
+      },
+    });
 
     const lensPostResponseData =
       lensPostData && lensPostData.data && lensPostData.data.data;
@@ -185,7 +183,7 @@ export default function VoteImage() {
   async function upvoteImage({ publicationId }) {
     try {
       const res = await PublicationApi.addReaction({
-        profileId: userProfile?.id,
+        profileId: userProfile?.lens_profile_id,
         reactionType: ReactionType.UPVOTE,
         publicationId: publicationId.toString(),
       });
@@ -210,8 +208,8 @@ export default function VoteImage() {
     const publicationId = consumedData.current[imageIndex]?.publicationId;
 
     console.log({ lensPostId, publicationId });
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reaction`, {
+    axiosInstance
+      .post(`/reaction`, {
         reaction: dir == "right" ? ReactionTypes.VOTED : ReactionTypes.IGNORED,
         lens_post_id: lensPostId,
       })

@@ -7,7 +7,12 @@ import LeftArrow from "./SVG/leftArrow";
 import RightArrow from "./SVG/rightArrow";
 import HofCross from "./SVG/hofCross";
 
-function HallOfFlameModal({ shown, close }) {
+function HallOfFlameModal({
+  shown,
+  close,
+  onLeftArrowClick,
+  onRightArrowClick,
+}) {
   return shown ? (
     <div
       className={styles.modalBackdrop}
@@ -47,12 +52,18 @@ function HallOfFlameModal({ shown, close }) {
           <span className={`${styles.dot} mx-[10px]`}></span>
           <span>#Magical</span>
         </div>
-        <button className="absolute top-0 bottom-0 left-[450px]">
-            <LeftArrow />
-          </button>
-          <button className="absolute top-0 bottom-0 right-[450px]">
-            <RightArrow />
-          </button>
+        <button
+          className="prev absolute top-0 bottom-0 left-[450px]"
+          onClick={onLeftArrowClick}
+        >
+          <LeftArrow />
+        </button>
+        <button
+          className="next absolute top-0 bottom-0 right-[450px]"
+          onClick={onRightArrowClick}
+        >
+          <RightArrow />
+        </button>
         <div
           className={`${styles.card} flex items-center justify-center mt-[20px]`}
           style={{
