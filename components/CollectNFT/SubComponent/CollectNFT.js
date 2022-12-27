@@ -5,14 +5,12 @@ import collectNFTModalStyles from "./collectModal.module.scss";
 import CollectNFTModal from "./collectNFTModal";
 import Collect from "./SVG/collect";
 import { axiosInstance } from "../../../AxiosInstance";
-import { useUserContext } from "../../../context/UserContext";
 import { useAuthContext } from "../../../context/AuthContext";
 import { ClipLoader } from "react-spinners";
 
 function CollectNFT(props) {
   const [modalShown, toggleModal] = useState(false);
   const paginationIdentifierRef = useRef(null);
-  const { userProfile } = useUserContext();
   const { isUserLoggedIn } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [modalData, setModalData] = useState();
@@ -25,42 +23,40 @@ function CollectNFT(props) {
       const collectApiResponse = await axiosInstance.get("collect-nfts", {
         params: {
           pagination_identifier: paginationIdentifierRef.current,
-          current_user_id: userProfile?.id,
         },
       });
 
       if (collectApiResponse.data.success) {
         const collectData = collectApiResponse.data.data;
-        const lensPosts = collectData.lens_posts_ids;
-        const lensPostDetails = collectData.lens_posts;
-        const lensPostDetailsImages = collectData.images;
-        const lensPostDetailsTexts = collectData.texts;
+        const lensPosts = collectData?.lens_posts_ids;
+        const lensPostDetails = collectData?.lens_posts;
+        const lensPostDetailsImages = collectData?.images;
+        const lensPostDetailsTexts = collectData?.texts;
         const currentUserLensPostRelations =
-          collectData.current_user_lens_post_relations;
-        const users = collectData.users;
-        paginationIdentifierRef.current = collectData.meta.next_page_payload;
+          collectData?.current_user_lens_post_relations;
+        const users = collectData?.users;
+        paginationIdentifierRef.current = collectData?.meta?.next_page_payload;
         let data = [];
-        console.log("here here", collectData);
         for (let i = 0; i < lensPosts.length; i++) {
-          const lensPostDetail = Object.values(lensPostDetails).find(
+          const lensPostDetail = Object.values(lensPostDetails)?.find(
             (post) => post.id == lensPosts[i]
           );
           console.log({ lensPostDetail });
-          const lensPostImageDetail = Object.values(lensPostDetailsImages).find(
-            (image) => image.id == lensPostDetail.image_id
-          );
-          const lensPostTextDetails = Object.values(lensPostDetailsTexts).find(
+          const lensPostImageDetail = Object.values(
+            lensPostDetailsImages
+          )?.find((image) => image.id == lensPostDetail.image_id);
+          const lensPostTextDetails = Object.values(lensPostDetailsTexts)?.find(
             (text) => text.id == lensPostDetail.description_text_id
           );
 
           const currentUserLensPostRelation = Object.values(
             currentUserLensPostRelations
-          ).find(
+          )?.find(
             (lensPost) =>
               lensPost.id == lensPostDetail.current_user_lens_post_relation_id
           );
 
-          const ownerUser = Object.values(users).find(
+          const ownerUser = Object.values(users)?.find(
             (user) => user.id == lensPostDetail.owner_user_id
           );
 
@@ -75,8 +71,8 @@ function CollectNFT(props) {
 
           data.push(postData);
         }
-        setIsLoading(false);
         setCollectData(data);
+        setIsLoading(false);
       }
     } catch (error) {
       setIsLoading(false);
@@ -174,7 +170,7 @@ function CollectNFT(props) {
             collectData.map((ele, index) => {
               return (
                 <div key={index} className="rounded-[12px] relative">
-                  <img src={ele.image} alt="Lens Icon" />
+                  <img className="w-full" src={ele.image} alt="Lens Icon" />
                   <div className={`${styles.nftDetails} p-[15px]`}>
                     <div className="flex items-start justify-between">
                       <span className={`${styles.nftTitle}`}>{ele?.title}</span>

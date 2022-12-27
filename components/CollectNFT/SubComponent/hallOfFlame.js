@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./HallOfFlame.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -7,28 +7,103 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import HallOfFlameModal from "./hallOfFlameModal";
+import { axiosInstance } from "../../../AxiosInstance";
 
 function HallOfFlame(props) {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const swiperRef = useRef();
-  const data = [1, 2, 3, 4];
-  const emptyData = [1, 2, 3, 4, 5];
-  const shouldShowEmptyData = data.length !== 9;
+
+  const paginationIdentifierRef = useRef();
+
+  const [hallOfFlameData, setHallOfFlameData] = useState([]);
+  const shouldShowEmptyData = hallOfFlameData.length !== 9;
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const hallOfFlameResponse = await axiosInstance.get(
+        "/hall-of-flame-nfts"
+      );
+      if (hallOfFlameResponse.data.success) {
+        const hallOfFlameData = hallOfFlameResponse.data.data;
+        const lensPosts = hallOfFlameData?.lens_posts_ids;
+        const lensPostDetails = hallOfFlameData?.lens_posts;
+        const lensPostDetailsImages = hallOfFlameData?.images;
+        const lensPostDetailsTexts = hallOfFlameData?.texts;
+        const currentUserLensPostRelations =
+          hallOfFlameData?.current_user_lens_post_relations;
+        const users = hallOfFlameData?.users;
+        paginationIdentifierRef.current =
+          hallOfFlameData?.meta?.next_page_payload;
+        let data = [];
+        console.log("here here", hallOfFlameData);
+        for (let i = 0; i < lensPosts.length; i++) {
+          const lensPostDetail = Object.values(lensPostDetails)?.find(
+            (post) => post.id == lensPosts[i]
+          );
+          console.log({ lensPostDetail });
+          const lensPostImageDetail = Object.values(
+            lensPostDetailsImages
+          )?.find((image) => image.id == lensPostDetail?.image_id);
+          const lensPostTextDetails = Object.values(lensPostDetailsTexts)?.find(
+            (text) => text.id == lensPostDetail?.description_text_id
+          );
+
+          const currentUserLensPostRelation = currentUserLensPostRelations
+            ? Object.values(currentUserLensPostRelations)?.find(
+                (lensPost) =>
+                  lensPost.id ==
+                  lensPostDetail?.current_user_lens_post_relation_id
+              )
+            : null;
+
+          const ownerUser = Object.values(users)?.find(
+            (user) => user.id == lensPostDetail?.owner_user_id
+          );
+
+          let postData = {
+            title: lensPostDetail?.title,
+            description: lensPostTextDetails?.text,
+            image: lensPostImageDetail?.url,
+            totalVotes: lensPostDetail?.total_votes,
+            hasCollected:
+              !!currentUserLensPostRelation?.collect_nft_transaction_hash,
+            handle: ownerUser?.lens_profile_username,
+          };
+
+          data.push(postData);
+        }
+        setHallOfFlameData(data);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const onItemClick = (ele) => {
     setModalData(ele);
+    setShowModal(!showModal);
   };
 
   console.log({ shouldShowEmptyData });
   return (
     <div className={`${styles.container} min-w-0`}>
       <HallOfFlameModal
+        modalData={modalData}
         shown={showModal}
         close={() => {
           setShowModal(false);
         }}
         onLeftArrowClick={() => {
+          console.log({ swiperRef });
           swiperRef.current?.slidePrev();
         }}
         onRightArrowClick={() => swiperRef.current?.slideNext()}
@@ -93,13 +168,11 @@ function HallOfFlame(props) {
             slidesPerView={9}
             spaceBetween={30}
             slidesPerGroup={1}
-            // loop={true}
             loopFillGroupWithBlank={true}
             modules={[Navigation]}
             onBeforeInit={(swiper) => {
               swiperRef.current = swiper;
             }}
-            loopedSlides={100}
             className={styles.carouselItems}
             navigation={{
               enabled: true,
@@ -107,19 +180,20 @@ function HallOfFlame(props) {
               prevEl: ".prev",
             }}
           >
-            {data.length > 0 &&
-              data.map((ele, index) => {
+            {hallOfFlameData.length > 0 &&
+              hallOfFlameData.map((ele, index) => {
+                console.log({ ele });
                 return (
                   <SwiperSlide key={index}>
                     <div
                       className={`${styles.carouselItem}`}
                       onClick={() => {
-                        setShowModal(!showModal);
+                        onItemClick(ele);
                       }}
                     >
                       <Image
                         className={styles.carouselImage}
-                        src="https://static.plgworks.com/assets/images/hon/green.jpg"
+                        src={ele?.image}
                         alt="Lens Icon"
                         width="30"
                         height="30"
@@ -136,7 +210,7 @@ function HallOfFlame(props) {
                           />
                         </span>
                         <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
-                          43
+                          {ele.totalVotes}
                         </span>
                       </div>
                     </div>
@@ -173,7 +247,7 @@ function HallOfFlame(props) {
               </div>
             </SwiperSlide> */}
 
-            {shouldShowEmptyData
+            {/* {shouldShowEmptyData
               ? emptyData.map((ele, index) => {
                   return (
                     <SwiperSlide key={index}>
@@ -188,7 +262,7 @@ function HallOfFlame(props) {
                     </SwiperSlide>
                   );
                 })
-              : null}
+              : null} */}
           </Swiper>
         </div>
       </div>

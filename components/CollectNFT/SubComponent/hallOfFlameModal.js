@@ -10,6 +10,7 @@ import HofCross from "./SVG/hofCross";
 function HallOfFlameModal({
   shown,
   close,
+  modalData,
   onLeftArrowClick,
   onRightArrowClick,
 }) {
@@ -67,7 +68,7 @@ function HallOfFlameModal({
         <div
           className={`${styles.card} flex items-center justify-center mt-[20px]`}
           style={{
-            backgroundImage: `url(https://static.plgworks.com/assets/images/hon/vespa.jpg)`,
+            backgroundImage: `url(${modalData.image})`,
           }}
         >
           <div
@@ -81,13 +82,11 @@ function HallOfFlameModal({
                 height="27"
               />
             </span>
-            <span>42</span>
+            <span>{modalData.totalVotes}</span>
           </div>
           <div className={`${styles.nftDetails} p-[15px]`}>
             <div className="flex items-start justify-between">
-              <div className={styles.nftTitle}>
-                The Magical Land of Auroras and Buildings
-              </div>
+              <div className={styles.nftTitle}>{modalData.title}</div>
               <div>
                 <Image
                   src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
@@ -99,7 +98,7 @@ function HallOfFlameModal({
             </div>
             <div className="flex justify-between items-center mt-[14px] mb-[22px]">
               <div className="flex items-center font-medium text-[#ffffff99] text-[16px] leading-[26px]">
-                <span>@harshit</span>
+                <span>{modalData.handle}</span>
                 <span>.</span>
                 <span>Follow</span>
               </div>
