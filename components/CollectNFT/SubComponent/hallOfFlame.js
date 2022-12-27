@@ -19,6 +19,7 @@ function HallOfFlame(props) {
 
   const [hallOfFlameData, setHallOfFlameData] = useState([]);
   const shouldShowEmptyData = hallOfFlameData.length !== 9;
+  const activeIndex = useRef(0);
 
   const fetchData = async () => {
     try {
@@ -88,7 +89,9 @@ function HallOfFlame(props) {
     fetchData();
   }, []);
 
-  const onItemClick = (ele) => {
+  const onItemClick = (ele, index) => {
+    console.log("swiper ref", swiperRef.current.activeIndex);
+    activeIndex.current = index;
     setModalData(ele);
     setShowModal(!showModal);
   };
@@ -99,6 +102,8 @@ function HallOfFlame(props) {
       <HallOfFlameModal
         modalData={modalData}
         shown={showModal}
+        hallOfFlameData={hallOfFlameData}
+        initialSlide={activeIndex.current}
         close={() => {
           setShowModal(false);
         }}
@@ -188,7 +193,7 @@ function HallOfFlame(props) {
                     <div
                       className={`${styles.carouselItem}`}
                       onClick={() => {
-                        onItemClick(ele);
+                        onItemClick(ele, index);
                       }}
                     >
                       <Image
