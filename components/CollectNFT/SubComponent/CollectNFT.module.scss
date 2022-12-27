@@ -39,3 +39,6 @@
   backdrop-filter: blur(8px);
   border-radius: 4px;
 }
+.scroll::-webkit-scrollbar {
+  display: none;
+}
