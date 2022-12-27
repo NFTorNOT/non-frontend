@@ -52,6 +52,7 @@ function HallOfFlameModal({
         <Swiper
           initialSlide={initialSlide}
           slidesPerView={1}
+          spaceBetween={30}
           slidesPerGroup={1}
           modules={[Navigation]}
           className={`${styles.carouselItems} flex items-center rounded-[10px]`}
@@ -60,13 +61,12 @@ function HallOfFlameModal({
             nextEl: ".next",
             prevEl: ".prev",
           }}
-          width={512}
         >
           {hallOfFlameData.length > 0 &&
             hallOfFlameData.map((ele, index) => {
               return (
                 <SwiperSlide>
-                  <div className="w-[512px]">
+                  <div className="w-full">
                     <div className="flex items-center justify-center">
                       <span className="mr-[8px] font-bold text-[20px] leading-[32px] text-[#ffffff]">
                         Hall of Flame
