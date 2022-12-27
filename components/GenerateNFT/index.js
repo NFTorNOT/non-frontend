@@ -3,7 +3,6 @@ import { useAccount } from "wagmi";
 import Image from "next/image";
 import LensHelper from "../../utils/LensHelper";
 import styles from "./Generate.module.scss";
-import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems, TabNames } from "../Main/TabItems";
@@ -15,6 +14,7 @@ import ThemesData from "./ThemesData";
 import { useAuthContext } from "../../context/AuthContext";
 import SubmitForVoteModal from "./SubmitForVoteModal/SubmitForVoteModal";
 import UserInput from "./UserInput";
+import { axiosInstance } from "../../AxiosInstance";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -61,7 +61,7 @@ export default function GenerateNFT() {
     }
     setImageGenerationInProgress(true);
 
-    axios
+    axiosInstance
       .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/image-suggestions`, {
         params: {
           prompt: prompt,
@@ -132,7 +132,7 @@ export default function GenerateNFT() {
       console.log("here here", lensMetadataIpfsObjectId.current);
       const { txId, txHash } = await LensHelper.postWithDispatcher({
         postMetadataCid: lensMetadataIpfsObjectId.current.cid,
-        profileId: userProfile.id,
+        profileId: userProfile.lens_profile_id,
         profileAddress: address,
       });
 
@@ -153,8 +153,8 @@ export default function GenerateNFT() {
   };
 
   const submitToVoteApi = () => {
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-to-vote`, {
+    axiosInstance
+      .post(`/submit-to-vote`, {
         image_url: selectedImgUrl,
         title: imageTitle,
         description: prompt,
@@ -176,8 +176,8 @@ export default function GenerateNFT() {
       return;
     }
     setSubmitToVoteApiInProgress(true);
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/store-on-ipfs`, {
+    axiosInstance
+      .post(`/store-on-ipfs`, {
         image_url: selectedImgUrl,
         title: imageTitle,
         description: prompt,

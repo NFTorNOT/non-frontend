@@ -13,10 +13,10 @@ function RightArrow(props) {
         <path
           d="M17.25 9.58332L30.6667 23L17.25 36.4167"
           stroke="white"
-          stroke-opacity="0.8"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeOpacity="0.8"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </div>

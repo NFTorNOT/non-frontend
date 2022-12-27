@@ -5,22 +5,21 @@ import SessionHelper from "../../utils/SessionHelper";
 import { useAuthContext } from "../../context/AuthContext";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { axiosInstance } from "../../AxiosInstance";
 
 function LogoutModal({ shown, close }) {
   const { setIsUserLoggedIn } = useAuthContext();
   const router = useRouter();
   const logout = async () => {
     try {
-      // const logoutResponse = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/logout`
-      // );
-      // if (logoutResponse.data.success) {
-      SessionHelper.clearSession();
-      setIsUserLoggedIn(false);
-      router.reload();
-      // }
+      const logoutResponse = await axiosInstance.post(`/logout`);
+      if (logoutResponse.data.success) {
+        SessionHelper.clearSession();
+        setIsUserLoggedIn(false);
+        router.reload();
+      }
     } catch (error) {
-      // console.log("error in logout", error);
+      console.log("error in logout", error);
     }
   };
   return shown ? (

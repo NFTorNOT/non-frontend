@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./HallOfFlame.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,14 +9,29 @@ import "swiper/css/navigation";
 import HallOfFlameModal from "./hallOfFlameModal";
 
 function HallOfFlame(props) {
-  const [modalShown, toggleModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState();
+  const swiperRef = useRef();
+  const data = [1, 2, 3, 4];
+  const emptyData = [1, 2, 3, 4, 5];
+  const shouldShowEmptyData = data.length !== 9;
+
+  const onItemClick = (ele) => {
+    setModalData(ele);
+  };
+
+  console.log({ shouldShowEmptyData });
   return (
     <div className={`${styles.container} min-w-0`}>
       <HallOfFlameModal
-        shown={modalShown}
+        shown={showModal}
         close={() => {
-          toggleModal(false);
+          setShowModal(false);
         }}
+        onLeftArrowClick={() => {
+          swiperRef.current?.slidePrev();
+        }}
+        onRightArrowClick={() => swiperRef.current?.slideNext()}
       />
       <div className="flex items-center">
         <div className="font-bold text-[20px] leading-[32px] text-[#ffffff] mr-[8px]">
@@ -78,9 +93,12 @@ function HallOfFlame(props) {
             slidesPerView={9}
             spaceBetween={30}
             slidesPerGroup={1}
-            loop={true}
+            // loop={true}
             loopFillGroupWithBlank={true}
             modules={[Navigation]}
+            onBeforeInit={(swiper) => {
+              swiperRef.current = swiper;
+            }}
             loopedSlides={100}
             className={styles.carouselItems}
             navigation={{
@@ -89,7 +107,43 @@ function HallOfFlame(props) {
               prevEl: ".prev",
             }}
           >
-            <SwiperSlide>
+            {data.length > 0 &&
+              data.map((ele, index) => {
+                return (
+                  <SwiperSlide key={index}>
+                    <div
+                      className={`${styles.carouselItem}`}
+                      onClick={() => {
+                        setShowModal(!showModal);
+                      }}
+                    >
+                      <Image
+                        className={styles.carouselImage}
+                        src="https://static.plgworks.com/assets/images/hon/green.jpg"
+                        alt="Lens Icon"
+                        width="30"
+                        height="30"
+                      />
+                      <div
+                        className={`${styles.trending} p-[5px] flex items-center`}
+                      >
+                        <span>
+                          <Image
+                            src="https://static.plgworks.com/assets/images/non/flame-icon.png"
+                            alt="Lens Icon"
+                            width="19"
+                            height="19"
+                          />
+                        </span>
+                        <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
+                          43
+                        </span>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+            {/* <SwiperSlide>
               <div
                 className={`${styles.carouselItem}`}
                 onClick={() => {
@@ -117,115 +171,24 @@ function HallOfFlame(props) {
                   </span>
                 </div>
               </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={`${styles.carouselItem}`}>
-                <Image
-                  className={styles.carouselImage}
-                  src="https://static.plgworks.com/assets/images/hon/green.jpg"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-                <div className={`${styles.trending} p-[5px] flex items-center`}>
-                  <span>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/flame-icon.png"
-                      alt="Lens Icon"
-                      width="19"
-                      height="19"
-                    />
-                  </span>
-                  <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
-                    42
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={`${styles.carouselItem}`}>
-                <Image
-                  className={styles.carouselImage}
-                  src="https://static.plgworks.com/assets/images/hon/tree.jpg"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-                <div className={`${styles.trending} p-[5px] flex items-center`}>
-                  <span>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/flame-icon.png"
-                      alt="Lens Icon"
-                      width="19"
-                      height="19"
-                    />
-                  </span>
-                  <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
-                    40
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={styles.carouselItem}>
-                <Image
-                  src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={styles.carouselItem}>
-                <Image
-                  src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={styles.carouselItem}>
-                <Image
-                  src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={styles.carouselItem}>
-                <Image
-                  src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={styles.carouselItem}>
-                <Image
-                  src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className={styles.carouselItem}>
-                <Image
-                  src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-              </div>
-            </SwiperSlide>
+            </SwiperSlide> */}
+
+            {shouldShowEmptyData
+              ? emptyData.map((ele, index) => {
+                  return (
+                    <SwiperSlide key={index}>
+                      <div className={styles.carouselItem}>
+                        <Image
+                          src="https://static.plgworks.com/assets/images/non/generate-default.png"
+                          alt="Lens Icon"
+                          width="30"
+                          height="30"
+                        />
+                      </div>
+                    </SwiperSlide>
+                  );
+                })
+              : null}
           </Swiper>
         </div>
       </div>

@@ -12,6 +12,7 @@ import { useSignInModalContext } from "../../../context/SignInModalContext";
 import axios from "axios";
 import UserApi from "../../../graphql/UserApi";
 import { useUserContext } from "../../../context/UserContext";
+import { axiosInstance } from "../../../AxiosInstance";
 
 export const SignIn = ({ onSignIn, isLoading }) => {
   return (
@@ -43,7 +44,7 @@ export default function SignInButton() {
   const userProfileRef = useRef();
   const messageText = useRef();
   const signedMessageSignature = useRef();
-  const { setUserProfile } = useUserContext();
+  const { setUserProfile, userProfile } = useUserContext();
   const accessTokenRef = useRef();
   const refreshTokenRef = useRef();
 
@@ -125,9 +126,8 @@ export default function SignInButton() {
 
   async function login() {
     try {
-      const loginResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/connect`,
-
+      const loginResponse = await axiosInstance.post(
+        `/connect`,
         {
           lens_profile_id: userProfileRef.current?.id,
           lens_profile_username: userProfileRef.current?.handle,
@@ -165,8 +165,6 @@ export default function SignInButton() {
           accessToken: accessTokenRef.current,
           refreshToken: refreshTokenRef.current,
         });
-
-        console.log({ userDetails });
         setUserProfile(userDetails);
         setIsUserLoggedIn(true);
       }
@@ -176,7 +174,7 @@ export default function SignInButton() {
     }
   }
 
-  console.log({ isConnected, isUserLoggedIn });
+  console.log({ isConnected, isUserLoggedIn, userProfile });
 
   return (
     isUserLoggedIn !== undefined && (
