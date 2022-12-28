@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import styles from "./hallOfFlameModal.module.scss";
 import Image from "next/image";
-import Close from "./SVG/close";
 import Collect from "./SVG/collect";
 import LeftArrow from "./SVG/leftArrow";
 import RightArrow from "./SVG/rightArrow";
@@ -12,11 +11,9 @@ import { Navigation } from "swiper";
 function HallOfFlameModal({
   shown,
   close,
-  modalData,
-  onLeftArrowClick,
-  onRightArrowClick,
   hallOfFlameData,
   initialSlide,
+  onCollectNow,
 }) {
   return shown ? (
     <div
@@ -36,16 +33,10 @@ function HallOfFlameModal({
         <button onClick={close} className="absolute top-0 right-0">
           <HofCross />
         </button>
-        <button
-          className="prev absolute top-0 bottom-0 left-[450px]"
-          onClick={onLeftArrowClick}
-        >
+        <button className="modalPrev absolute top-0 bottom-0 left-[450px]">
           <LeftArrow />
         </button>
-        <button
-          className="next absolute top-0 bottom-0 right-[450px]"
-          onClick={onRightArrowClick}
-        >
+        <button className="modalNext absolute top-0 bottom-0 right-[450px]">
           <RightArrow />
         </button>
 
@@ -58,14 +49,14 @@ function HallOfFlameModal({
           className={`${styles.carouselItems} flex items-center rounded-[10px]`}
           navigation={{
             enabled: true,
-            nextEl: ".next",
-            prevEl: ".prev",
+            nextEl: ".modalNext",
+            prevEl: ".modalPrev",
           }}
         >
           {hallOfFlameData.length > 0 &&
             hallOfFlameData.map((ele, index) => {
               return (
-                <SwiperSlide>
+                <SwiperSlide key={index}>
                   <div className="w-full">
                     <div className="flex items-center justify-center">
                       <span className="mr-[8px] font-bold text-[20px] leading-[32px] text-[#ffffff]">
@@ -131,6 +122,7 @@ function HallOfFlameModal({
                         </div>
                         <button
                           className={`${styles.collectButton} flex items-center justify-center py-[7px]`}
+                          onClick={() => onCollectNow(ele)}
                         >
                           <span>
                             <Collect />

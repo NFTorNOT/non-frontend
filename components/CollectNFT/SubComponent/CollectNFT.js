@@ -14,9 +14,9 @@ function CollectNFT(props) {
   const { isUserLoggedIn } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [modalData, setModalData] = useState();
-  const currentCollectedNFT = useRef([]);
   const [collectData, setCollectData] = useState([]);
-  const [isNftCollected, setIsNftCollected] = useState(false);
+  const isFirstTimeLoading = useRef(false);
+  const allData = useRef([]);
   let hasNextPageIdentifier = useRef(null);
 
   const fetchCollectData = async () => {
@@ -41,7 +41,7 @@ function CollectNFT(props) {
           collectData.meta && collectData.meta.next_page_payload;
         hasNextPageIdentifier.current =
           nextPagePayload && nextPagePayload.pagination_identifier;
-        hasNextPageIdentifier.current = collectData?.meta?.next_page_payload;
+
         let data = [];
         for (let i = 0; i < lensPosts.length; i++) {
           const lensPostDetail = Object.values(lensPostDetails)?.find(
@@ -80,8 +80,10 @@ function CollectNFT(props) {
 
           data.push(postData);
         }
+        allData.current = [...allData.current, ...data];
         setCollectData(data);
         setTimeout(() => {
+          isFirstTimeLoading.current = true;
           setIsLoading(false);
         }, 1000);
       }
@@ -125,7 +127,7 @@ function CollectNFT(props) {
         Collect NFTs
       </div>
 
-      {isLoading ? (
+      {isLoading && !isFirstTimeLoading.current ? (
         <div className="text-center">
           <ClipLoader />
         </div>
@@ -165,7 +167,7 @@ function CollectNFT(props) {
         </div>
       ) : null}
 
-      {collectData.length == 0 && !isLoading ? (
+      {allData.current.length == 0 && !isLoading ? (
         <div className="bg-[#00000099] text-[#ffffff] text-[20px] mt-[16px] h-[512px] flex items-center justify-center">
           <div className="text-center font-medium text-[16px] ">
             <div>Oops! It's Empty</div>
@@ -191,13 +193,13 @@ function CollectNFT(props) {
         </div>
       ) : null}
 
-      {collectData.length > 0 && !isLoading && (
+      {allData.current.length > 0 && !isLoading && (
         <div
           className={`${styles.scroll} grid grid-cols-2 gap-5 max-h-[512px] overflow-y-scroll mt-[16px]`}
           onScroll={handleScroll}
         >
-          {collectData.length > 0 &&
-            collectData.map((ele, index) => {
+          {allData.current.length > 0 &&
+            allData.current.map((ele, index) => {
               return (
                 <div key={index} className="rounded-[12px] relative">
                   <img className="w-full" src={ele.image} alt="Lens Icon" />

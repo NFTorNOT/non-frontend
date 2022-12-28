@@ -27,30 +27,38 @@ function CollectNFTModal({ shown, close, modalData }) {
 
   console.log({ modalData, isNftCollected });
   const fetchPublicationData = async () => {
-    try {
-      const publicationRes = await PublicationApi.fetchPublication({
-        publicationId: modalData?.lensPublicationId,
+    PublicationApi.fetchPublication({
+      publicationId: modalData?.lensPublicationId,
+    })
+      .then((publicationRes) => {
+        console.log({ publicationRes });
+        const totalCollects =
+          publicationRes.data.publication.stats.totalAmountOfCollects;
+        isNftCollectedByMe.current =
+          publicationRes.data.publication.hasCollectedByMe;
+
+        console.log({
+          totalCollects,
+          isNftCollectedByMe: isNftCollectedByMe.current,
+        });
+        setTotalCollects(totalCollects);
+      })
+      .catch((error) => {
+        console.log({ error });
       });
-      const totalCollects =
-        publicationRes.data.publication.stats.totalAmountOfCollects;
-      isNftCollectedByMe.current =
-        publicationRes.data.publication.hasCollectedByMe;
-      setTotalCollects(totalCollects);
-    } catch (error) {
-      console.log({ error });
-    }
   };
 
   useEffect(() => {
     console.log("mounted");
+    fetchPublicationData();
     isNftCollectedByMe.current = null;
     setApiError("");
-    fetchPublicationData();
+
     return () => {
       setApiError("");
       console.log("unmounted");
     };
-  }, []);
+  }, [shown]);
 
   async function allowanceFlow() {
     try {
@@ -83,6 +91,9 @@ function CollectNFTModal({ shown, close, modalData }) {
 
   async function collectPost() {
     try {
+      if (isNftCollected) {
+        return;
+      }
       setApiError("");
       setIsLoading(true);
       const collectTypedDataResponse = await CollectApi.createCollectTypedData({

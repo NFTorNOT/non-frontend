@@ -188,6 +188,7 @@ class PublicationApi {
           publicationId,
         },
       },
+      fetchPolicy: "no-cache",
     });
   }
 
