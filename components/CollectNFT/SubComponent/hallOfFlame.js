@@ -115,7 +115,6 @@ function HallOfFlame(props) {
     setShowCollectModal(true);
   };
 
-  console.log({ shouldShowEmptyData, allData: allData.current });
   return (
     <div className={`${styles.container} min-w-0`}>
       <HallOfFlameModal
@@ -134,7 +133,6 @@ function HallOfFlame(props) {
           modalData={modalData}
           shown={showCollectModal}
           close={() => {
-            console.log("in clonse");
             setShowCollectModal(false);
           }}
         />

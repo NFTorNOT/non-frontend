@@ -16,25 +16,19 @@ function CollectNFTModal({ shown, close, modalData }) {
   const [isNftCollected, setIsNftCollected] = useState(false);
   const isNftCollectedByMe = useRef();
   const { signTypedDataAsync, isError } = useSignTypedData();
-  const { data: signer, isError: isSignerError, status } = useSigner();
+  const { data: signer } = useSigner();
   const [totalCollects, setTotalCollects] = useState(0);
 
-  console.log({ modalData, isNftCollected });
   const fetchPublicationData = async () => {
     PublicationApi.fetchPublication({
       publicationId: modalData?.lensPublicationId,
     })
       .then((publicationRes) => {
-        console.log({ publicationRes });
         const totalCollects =
           publicationRes.data.publication.stats.totalAmountOfCollects;
         isNftCollectedByMe.current =
           publicationRes.data.publication.hasCollectedByMe;
 
-        console.log({
-          totalCollects,
-          isNftCollectedByMe: isNftCollectedByMe.current,
-        });
         setTotalCollects(totalCollects);
       })
       .catch((error) => {
@@ -92,15 +86,11 @@ function CollectNFTModal({ shown, close, modalData }) {
         publicationId: modalData.lensPublicationId,
       });
 
-      console.log({ collectTypedDataResponse });
-
       let createCollectTypedData =
         collectTypedDataResponse.data.createCollectTypedData.typedData;
       delete createCollectTypedData.domain.__typename;
       delete createCollectTypedData.types.__typename;
       delete createCollectTypedData.value.__typename;
-
-      console.log({ createCollectTypedData });
 
       const signature = await signTypedDataAsync({
         types: createCollectTypedData.types,
@@ -116,8 +106,6 @@ function CollectNFTModal({ shown, close, modalData }) {
       const txHash = broadCastData?.data?.broadcast?.txHash;
 
       const res = await LensHelper.pollUntilIndexed({ txHash });
-
-      console.log({ res });
 
       if (res.indexed) {
         const collectApiRes = await axiosInstance.post("/collect", {
@@ -142,12 +130,9 @@ function CollectNFTModal({ shown, close, modalData }) {
           setIsLoading(false);
         }
       }
-
-      console.log("error 2", error);
     }
   }
 
-  console.log({ isError, apierror, isSignerError, status });
   return shown ? (
     <div
       className={styles.modalBackdrop}
