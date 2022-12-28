@@ -15,7 +15,7 @@ function HallOfFlame(props) {
   const [isLoading, setIsLoading] = useState(false);
   const swiperRef = useRef();
 
-  const paginationIdentifierRef = useRef();
+  let hasNextPageIdentifier = useRef(null);
 
   const [hallOfFlameData, setHallOfFlameData] = useState([]);
   const shouldShowEmptyData = hallOfFlameData.length !== 9;
@@ -29,7 +29,7 @@ function HallOfFlame(props) {
           "/hall-of-flame-nfts",
           {
             params: {
-              pagination_identifier: paginationIdentifierRef.current,
+              pagination_identifier: hasNextPageIdentifier.current,
             },
           }
         );
@@ -42,10 +42,11 @@ function HallOfFlame(props) {
           const currentUserLensPostRelations =
             hallOfFlameData?.current_user_lens_post_relations;
           const users = hallOfFlameData?.users;
-          paginationIdentifierRef.current =
-            hallOfFlameData?.meta?.next_page_payload;
+          const nextPagePayload =
+            hallOfFlameData.meta && hallOfFlameData.meta.next_page_payload;
+          hasNextPageIdentifier.current =
+            nextPagePayload && nextPagePayload.pagination_identifier;
           let data = [];
-          console.log("here here", hallOfFlameData);
           for (let i = 0; i < lensPosts.length; i++) {
             const lensPostDetail = Object.values(lensPostDetails)?.find(
               (post) => post.id == lensPosts[i]
@@ -85,7 +86,7 @@ function HallOfFlame(props) {
           setHallOfFlameData(data);
           setIsLoading(false);
         }
-      } while (paginationIdentifierRef.current);
+      } while (hasNextPageIdentifier.current);
     } catch (error) {
       setIsLoading(false);
       console.log("error", error);

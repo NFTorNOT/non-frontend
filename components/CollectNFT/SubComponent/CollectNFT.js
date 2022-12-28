@@ -11,19 +11,19 @@ import SignInButton from "../../TopBar/SignInButton";
 
 function CollectNFT(props) {
   const [modalShown, toggleModal] = useState(false);
-  const paginationIdentifierRef = useRef(null);
   const { isUserLoggedIn } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [modalData, setModalData] = useState();
 
   const [collectData, setCollectData] = useState([]);
+  let hasNextPageIdentifier = useRef(null);
 
   const fetchCollectData = async () => {
     try {
       setIsLoading(true);
       const collectApiResponse = await axiosInstance.get("collect-nfts", {
         params: {
-          pagination_identifier: paginationIdentifierRef.current,
+          pagination_identifier: hasNextPageIdentifier.current,
         },
       });
 
@@ -36,7 +36,11 @@ function CollectNFT(props) {
         const currentUserLensPostRelations =
           collectData?.current_user_lens_post_relations;
         const users = collectData?.users;
-        paginationIdentifierRef.current = collectData?.meta?.next_page_payload;
+        const nextPagePayload =
+          collectData.meta && collectData.meta.next_page_payload;
+        hasNextPageIdentifier.current =
+          nextPagePayload && nextPagePayload.pagination_identifier;
+        hasNextPageIdentifier.current = collectData?.meta?.next_page_payload;
         let data = [];
         for (let i = 0; i < lensPosts.length; i++) {
           const lensPostDetail = Object.values(lensPostDetails)?.find(
@@ -98,7 +102,8 @@ function CollectNFT(props) {
     const target = event.target;
 
     if (target.scrollHeight - target.scrollTop === target.clientHeight) {
-      if (paginationIdentifierRef.current) {
+      console.log("reached end", hasNextPageIdentifier.current);
+      if (hasNextPageIdentifier.current) {
         fetchCollectData();
       }
     }
