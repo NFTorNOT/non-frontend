@@ -14,8 +14,9 @@ function CollectNFT(props) {
   const { isUserLoggedIn } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [modalData, setModalData] = useState();
-
+  const currentCollectedNFT = useRef([]);
   const [collectData, setCollectData] = useState([]);
+  const [isNftCollected, setIsNftCollected] = useState(false);
   let hasNextPageIdentifier = useRef(null);
 
   const fetchCollectData = async () => {
@@ -70,6 +71,7 @@ function CollectNFT(props) {
             description: lensPostTextDetails?.text,
             image: lensPostImageDetail?.url,
             lensPublicationId: lensPostDetail?.lens_publication_id,
+            lensId: lensPostDetail?.id,
             lensProfileOwnerAddress: ownerUser.lens_profile_owner_address,
             hasCollected:
               !!currentUserLensPostRelation?.collect_nft_transaction_hash,
@@ -89,7 +91,7 @@ function CollectNFT(props) {
   };
 
   const showModal = (ele) => {
-    setModalData(ele);
+    setModalData({ ...ele });
     toggleModal(!modalShown);
   };
 
@@ -98,7 +100,6 @@ function CollectNFT(props) {
   }, [isUserLoggedIn]);
 
   const handleScroll = (event) => {
-    console.log({ event });
     const target = event.target;
 
     if (target.scrollHeight - target.scrollTop === target.clientHeight) {
@@ -111,13 +112,15 @@ function CollectNFT(props) {
 
   return (
     <div className={`${styles.collectNft} mt-[40px]  min-h-0`}>
-      <CollectNFTModal
-        modalData={modalData}
-        shown={modalShown}
-        close={() => {
-          toggleModal(false);
-        }}
-      />
+      {modalShown ? (
+        <CollectNFTModal
+          modalData={modalData}
+          shown={modalShown}
+          close={() => {
+            toggleModal(false);
+          }}
+        />
+      ) : null}
       <div className="text-[#ffffff] font-bold text-[20px] leading-[32px]">
         Collect NFTs
       </div>

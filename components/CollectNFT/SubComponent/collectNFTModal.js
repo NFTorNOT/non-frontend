@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./collectModal.module.scss";
 import Collect from "./SVG/collect";
 import Close from "./SVG/close";
@@ -8,17 +8,49 @@ import { useContract, useSigner, useSignTypedData } from "wagmi";
 import { splitSignature } from "ethers/lib/utils.js";
 import LensHubAbi from "../../../abis/LensHubAbi.json";
 import { ERROR_TYPES } from "../../../utils/Constants";
+import PublicationApi from "../../../graphql/PublicationApi";
+import { axiosInstance } from "../../../AxiosInstance";
 
 function CollectNFTModal({ shown, close, modalData }) {
   const [isLoading, setIsLoading] = useState(false);
   const [apierror, setApiError] = useState("");
-  const { signTypedDataAsync, error } = useSignTypedData();
-  const { data: signer } = useSigner();
+  const [isNftCollected, setIsNftCollected] = useState(false);
+  const isNftCollectedByMe = useRef();
+  const { signTypedDataAsync, isError } = useSignTypedData();
+  const { data: signer, isError: isSignerError, status } = useSigner();
+  const [totalCollects, setTotalCollects] = useState(0);
   const contract = useContract({
     address: process.env.NEXT_PUBLIC_LENS_HUB_CONTRACT_ADDRESS,
     abi: LensHubAbi,
     signerOrProvider: signer,
   });
+
+  console.log({ modalData, isNftCollected });
+  const fetchPublicationData = async () => {
+    try {
+      const publicationRes = await PublicationApi.fetchPublication({
+        publicationId: modalData?.lensPublicationId,
+      });
+      const totalCollects =
+        publicationRes.data.publication.stats.totalAmountOfCollects;
+      isNftCollectedByMe.current =
+        publicationRes.data.publication.hasCollectedByMe;
+      setTotalCollects(totalCollects);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    console.log("mounted");
+    isNftCollectedByMe.current = null;
+    setApiError("");
+    fetchPublicationData();
+    return () => {
+      setApiError("");
+      console.log("unmounted");
+    };
+  }, []);
 
   async function allowanceFlow() {
     try {
@@ -37,17 +69,17 @@ function CollectNFTModal({ shown, close, modalData }) {
       });
       await tx1.wait(1);
       collectPost();
-      console.log({ tx1 });
     } catch (error) {
-      console.log({ error });
+      if (error.code) {
+        setApiError(error?.reason);
+        setIsLoading(false);
+      } else if (error?.message) {
+        setApiError(error.message);
+      } else {
+        setIsLoading(false);
+      }
     }
   }
-
-  useEffect(() => {
-    return () => {
-      setApiError("");
-    };
-  }, []);
 
   async function collectPost() {
     try {
@@ -91,28 +123,35 @@ function CollectNFTModal({ shown, close, modalData }) {
         { gasLimit: 1000000 }
       );
       const res = await tx.wait();
-      setIsLoading(false);
-      console.log({ res: res.transactionHash });
+
+      const collectApiRes = await axiosInstance.post("/collect", {
+        lens_post_id: modalData.lensId,
+        collect_nft_transaction_hash: res.transactionHash,
+      });
+
+      if (collectApiRes.data.success) {
+        setIsNftCollected(true);
+        setIsLoading(false);
+      } else console.log({ res: res.transactionHash });
     } catch (error) {
       if (error?.message == ERROR_TYPES.ALLOWANCE) {
+        setIsLoading(true);
         allowanceFlow();
       } else if (error.message) {
-        if (error.message) {
-          setApiError(error.message);
-        }
+        setApiError(error.message);
+
         setIsLoading(false);
       } else {
         if (error) {
-          setApiError(error);
+          setIsLoading(false);
         }
       }
 
-      console.log("error", error);
+      console.log("error 2", error);
     }
   }
 
-  console.log({ error: error?.message });
-
+  console.log({ isError, apierror, isSignerError, status });
   return shown ? (
     <div
       className={styles.modalBackdrop}
@@ -166,24 +205,45 @@ function CollectNFTModal({ shown, close, modalData }) {
               height="26"
             />
           </span>
-          <span className="ml-[12px]">2 Collectors</span>
+          <span className="ml-[12px]">{totalCollects} Collectors</span>
         </div>
-        <button
-          className={`${styles.collectButton} flex items-center justify-center py-[7px] mt-[20px]`}
-          onClick={() => collectPost()}
-        >
-          <span>
-            <Collect />
-          </span>
-          {isLoading ? (
-            <span className="pl-[11px]">Collecting...</span>
-          ) : (
-            <span className="pl-[11px]">Collect Now</span>
-          )}
-        </button>
-        {apierror || error ? (
+        {modalData?.hasCollected || isNftCollectedByMe.current ? (
+          <button
+            className={`${styles.alreadyCollectedButton} flex items-center justify-center py-[7px]`}
+          >
+            <span>
+              <Collect />
+            </span>
+            <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
+              You have already collected this
+            </span>
+          </button>
+        ) : (
+          <button
+            className={`${styles.collectButton} flex items-center justify-center py-[7px] mt-[20px]`}
+            onClick={() => collectPost()}
+          >
+            <span>
+              <Collect />
+            </span>
+            {isLoading ? (
+              <span className="pl-[11px]">Collecting...</span>
+            ) : isNftCollected ? (
+              <span className="pl-[11px]">Collected</span>
+            ) : (
+              <span className="pl-[11px]">Collect Now</span>
+            )}
+          </button>
+        )}
+
+        {isError && apierror ? (
           <div className="flex items-center justify-center mt-5">
-            <span>{apierror || error.message}</span>
+            <span>user rejected signing</span>
+          </div>
+        ) : null}
+        {!isError && apierror ? (
+          <div className="flex items-center justify-center mt-5">
+            <span>{apierror}</span>
           </div>
         ) : null}
       </div>
