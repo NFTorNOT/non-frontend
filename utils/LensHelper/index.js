@@ -9,7 +9,7 @@ class LensHelper {
         feeCollectModule: {
           amount: {
             currency: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
-            value: "1.00",
+            value: "0.01",
           },
           recipient: profileAddress,
           followerOnly: false,

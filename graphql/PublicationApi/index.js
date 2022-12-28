@@ -106,6 +106,10 @@ const Query = {
   	publication(request: $request){
     	... on Post{
         id
+        hasCollectedByMe
+        stats{
+          totalAmountOfCollects
+        }
         metadata{
           description
         }
@@ -176,7 +180,7 @@ class PublicationApi {
     });
   }
 
-  fetchPublication(publicationId) {
+  fetchPublication({ publicationId }) {
     return apolloClient.query({
       query: Query.publication,
       variables: {
@@ -184,6 +188,7 @@ class PublicationApi {
           publicationId,
         },
       },
+      fetchPolicy: "no-cache",
     });
   }
 

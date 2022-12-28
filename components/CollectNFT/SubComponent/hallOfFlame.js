@@ -8,16 +8,19 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import HallOfFlameModal from "./hallOfFlameModal";
 import { axiosInstance } from "../../../AxiosInstance";
+import CollectNFTModal from "./collectNFTModal";
 
 function HallOfFlame(props) {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState();
+  const [showCollectModal, setShowCollectModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const swiperRef = useRef();
 
   let hasNextPageIdentifier = useRef(null);
 
   const [hallOfFlameData, setHallOfFlameData] = useState([]);
+  const allData = useRef([]);
   const shouldShowEmptyData = hallOfFlameData.length !== 9;
   const activeIndex = useRef(0);
 
@@ -73,6 +76,9 @@ function HallOfFlame(props) {
 
             let postData = {
               title: lensPostDetail?.title,
+              lensPublicationId: lensPostDetail?.lens_publication_id,
+              lensProfileOwnerAddress: ownerUser.lens_profile_owner_address,
+              lensId: lensPostDetail?.id,
               description: lensPostTextDetails?.text,
               image: lensPostImageDetail?.url,
               totalVotes: lensPostDetail?.total_votes,
@@ -83,6 +89,7 @@ function HallOfFlame(props) {
 
             data.push(postData);
           }
+          allData.current = [...allData.current, ...data];
           setHallOfFlameData(data);
           setIsLoading(false);
         }
@@ -100,27 +107,36 @@ function HallOfFlame(props) {
   const onItemClick = (ele, index) => {
     console.log("swiper ref", swiperRef.current.activeIndex);
     activeIndex.current = index;
-    setModalData(ele);
     setShowModal(!showModal);
   };
 
-  console.log({ shouldShowEmptyData });
+  const onCollectNowClicked = (ele) => {
+    setModalData(ele);
+    setShowCollectModal(true);
+  };
+
   return (
     <div className={`${styles.container} min-w-0`}>
       <HallOfFlameModal
-        modalData={modalData}
         shown={showModal}
-        hallOfFlameData={hallOfFlameData}
+        hallOfFlameData={allData.current}
         initialSlide={activeIndex.current}
         close={() => {
           setShowModal(false);
         }}
-        onLeftArrowClick={() => {
-          console.log({ swiperRef });
-          swiperRef.current?.slidePrev();
+        onCollectNow={(modalData) => {
+          onCollectNowClicked(modalData);
         }}
-        onRightArrowClick={() => swiperRef.current?.slideNext()}
       />
+      {showCollectModal ? (
+        <CollectNFTModal
+          modalData={modalData}
+          shown={showCollectModal}
+          close={() => {
+            setShowCollectModal(false);
+          }}
+        />
+      ) : null}
       <div className="flex items-center">
         <div className="font-bold text-[20px] leading-[32px] text-[#ffffff] mr-[8px]">
           Hall of Flame
@@ -193,9 +209,8 @@ function HallOfFlame(props) {
               prevEl: ".prev",
             }}
           >
-            {hallOfFlameData.length > 0 &&
-              hallOfFlameData.map((ele, index) => {
-                console.log({ ele });
+            {allData.current.length > 0 &&
+              allData.current.map((ele, index) => {
                 return (
                   <SwiperSlide key={index}>
                     <div
