@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./collectModal.module.scss";
 import Collect from "./SVG/collect";
 import Close from "./SVG/close";
@@ -11,7 +11,8 @@ import { ERROR_TYPES } from "../../../utils/Constants";
 
 function CollectNFTModal({ shown, close, modalData }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { signTypedDataAsync } = useSignTypedData();
+  const [apierror, setApiError] = useState("");
+  const { signTypedDataAsync, error } = useSignTypedData();
   const { data: signer } = useSigner();
   const contract = useContract({
     address: process.env.NEXT_PUBLIC_LENS_HUB_CONTRACT_ADDRESS,
@@ -42,8 +43,16 @@ function CollectNFTModal({ shown, close, modalData }) {
     }
   }
 
+  useEffect(() => {
+    return () => {
+      setApiError("");
+    };
+  }, []);
+
   async function collectPost() {
     try {
+      setApiError("");
+      setIsLoading(true);
       const collectTypedDataResponse = await CollectApi.createCollectTypedData({
         publicationId: modalData.lensPublicationId,
       });
@@ -82,15 +91,27 @@ function CollectNFTModal({ shown, close, modalData }) {
         { gasLimit: 1000000 }
       );
       const res = await tx.wait();
+      setIsLoading(false);
       console.log({ res: res.transactionHash });
-      //collect with sig
     } catch (error) {
       if (error?.message == ERROR_TYPES.ALLOWANCE) {
         allowanceFlow();
+      } else if (error.message) {
+        if (error.message) {
+          setApiError(error.message);
+        }
+        setIsLoading(false);
+      } else {
+        if (error) {
+          setApiError(error);
+        }
       }
+
       console.log("error", error);
     }
   }
+
+  console.log({ error: error?.message });
 
   return shown ? (
     <div
@@ -154,8 +175,17 @@ function CollectNFTModal({ shown, close, modalData }) {
           <span>
             <Collect />
           </span>
-          <span className="pl-[11px]">Collect Now</span>
+          {isLoading ? (
+            <span className="pl-[11px]">Collecting...</span>
+          ) : (
+            <span className="pl-[11px]">Collect Now</span>
+          )}
         </button>
+        {apierror || error ? (
+          <div className="flex items-center justify-center mt-5">
+            <span>{apierror || error.message}</span>
+          </div>
+        ) : null}
       </div>
     </div>
   ) : null;
