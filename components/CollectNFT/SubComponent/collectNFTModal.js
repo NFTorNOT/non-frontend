@@ -4,12 +4,11 @@ import Collect from "./SVG/collect";
 import Close from "./SVG/close";
 import Image from "next/image";
 import CollectApi from "../../../graphql/CollectApi";
-import { useContract, useSigner, useSignTypedData } from "wagmi";
-import { splitSignature } from "ethers/lib/utils.js";
-import LensHubAbi from "../../../abis/LensHubAbi.json";
+import { useSigner, useSignTypedData } from "wagmi";
 import { ERROR_TYPES } from "../../../utils/Constants";
 import PublicationApi from "../../../graphql/PublicationApi";
 import { axiosInstance } from "../../../AxiosInstance";
+import LensHelper from "../../../utils/LensHelper";
 
 function CollectNFTModal({ shown, close, modalData }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,11 +18,6 @@ function CollectNFTModal({ shown, close, modalData }) {
   const { signTypedDataAsync, isError } = useSignTypedData();
   const { data: signer, isError: isSignerError, status } = useSigner();
   const [totalCollects, setTotalCollects] = useState(0);
-  const contract = useContract({
-    address: process.env.NEXT_PUBLIC_LENS_HUB_CONTRACT_ADDRESS,
-    abi: LensHubAbi,
-    signerOrProvider: signer,
-  });
 
   console.log({ modalData, isNftCollected });
   const fetchPublicationData = async () => {
@@ -49,14 +43,12 @@ function CollectNFTModal({ shown, close, modalData }) {
   };
 
   useEffect(() => {
-    console.log("mounted");
     fetchPublicationData();
     isNftCollectedByMe.current = null;
     setApiError("");
 
     return () => {
       setApiError("");
-      console.log("unmounted");
     };
   }, [shown]);
 
@@ -116,34 +108,27 @@ function CollectNFTModal({ shown, close, modalData }) {
         value: createCollectTypedData.value,
       });
 
-      const { v, r, s } = splitSignature(signature);
-
-      const tx = await contract.collectWithSig(
-        {
-          collector: modalData.lensProfileOwnerAddress,
-          profileId: createCollectTypedData.value.profileId,
-          pubId: createCollectTypedData.value.pubId,
-          data: createCollectTypedData.value.data,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: createCollectTypedData.value.deadline,
-          },
-        },
-        { gasLimit: 1000000 }
-      );
-      const res = await tx.wait();
-
-      const collectApiRes = await axiosInstance.post("/collect", {
-        lens_post_id: modalData.lensId,
-        collect_nft_transaction_hash: res.transactionHash,
+      const broadCastData = await CollectApi.broadCast({
+        id: collectTypedDataResponse?.data?.createCollectTypedData?.id,
+        signature,
       });
 
-      if (collectApiRes.data.success) {
-        setIsNftCollected(true);
-        setIsLoading(false);
-      } else console.log({ res: res.transactionHash });
+      const txHash = broadCastData?.data?.broadcast?.txHash;
+
+      const res = await LensHelper.pollUntilIndexed({ txHash });
+
+      console.log({ res });
+
+      if (res.indexed) {
+        const collectApiRes = await axiosInstance.post("/collect", {
+          lens_post_id: modalData.lensId,
+          collect_nft_transaction_hash: res.txHash,
+        });
+        if (collectApiRes.data.success) {
+          setIsNftCollected(true);
+          setIsLoading(false);
+        }
+      }
     } catch (error) {
       if (error?.message == ERROR_TYPES.ALLOWANCE) {
         setIsLoading(true);

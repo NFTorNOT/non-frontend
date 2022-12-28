@@ -40,6 +40,18 @@ const Query = {
       data
     }
   }`),
+
+  broadCast: gql(`mutation Broadcast($request: BroadcastRequest!) {
+    broadcast(request: $request) {
+      ... on RelayerResult {
+        txHash
+        txId
+      }
+      ... on RelayError {
+        reason
+      }
+    }
+  }`),
 };
 
 class CollectApi {
@@ -62,6 +74,18 @@ class CollectApi {
           currency: Constants.WMATIC_CURRENCY_ADDRESS,
           collectModule: Constants.FEE_COLLECT_MODULE,
           value: "100",
+        },
+      },
+    });
+  }
+
+  broadCast({ id, signature }) {
+    return apolloClient.mutate({
+      mutation: Query.broadCast,
+      variables: {
+        request: {
+          id,
+          signature,
         },
       },
     });
