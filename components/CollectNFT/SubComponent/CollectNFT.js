@@ -226,19 +226,33 @@ function CollectNFT(props) {
                         <span>Show Prompt</span>
                       </div>
                     </div>
-                    <button
-                      className={`${styles.collectButton} flex items-center justify-center py-[7px]`}
-                      onClick={() => {
-                        showModal(ele);
-                      }}
-                    >
-                      <span>
-                        <Collect />
-                      </span>
-                      <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
-                        Collect Now
-                      </span>
-                    </button>
+                    {ele.hasCollected ? (
+                      <button
+                        className={`${styles.alreadyCollectedButton} flex items-center justify-center py-[7px]`}
+                        onClick={() => {}}
+                      >
+                        <span>
+                          <Collect />
+                        </span>
+                        <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
+                          You have already collected this
+                        </span>
+                      </button>
+                    ) : (
+                      <button
+                        className={`${styles.collectButton} flex items-center justify-center py-[7px]`}
+                        onClick={() => {
+                          showModal(ele);
+                        }}
+                      >
+                        <span>
+                          <Collect />
+                        </span>
+                        <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
+                          Collect Now
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
               );

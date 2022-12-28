@@ -55,6 +55,7 @@ function HallOfFlameModal({
         >
           {hallOfFlameData.length > 0 &&
             hallOfFlameData.map((ele, index) => {
+              console.log("hallOfFlameData", { ele });
               return (
                 <SwiperSlide key={index}>
                   <div className="w-full">
@@ -120,17 +121,30 @@ function HallOfFlameModal({
                             <span>Show Prompt</span>
                           </div>
                         </div>
-                        <button
-                          className={`${styles.collectButton} flex items-center justify-center py-[7px]`}
-                          onClick={() => onCollectNow(ele)}
-                        >
-                          <span>
-                            <Collect />
-                          </span>
-                          <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
-                            Collect Now
-                          </span>
-                        </button>
+                        {ele.hasCollected ? (
+                          <button
+                            className={`${styles.collectButton} flex items-center justify-center py-[7px]`}
+                          >
+                            <span>
+                              <Collect />
+                            </span>
+                            <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
+                              You have already collected this
+                            </span>
+                          </button>
+                        ) : (
+                          <button
+                            className={`${styles.collectButton} flex items-center justify-center py-[7px]`}
+                            onClick={() => onCollectNow(ele)}
+                          >
+                            <span>
+                              <Collect />
+                            </span>
+                            <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
+                              Collect Now
+                            </span>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
