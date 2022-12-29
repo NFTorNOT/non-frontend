@@ -186,7 +186,6 @@ export default function GenerateNFT() {
 
     const defaultProfile = defaultProfileResponse?.data?.defaultProfile;
     userProfileRef.current = defaultProfile;
-    console.log({ userProfile: userProfileRef.current });
 
     if (!defaultProfile?.dispatcher?.address) {
       setShouldShowEnableDispatcherModal(true);
