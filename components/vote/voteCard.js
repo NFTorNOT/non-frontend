@@ -104,10 +104,10 @@ export default function VoteCard(props) {
   };
 
   useEffect(() => {
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
-    const handleHeight = handleWrapperRef.current.clientHeight;
-    const descriptionHeight = descriptionWrapperRef.current.clientHeight;
+    const titleHeight = titleWrapperRef.current?.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
+    const handleHeight = handleWrapperRef.current?.clientHeight;
+    const descriptionHeight = descriptionWrapperRef?.current.clientHeight;
 
     if (showPrompt) {
       setWrapperTransY(0);

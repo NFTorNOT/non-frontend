@@ -15,6 +15,8 @@ import { useAuthContext } from "../../context/AuthContext";
 import SubmitForVoteModal from "./SubmitForVoteModal/SubmitForVoteModal";
 import UserInput from "./UserInput";
 import { axiosInstance } from "../../AxiosInstance";
+import EnableDispatcherModal from "../EnableDispatcherModal";
+import UserApi from "../../graphql/UserApi";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -49,6 +51,9 @@ export default function GenerateNFT() {
     useState(false);
   const [putImageToVoteInProgress, setPutImageToVoteInProgress] =
     useState(false);
+  const [shouldShowEnableDispatcherModal, setShouldShowEnableDispatcherModal] =
+    useState(false);
+  const userProfileRef = useRef();
 
   for (var key in FilterToText) {
     filterOptions.push(key);
@@ -149,6 +154,7 @@ export default function GenerateNFT() {
       console.log({ indexedResult, publicationRes });
     } catch (error) {
       console.log(error);
+      setSubmitToVoteApiInProgress(false);
     }
   };
 
@@ -164,18 +170,31 @@ export default function GenerateNFT() {
         lens_publication_id: submittedImagePublicationId.current,
       })
       .then((response) => {
-        console.log("Response", response);
         onTabChange(TabItems[TabNames.VoteImage]);
       });
     setSubmitToVoteApiInProgress(false);
   };
 
-  const submitVoteClickHandler = () => {
-    if (!address) {
-      alert("Please sign in to vote");
+  const submitVoteClickHandler = async () => {
+    if (!isUserLoggedIn) {
+      alert("Please sign in to submit the image");
       return;
     }
+    const defaultProfileResponse = await UserApi.defaultProfile({
+      walletAddress: address,
+    });
+
+    const defaultProfile = defaultProfileResponse?.data?.defaultProfile;
+    userProfileRef.current = defaultProfile;
+    console.log({ userProfile: userProfileRef.current });
+
+    if (!defaultProfile?.dispatcher?.address) {
+      setShouldShowEnableDispatcherModal(true);
+      return;
+    }
+
     setSubmitToVoteApiInProgress(true);
+
     axiosInstance
       .post(`/store-on-ipfs`, {
         image_url: selectedImgUrl,
@@ -199,6 +218,9 @@ export default function GenerateNFT() {
           }
         }
         postOnLens();
+      })
+      .catch((error) => {
+        setSubmitToVoteApiInProgress(false);
       });
   };
 
@@ -280,6 +302,13 @@ export default function GenerateNFT() {
               setsubmitToVoteModal={setsubmitToVoteModal}
               clickHandler={() => submitVoteClickHandler()}
             />
+
+            {shouldShowEnableDispatcherModal ? (
+              <EnableDispatcherModal
+                userProfile={userProfileRef.current}
+                onClose={() => setShouldShowEnableDispatcherModal(false)}
+              />
+            ) : null}
 
             {imagesData.length <= 0 ? (
               <div className={styles.emptyImageContainer}>

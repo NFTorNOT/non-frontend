@@ -198,6 +198,7 @@ class UserApi {
           ethereumAddress: walletAddress,
         },
       },
+      fetchPolicy: "no-cache",
     });
   }
 
