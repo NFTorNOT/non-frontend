@@ -1,10 +1,8 @@
 import styles from "./Vote.module.scss";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
-import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
-import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "../../context/AuthContext";
 import NonCard from "../nonCard";
 import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
@@ -12,7 +10,6 @@ import Not from "./svg/not";
 import Hot from "./svg/hot";
 import TrendingThemeDefault from "./TrendingThemeDefault";
 import ClickOnHot from "./svg/clickOnHot";
-import axios, { all } from "axios";
 import { ReactionTypes } from "../../utils/Constants";
 import VoteCard from "./voteCard";
 import { axiosInstance } from "../../AxiosInstance";
@@ -20,11 +17,8 @@ import { axiosInstance } from "../../AxiosInstance";
 export default function VoteImage() {
   const ipfs = "0x34...2745";
   const { userProfile } = useUserContext();
-  const { getPostId } = useCurrentPublicationId();
 
   const [nftDetailsModal, setNftDetailsModal] = useState(false);
-  const imageDetailsListRef = useRef([]);
-  const [apiInProgress, setIsApiInProgress] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [selectedTheme, setSelectedTheme] = useState("");
   const [themesData, setThemesData] = useState([]);
