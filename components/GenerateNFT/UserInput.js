@@ -13,6 +13,7 @@ function UserInput({
     <div className="absolute bottom-0 w-full">
       <input
         type="text"
+        maxLength={50}
         value={imageTitle}
         onChange={(event) => {
           setImageTitle(event.target.value);

@@ -238,6 +238,7 @@ export default function GenerateNFT() {
             <textarea
               placeholder="Dramatic sky and buildings painting"
               className={styles.prompt_area}
+              maxLength={250}
               onChange={(e) => {
                 setPromt(e.target.value.trim());
               }}
