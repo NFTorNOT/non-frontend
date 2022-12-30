@@ -10,28 +10,31 @@ function UserInput({
 }) {
   const [imageTitle, setImageTitle] = useState("");
   return (
-    <div>
+    <div className="absolute bottom-0 w-full">
       <input
         type="text"
+        maxLength={50}
         value={imageTitle}
         onChange={(event) => {
           setImageTitle(event.target.value);
           onSubmit(event.target.value);
         }}
         placeholder="Enter a title for your masterpiece..."
-        className={styles.masterpeice}
+        className={`${styles.masterpeice} focus:outline-none`}
       />
       <button
         disabled={!imageTitle}
         onClick={() => onSubmitToVote(image.image_url)}
-        className={`${styles.submitVote} ${!imageTitle ? styles.disabled : {}}`}
+        className={`${styles.submitVote} ml-[15px] ${
+          !imageTitle ? styles.disabled : {}
+        }`}
         type="submit"
-        title="Submit for voting"
+        title="+ Submit for voting"
       >
         {putImageToVoteInProgress ? (
           <ClipLoader color={"#fff"} loading={true} size={15} />
         ) : (
-          "Submit for voting"
+          "+ Submit for voting"
         )}
       </button>
     </div>

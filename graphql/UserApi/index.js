@@ -146,6 +146,35 @@ const Query = {
       }
     }
   `,
+
+  enableDispatcher: gql`
+    mutation CreateSetDispatcherTypedData($request: SetDispatcherRequest!) {
+      createSetDispatcherTypedData(request: $request) {
+        id
+        expiresAt
+        typedData {
+          types {
+            SetDispatcherWithSig {
+              name
+              type
+            }
+          }
+          domain {
+            name
+            chainId
+            version
+            verifyingContract
+          }
+          value {
+            nonce
+            deadline
+            profileId
+            dispatcher
+          }
+        }
+      }
+    }
+  `,
 };
 
 class UserApi {
@@ -169,6 +198,7 @@ class UserApi {
           ethereumAddress: walletAddress,
         },
       },
+      fetchPolicy: "no-cache",
     });
   }
 
@@ -178,6 +208,17 @@ class UserApi {
       variables: {
         request: {
           handle,
+        },
+      },
+    });
+  }
+
+  enableDispatcher({ profileId }) {
+    return apolloClient.mutate({
+      mutation: Query.enableDispatcher,
+      variables: {
+        request: {
+          profileId,
         },
       },
     });

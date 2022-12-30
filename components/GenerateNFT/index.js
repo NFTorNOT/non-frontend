@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 import LensHelper from "../../utils/LensHelper";
 import styles from "./Generate.module.scss";
-import ClipLoader from "react-spinners/ClipLoader";
 import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems, TabNames } from "../Main/TabItems";
 import { useUserContext } from "../../context/UserContext";
-import useCurrentPublicationId from "../../utils/useCurrentPublicationId";
 import PublicationApi from "../../graphql/PublicationApi";
 import FilterToText from "./FilterToText";
 import ThemesData from "./ThemesData";
@@ -15,6 +13,9 @@ import { useAuthContext } from "../../context/AuthContext";
 import SubmitForVoteModal from "./SubmitForVoteModal/SubmitForVoteModal";
 import UserInput from "./UserInput";
 import { axiosInstance } from "../../AxiosInstance";
+import EnableDispatcherModal from "../EnableDispatcherModal";
+import UserApi from "../../graphql/UserApi";
+import ImageLoader from "../NONImage/ImageLoader";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -25,11 +26,10 @@ export default function GenerateNFT() {
   var sectionStyle = {
     backgroundImage: `url(${image})`,
   };
-  const [prompt, setPromt] = useState("Dramatic sky and buildings painting");
+  const [prompt, setPromt] = useState("");
   const [filter, setfilter] = useState("CINEMATIC");
   const [theme, setTheme] = useState("Light");
-  const [imageTitle, setImageTitle] = useState("");
-  const [selectedImgUrl, setSelectedImgUrl] = useState("");
+  const [selectedImageData, setSelectedImageData] = useState();
 
   const lensMetadataIpfsObjectId = useRef();
   const imageIpfsObjectId = useRef();
@@ -39,16 +39,17 @@ export default function GenerateNFT() {
   const [submitToVoteApiInProgress, setSubmitToVoteApiInProgress] =
     useState(false);
 
-  const selectedPrompt = useRef([]);
-  const generatedImagesData = useRef([]);
-  const scrollRef = useRef();
   const submittedImagePublicationId = useRef();
 
   var filterOptions = [];
   const [imageGenerationInProgress, setImageGenerationInProgress] =
     useState(false);
-  const [putImageToVoteInProgress, setPutImageToVoteInProgress] =
+  const [shouldShowEnableDispatcherModal, setShouldShowEnableDispatcherModal] =
     useState(false);
+  const userProfileRef = useRef();
+  let regex = /[`!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?~]/;
+
+  const generatedImagesRef = useRef([]);
 
   for (var key in FilterToText) {
     filterOptions.push(key);
@@ -59,6 +60,12 @@ export default function GenerateNFT() {
       alert("prompt is required for image generaration");
       return;
     }
+
+    if (regex.test(prompt)) {
+      alert("Prompt can not contain special characters");
+      return;
+    }
+
     setImageGenerationInProgress(true);
 
     axiosInstance
@@ -70,6 +77,7 @@ export default function GenerateNFT() {
       })
       .then((response) => {
         console.log(response.data);
+
         const generatedImagesResponseData = response.data.data;
         if (!generatedImagesResponseData) {
           // TODO:DS : Show Response Err
@@ -77,59 +85,42 @@ export default function GenerateNFT() {
         }
         const suggestionsIdsArr = generatedImagesResponseData.suggestion_ids;
         const suggestionsMap = generatedImagesResponseData.suggestions;
-
+        let currentGeneratedImages = [];
         for (let cnt = 0; cnt < suggestionsIdsArr.length; cnt++) {
           const image = suggestionsMap[suggestionsIdsArr[cnt]];
 
           if (!image) {
             continue;
           }
-          const imageUrl = image.image_url;
 
-          if (!selectedPrompt.current.includes(prompt)) {
-            generatedImagesData.current = [];
-            selectedPrompt.current.push(prompt);
-          }
-
-          generatedImagesData.current.push({
-            image_url: imageUrl,
-          });
+          let data = {
+            imageUrl: image.image_url,
+            prompt: prompt,
+            theme: theme,
+            filter: filter,
+          };
+          currentGeneratedImages.push(data);
         }
-        setImagesData(generatedImagesData);
+
+        generatedImagesRef.current = [
+          ...currentGeneratedImages,
+          ...generatedImagesRef.current,
+        ];
+        setImagesData(currentGeneratedImages);
       })
       .finally(() => {
         setImageGenerationInProgress(false);
       });
   };
 
-  async function onSubmitToVote(imgUrl) {
-    console.log("here here");
-    setPutImageToVoteInProgress(true);
+  async function onSubmitToVote(ele) {
+    console.log({ ele });
+    setSelectedImageData(ele);
     setsubmitToVoteModal(true);
-    setSelectedImgUrl(imgUrl);
-    setPutImageToVoteInProgress(false);
   }
-
-  useEffect(() => {
-    if (imageGenerationInProgress) {
-      setTimeout(() => {
-        scrollToMyRef();
-      }, 500);
-    }
-  }, [imageGenerationInProgress]);
-
-  const scrollToMyRef = () => {
-    scrollRef.current?.scrollIntoView({
-      top: 0,
-      inline: "nearest",
-      behavior: "smooth",
-      block: "start",
-    });
-  };
 
   const postOnLens = async () => {
     try {
-      console.log("here here", lensMetadataIpfsObjectId.current);
       const { txId, txHash } = await LensHelper.postWithDispatcher({
         postMetadataCid: lensMetadataIpfsObjectId.current.cid,
         profileId: userProfile.lens_profile_id,
@@ -149,38 +140,51 @@ export default function GenerateNFT() {
       console.log({ indexedResult, publicationRes });
     } catch (error) {
       console.log(error);
+      setSubmitToVoteApiInProgress(false);
     }
   };
 
   const submitToVoteApi = () => {
     axiosInstance
       .post(`/submit-to-vote`, {
-        image_url: selectedImgUrl,
-        title: imageTitle,
-        description: prompt,
-        theme_name: theme,
+        image_url: selectedImageData?.imageUrl,
+        title: selectedImageData?.title,
+        description: selectedImageData?.prompt,
+        theme_name: selectedImageData?.theme,
         image_ipfs_object_id: imageIpfsObjectId.current.id,
         lens_metadata_ipfs_object_id: lensMetadataIpfsObjectId.current.id,
         lens_publication_id: submittedImagePublicationId.current,
       })
       .then((response) => {
-        console.log("Response", response);
         onTabChange(TabItems[TabNames.VoteImage]);
       });
     setSubmitToVoteApiInProgress(false);
   };
 
-  const submitVoteClickHandler = () => {
-    if (!address) {
-      alert("Please sign in to vote");
+  const submitVoteClickHandler = async () => {
+    if (!isUserLoggedIn) {
+      alert("Please sign in to submit the image");
       return;
     }
+    const defaultProfileResponse = await UserApi.defaultProfile({
+      walletAddress: address,
+    });
+
+    const defaultProfile = defaultProfileResponse?.data?.defaultProfile;
+    userProfileRef.current = defaultProfile;
+
+    if (!defaultProfile?.dispatcher?.address) {
+      setShouldShowEnableDispatcherModal(true);
+      return;
+    }
+
     setSubmitToVoteApiInProgress(true);
+
     axiosInstance
       .post(`/store-on-ipfs`, {
-        image_url: selectedImgUrl,
-        title: imageTitle,
-        description: prompt,
+        image_url: selectedImageData?.imageUrl,
+        title: selectedImageData?.title,
+        description: selectedImageData?.prompt,
       })
       .then((response) => {
         const apiResponseData = response.data.data;
@@ -199,12 +203,15 @@ export default function GenerateNFT() {
           }
         }
         postOnLens();
+      })
+      .catch((error) => {
+        setSubmitToVoteApiInProgress(false);
       });
   };
-
+  console.log({ g: generatedImagesRef.current });
   return (
     <>
-      <div className={`${styles.generateNFT}`}>
+      <div className={`${styles.generateNFT} container `}>
         <div className={styles.enter_prompt_container}>
           <>
             <div>Themes</div>
@@ -231,8 +238,9 @@ export default function GenerateNFT() {
             <textarea
               placeholder="Dramatic sky and buildings painting"
               className={styles.prompt_area}
+              maxLength={250}
               onChange={(e) => {
-                setPromt(e.target.value);
+                setPromt(e.target.value.trim());
               }}
             ></textarea>
             <div>Filter</div>
@@ -265,7 +273,7 @@ export default function GenerateNFT() {
             title="Generate Image"
           >
             {imageGenerationInProgress ? (
-              <ClipLoader color={"#fff"} loading={true} size={15} />
+              <ImageLoader color={"#fff"} height={15} width={15} />
             ) : (
               <span>Generate Image</span>
             )}
@@ -281,7 +289,14 @@ export default function GenerateNFT() {
               clickHandler={() => submitVoteClickHandler()}
             />
 
-            {imagesData.length <= 0 ? (
+            {shouldShowEnableDispatcherModal ? (
+              <EnableDispatcherModal
+                userProfile={userProfileRef.current}
+                onClose={() => setShouldShowEnableDispatcherModal(false)}
+              />
+            ) : null}
+
+            {generatedImagesRef.current.length <= 0 ? (
               <div className={styles.emptyImageContainer}>
                 <div className="text-skin-base font-semibold mb-[5px]">
                   Your Generations
@@ -289,7 +304,7 @@ export default function GenerateNFT() {
                 <div className="grid gap-5 overflow-y-auto h-full grid-cols-2">
                   <div className={styles.emptyImageCell}>
                     {imageGenerationInProgress ? (
-                      <ClipLoader color={"#fff"} loading={true} size={15} />
+                      <ImageLoader color={"#fff"} height={15} width={15} />
                     ) : (
                       <Image
                         src="https://static.plgworks.com/assets/images/non/generate-default.png"
@@ -302,7 +317,7 @@ export default function GenerateNFT() {
 
                   <div className={styles.emptyImageCell}>
                     {imageGenerationInProgress ? (
-                      <ClipLoader color={"#fff"} loading={true} size={15} />
+                      <ImageLoader color={"#fff"} height={15} width={15} />
                     ) : (
                       <Image
                         src="https://static.plgworks.com/assets/images/non/generate-default.png"
@@ -333,48 +348,64 @@ export default function GenerateNFT() {
               </div>
             ) : (
               <div style={sectionStyle}>
+                <div className="text-skin-base font-semibold m-[10px]">
+                  Your Generations
+                </div>
                 <div
                   id="generated-image-id"
                   className="grid gap-5 overflow-y-auto h-full grid-cols-2"
                 >
-                  {generatedImagesData.current.length > 0 &&
-                    generatedImagesData.current.map((image, index) => (
-                      <div
-                        ref={scrollRef}
-                        className={`${styles.bottom} relative`}
-                        key={index}
-                      >
-                        <img src={image.image_url} alt="Generated image" />
-                        <div className="absolute w-full">
+                  {imageGenerationInProgress ? (
+                    <div className={styles.emptyImageCell}>
+                      <ImageLoader color={"#fff"} height={15} width={15} />
+                    </div>
+                  ) : null}
+                  {imageGenerationInProgress ? (
+                    <div className={styles.emptyImageCell}>
+                      <ImageLoader color={"#fff"} height={15} width={15} />
+                    </div>
+                  ) : null}
+                  {generatedImagesRef.current.length > 0 &&
+                    generatedImagesRef.current.map((ele, index) => (
+                      <div className={styles.emptyImageCell}>
+                        <div
+                          style={{
+                            backgroundImage: `url(${ele.imageUrl})`,
+                          }}
+                          className="h-full w-full rounded-[10px] overflow-hidden relative"
+                        >
                           <UserInput
                             key={index}
-                            image={image}
-                            onSubmitToVote={onSubmitToVote}
+                            image={ele.imageUrl}
+                            onSubmitToVote={() => onSubmitToVote(ele)}
                             style={styles.masterpeice}
-                            putImageToVoteInProgress={putImageToVoteInProgress}
                             onSubmit={(value) => {
-                              setImageTitle(value);
+                              ele.title = value;
                             }}
                           />
                         </div>
                       </div>
+                      // <div className={`${styles.bottom} relative`} key={index}>
+                      //   <div
+                      //     style={{
+                      //       backgroundImage: `url(${ele.imageUrl})`,
+                      //     }}
+                      //     className="h-[412px] rounded-[16px]"
+                      //   ></div>
+
+                      //   <div className="absolute w-full">
+                      //     <UserInput
+                      //       key={index}
+                      //       image={ele.imageUrl}
+                      //       onSubmitToVote={() => onSubmitToVote(ele)}
+                      //       style={styles.masterpeice}
+                      //       onSubmit={(value) => {
+                      //         ele.title = value;
+                      //       }}
+                      //     />
+                      //   </div>
+                      // </div>
                     ))}
-                  <div className={styles.emptyImageCell}>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                      alt="Lens Icon"
-                      width="60"
-                      height="60"
-                    />
-                  </div>
-                  <div className={styles.emptyImageCell}>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                      alt="Lens Icon"
-                      width="60"
-                      height="60"
-                    />
-                  </div>
                 </div>
               </div>
             )}

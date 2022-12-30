@@ -13,6 +13,7 @@ import axios from "axios";
 import UserApi from "../../../graphql/UserApi";
 import { useUserContext } from "../../../context/UserContext";
 import { axiosInstance } from "../../../AxiosInstance";
+import EnableDispatcherModal from "../../EnableDispatcherModal";
 
 export const SignIn = ({ onSignIn, isLoading }) => {
   return (
@@ -50,6 +51,8 @@ export default function SignInButton() {
 
   const { address, isConnected } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldShowEnableDispatcherModal, setShouldShowEnableDispatcherModal] =
+    useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -164,6 +167,12 @@ export default function SignInButton() {
         });
         setUserProfile(userDetails);
         setIsUserLoggedIn(true);
+
+        const dispatcherAddress = userProfileRef?.current?.dispatcher?.address;
+
+        if (!dispatcherAddress) {
+          setShouldShowEnableDispatcherModal(true);
+        }
       }
     } catch (error) {
       console.log("error", error);
@@ -193,6 +202,12 @@ export default function SignInButton() {
             onRequestClose={handleClose}
             isOpen={open}
             onSignInComplete={handleClose}
+          />
+        ) : null}
+        {shouldShowEnableDispatcherModal ? (
+          <EnableDispatcherModal
+            userProfile={userProfileRef.current}
+            onClose={() => setShouldShowEnableDispatcherModal(false)}
           />
         ) : null}
       </>
