@@ -19,3 +19,22 @@ export const ReactionTypes = {
 export const ERROR_TYPES = {
   ALLOWANCE: "You do not have enough allowance to collect this publication.",
 };
+
+export const TRENDING_THEMES = [
+  {
+    id: 1,
+    name: "light",
+  },
+  {
+    id: 2,
+    name: "space",
+  },
+  {
+    id: 3,
+    name: "magical",
+  },
+  {
+    id: 4,
+    name: "other",
+  },
+];

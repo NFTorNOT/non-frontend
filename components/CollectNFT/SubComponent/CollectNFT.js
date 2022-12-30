@@ -47,7 +47,7 @@ function CollectNFT(props) {
           const lensPostDetail = Object.values(lensPostDetails)?.find(
             (post) => post.id == lensPosts[i]
           );
-          console.log({ lensPostDetail });
+
           const lensPostImageDetail = Object.values(
             lensPostDetailsImages
           )?.find((image) => image.id == lensPostDetail.image_id);

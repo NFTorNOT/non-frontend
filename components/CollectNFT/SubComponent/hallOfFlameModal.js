@@ -7,6 +7,7 @@ import RightArrow from "./SVG/rightArrow";
 import HofCross from "./SVG/hofCross";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
+import { TRENDING_THEMES } from "../../../utils/Constants";
 
 function HallOfFlameModal({
   shown,
@@ -15,6 +16,7 @@ function HallOfFlameModal({
   initialSlide,
   onCollectNow,
 }) {
+  const Themes = TRENDING_THEMES;
   return shown ? (
     <div
       className={styles.modalBackdrop}
@@ -73,11 +75,27 @@ function HallOfFlameModal({
                       </span>
                     </div>
                     <div className="flex items-center justify-center mt-[15px] font-bold text-[20px]">
-                      <span>#Light</span>
-                      <span className={`${styles.dot} mx-[10px]`}></span>
-                      <span>#Space</span>
-                      <span className={`${styles.dot} mx-[10px]`}></span>
-                      <span>#Magical</span>
+                      {Themes.length > 0 &&
+                        Themes.map((item, index) => {
+                          return (
+                            <>
+                              <span
+                                className={`${
+                                  ele?.theme?.name == item.name
+                                    ? "text-[#fff]"
+                                    : "text-[#ffffff99]"
+                                }`}
+                              >
+                                #{item.name}
+                              </span>
+                              {index < Themes.length - 1 ? (
+                                <span
+                                  className={`${styles.dot} mx-[10px]`}
+                                ></span>
+                              ) : null}
+                            </>
+                          );
+                        })}
                     </div>
                     <div
                       className={`${styles.card} flex items-center justify-center mt-[20px]`}

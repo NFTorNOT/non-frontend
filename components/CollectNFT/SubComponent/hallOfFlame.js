@@ -21,7 +21,7 @@ function HallOfFlame(props) {
 
   const [hallOfFlameData, setHallOfFlameData] = useState([]);
   const allData = useRef([]);
-  const shouldShowEmptyData = hallOfFlameData.length !== 9;
+
   const activeIndex = useRef(0);
 
   const fetchData = async () => {
@@ -42,6 +42,7 @@ function HallOfFlame(props) {
           const lensPostDetails = hallOfFlameData?.lens_posts;
           const lensPostDetailsImages = hallOfFlameData?.images;
           const lensPostDetailsTexts = hallOfFlameData?.texts;
+          const lensPostsTheme = hallOfFlameData?.themes;
           const currentUserLensPostRelations =
             hallOfFlameData?.current_user_lens_post_relations;
           const users = hallOfFlameData?.users;
@@ -74,6 +75,10 @@ function HallOfFlame(props) {
               (user) => user.id == lensPostDetail?.owner_user_id
             );
 
+            const currentTheme = Object.values(lensPostsTheme)?.find(
+              (theme) => theme.id == lensPostDetail?.theme_id
+            );
+
             let postData = {
               title: lensPostDetail?.title,
               lensPublicationId: lensPostDetail?.lens_publication_id,
@@ -85,6 +90,7 @@ function HallOfFlame(props) {
               hasCollected:
                 !!currentUserLensPostRelation?.collect_nft_transaction_hash,
               handle: ownerUser?.lens_profile_username,
+              theme: currentTheme,
             };
 
             data.push(postData);

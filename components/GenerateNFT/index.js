@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 import LensHelper from "../../utils/LensHelper";
@@ -28,7 +28,7 @@ export default function GenerateNFT() {
   };
   const [prompt, setPromt] = useState("");
   const [filter, setfilter] = useState("CINEMATIC");
-  const [theme, setTheme] = useState("Light");
+  const [theme, setTheme] = useState([]);
   const [selectedImageData, setSelectedImageData] = useState();
 
   const lensMetadataIpfsObjectId = useRef();
@@ -54,6 +54,31 @@ export default function GenerateNFT() {
   for (var key in FilterToText) {
     filterOptions.push(key);
   }
+
+  const trendingThemes = useRef([]);
+
+  const fetchTheme = async () => {
+    try {
+      const themeRes = await axiosInstance.get("/active-themes");
+      const activeThemes = themeRes?.data?.data?.active_theme_ids;
+      const allThemes = themeRes?.data?.data?.themes;
+      let themes = [];
+      for (let i = 0; i < activeThemes.length; i++) {
+        let theme = Object.values(allThemes)?.find(
+          (theme) => theme.id == activeThemes[i]
+        );
+        themes.push(theme);
+      }
+      trendingThemes.current = [...themes];
+      setTheme(trendingThemes.current[0]?.name);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    fetchTheme();
+  }, []);
 
   const submitForGeneration = () => {
     if (!prompt) {
@@ -208,7 +233,7 @@ export default function GenerateNFT() {
         setSubmitToVoteApiInProgress(false);
       });
   };
-  console.log({ g: generatedImagesRef.current });
+
   return (
     <>
       <div className={`${styles.generateNFT} container `}>
@@ -226,10 +251,10 @@ export default function GenerateNFT() {
                 setTheme(e.target.value);
               }}
             >
-              {ThemesData.map((style) => {
+              {trendingThemes.current.map((ele) => {
                 return (
-                  <option key={style.id} value={style.themeName}>
-                    #{style.themeName}
+                  <option key={ele?.id} value={ele?.name}>
+                    #{ele?.name}
                   </option>
                 );
               })}
