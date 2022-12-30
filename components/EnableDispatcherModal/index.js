@@ -20,7 +20,6 @@ const EnableDispatcherModal = ({ onClose }) => {
   };
 
   const enableDispatcher = async () => {
-    console.log({ userProfile });
     try {
       setIsLoading(true);
       const profileId = userProfile.lens_profile_id;
@@ -47,7 +46,6 @@ const EnableDispatcherModal = ({ onClose }) => {
       if (res.indexed) {
         onClose();
       }
-      console.log({ dispatcherRes });
     } catch (error) {
       setIsLoading(false);
     }
