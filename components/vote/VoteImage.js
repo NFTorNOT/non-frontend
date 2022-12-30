@@ -25,6 +25,7 @@ export default function VoteImage() {
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
   const [data, setData] = useState([]);
+  const allTrendingThemes = useRef([]);
 
   const { isUserLoggedIn } = useAuthContext();
   const isVoteInProgress = useRef(false);
@@ -66,22 +67,31 @@ export default function VoteImage() {
     const lensPostTextMap = lensPostResponseData.texts;
     const usersMap = lensPostResponseData.users;
     const themesMap = lensPostResponseData.themes;
+    const activeThemes = lensPostResponseData.active_theme_ids;
     const lensPostDetails = [];
 
-    for (let i = 1; i <= 3 && themes.length <= 3; i++) {
-      const isAlreadyPresent = themes.some(
-        (el) => el.themeName === themesMap[i]?.name
+    let trendingThemes = [];
+    for (let i = 0; i < activeThemes.length; i++) {
+      let theme = Object.values(themesMap)?.find(
+        (theme) => theme.id == activeThemes[i]
       );
-
-      if (!isAlreadyPresent && themesMap[i]?.id && themesMap[i]?.name) {
-        themes.push({
-          id: themesMap[i]?.id,
-          themeName: themesMap[i]?.name,
-        });
-      }
+      trendingThemes.push(theme);
     }
+    allTrendingThemes.current = [...trendingThemes];
+    // for (let i = 1; i <= 3 && themes.length <= 3; i++) {
+    //   const isAlreadyPresent = themes.some(
+    //     (el) => el.themeName === themesMap[i]?.name
+    //   );
 
-    setThemesData(themes);
+    //   if (!isAlreadyPresent && themesMap[i]?.id && themesMap[i]?.name) {
+    //     themes.push({
+    //       id: themesMap[i]?.id,
+    //       themeName: themesMap[i]?.name,
+    //     });
+    //   }
+    // }
+
+    // setThemesData(themes);
 
     for (let cnt = 0; cnt < lensPostIdsArr.length; cnt++) {
       const lensPost = lenstPostsMap[lensPostIdsArr[cnt]];
@@ -235,10 +245,13 @@ export default function VoteImage() {
       await childRefs.current[imageIndex]?.swipe(dir);
     }
   };
-
+  console.log({ selectedTheme });
   return (
     <div className="flex items-center justify-center flex-col">
-      <TrendingThemeDefault selectedTheme={selectedTheme} />
+      <TrendingThemeDefault
+        selectedTheme={selectedTheme}
+        trendingThemes={allTrendingThemes.current}
+      />
       <div className="relative md:flex justify-center md:items-center mt-[40px]">
         <NFTContractInfoModal
           visible={nftDetailsModal}

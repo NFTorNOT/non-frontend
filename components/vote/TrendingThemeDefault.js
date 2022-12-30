@@ -1,23 +1,11 @@
 import React from "react";
 import styles from "./TrendingTheme.module.scss";
 import TrendingThemeSvg from "./svg/TrendingThemeSvg";
+import { TRENDING_THEMES } from "../../utils/Constants";
 
-function TrendingThemeDefault(props) {
-  const selectedTheme = props.selectedTheme;
-  const themesData = [
-    {
-      id: "1",
-      themeName: "Light",
-    },
-    {
-      id: "2",
-      themeName: "Space",
-    },
-    {
-      id: "3",
-      themeName: "Magical",
-    },
-  ];
+function TrendingThemeDefault({ selectedTheme, trendingThemes }) {
+  console.log({ trendingThemes });
+  const currentTrendingThemes = TRENDING_THEMES;
 
   return (
     <>
@@ -28,19 +16,19 @@ function TrendingThemeDefault(props) {
             <TrendingThemeSvg />
           </div>
           <div className="flex items-center justify-center mt-[10px]">
-            {themesData.map((item, index) => (
+            {currentTrendingThemes.map((item, index) => (
               <div className="flex items-center" key={index}>
                 <span
                   className={`text-[30px] md:text-[48px] font-bold ${
-                    selectedTheme === item.themeName
+                    selectedTheme == item.name
                       ? "text-[#fff]"
                       : "text-[#ffffff99]"
                   }`}
                 >
                   {" "}
-                  #{item.themeName}
+                  #{item.name}
                 </span>
-                {index < 2 && (
+                {index < currentTrendingThemes.length - 1 && (
                   <span className="px-[20px]">
                     <svg
                       width="6"
