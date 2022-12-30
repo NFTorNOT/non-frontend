@@ -1,4 +1,4 @@
-const LoaderSvgIcon = ({ color = "black" }) => {
+const LoaderSvgIcon = ({ color = "white" }) => {
   return (
     <svg
       width="24"

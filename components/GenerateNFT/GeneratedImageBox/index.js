@@ -7,18 +7,11 @@ export default function GeneratedImageBox({ imgSrcUrl }) {
   const [isImageLoaded, setIsImageloaded] = React.useState(false);
 
   return (
-    <div
-      className="tablet:w-[320px] tablet:h-[320px] w-[404px] h-[404px] relative"
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
-    >
+    <div className="w-full h-[512px] relative">
       <NONImage
         imgSrcUrl={imgSrcUrl}
         alt="Whisper Image"
-        width={404}
-        height={404}
         onLoadingCompleteHandler={() => setIsImageloaded(true)}
-        classes="absolute rounded-[16px] border-solid border-[1px] border-[#ffffff33]"
       />
       {isImageLoaded && imgSrcUrl && (
         <div className="absolute bottom-0 w-[calc(100%-32px)] left-[16px] flex cursor-pointer">

@@ -8,7 +8,7 @@ export default function NONImage({
   height,
   width,
   alt,
-  priority = false,
+  priority = true,
   classes,
   onLoadingCompleteHandler,
 }) {

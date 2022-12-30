@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 import LensHelper from "../../utils/LensHelper";
 import styles from "./Generate.module.scss";
-import ClipLoader from "react-spinners/ClipLoader";
 import { useBottomTab } from "../../context/BottomTabContext";
 import { TabItems, TabNames } from "../Main/TabItems";
 import { useUserContext } from "../../context/UserContext";
@@ -16,8 +15,7 @@ import UserInput from "./UserInput";
 import { axiosInstance } from "../../AxiosInstance";
 import EnableDispatcherModal from "../EnableDispatcherModal";
 import UserApi from "../../graphql/UserApi";
-import NONImage from "../NONImage";
-import GeneratedImageBox from "./GeneratedImageBox";
+import ImageLoader from "../NONImage/ImageLoader";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -48,7 +46,6 @@ export default function GenerateNFT() {
     useState(false);
   const [shouldShowEnableDispatcherModal, setShouldShowEnableDispatcherModal] =
     useState(false);
-  const [emptyState, setEmptyState] = useState(true);
   const userProfileRef = useRef();
   let regex = /[`!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?~]/;
 
@@ -70,7 +67,6 @@ export default function GenerateNFT() {
     }
 
     setImageGenerationInProgress(true);
-    setEmptyState(false);
 
     axiosInstance
       .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/image-suggestions`, {
@@ -212,10 +208,10 @@ export default function GenerateNFT() {
         setSubmitToVoteApiInProgress(false);
       });
   };
-
+  console.log({ g: generatedImagesRef.current });
   return (
     <>
-      <div className={`${styles.generateNFT}`}>
+      <div className={`${styles.generateNFT} container `}>
         <div className={styles.enter_prompt_container}>
           <>
             <div>Themes</div>
@@ -276,7 +272,7 @@ export default function GenerateNFT() {
             title="Generate Image"
           >
             {imageGenerationInProgress ? (
-              <ClipLoader color={"#fff"} loading={true} size={15} />
+              <ImageLoader color={"#fff"} height={15} width={15} />
             ) : (
               <span>Generate Image</span>
             )}
@@ -299,7 +295,7 @@ export default function GenerateNFT() {
               />
             ) : null}
 
-            {imagesData.length <= 0 ? (
+            {generatedImagesRef.current.length <= 0 ? (
               <div className={styles.emptyImageContainer}>
                 <div className="text-skin-base font-semibold mb-[5px]">
                   Your Generations
@@ -307,7 +303,7 @@ export default function GenerateNFT() {
                 <div className="grid gap-5 overflow-y-auto h-full grid-cols-2">
                   <div className={styles.emptyImageCell}>
                     {imageGenerationInProgress ? (
-                      <ClipLoader color={"#fff"} loading={true} size={15} />
+                      <ImageLoader color={"#fff"} height={15} width={15} />
                     ) : (
                       <Image
                         src="https://static.plgworks.com/assets/images/non/generate-default.png"
@@ -320,7 +316,7 @@ export default function GenerateNFT() {
 
                   <div className={styles.emptyImageCell}>
                     {imageGenerationInProgress ? (
-                      <ClipLoader color={"#fff"} loading={true} size={15} />
+                      <ImageLoader color={"#fff"} height={15} width={15} />
                     ) : (
                       <Image
                         src="https://static.plgworks.com/assets/images/non/generate-default.png"
@@ -351,15 +347,32 @@ export default function GenerateNFT() {
               </div>
             ) : (
               <div style={sectionStyle}>
+                <div className="text-skin-base font-semibold m-[10px]">
+                  Your Generations
+                </div>
                 <div
                   id="generated-image-id"
                   className="grid gap-5 overflow-y-auto h-full grid-cols-2"
                 >
+                  {imageGenerationInProgress ? (
+                    <div className={styles.emptyImageCell}>
+                      <ImageLoader color={"#fff"} height={15} width={15} />
+                    </div>
+                  ) : null}
+                  {imageGenerationInProgress ? (
+                    <div className={styles.emptyImageCell}>
+                      <ImageLoader color={"#fff"} height={15} width={15} />
+                    </div>
+                  ) : null}
                   {generatedImagesRef.current.length > 0 &&
                     generatedImagesRef.current.map((ele, index) => (
-                      <div className={`${styles.bottom} relative`} key={index}>
-                        <img src={ele.imageUrl} alt="Generated image" />
-                        <div className="absolute w-full">
+                      <div className={styles.emptyImageCell}>
+                        <div
+                          style={{
+                            backgroundImage: `url(${ele.imageUrl})`,
+                          }}
+                          className="h-full w-full rounded-[10px] overflow-hidden relative"
+                        >
                           <UserInput
                             key={index}
                             image={ele.imageUrl}
@@ -371,23 +384,27 @@ export default function GenerateNFT() {
                           />
                         </div>
                       </div>
+                      // <div className={`${styles.bottom} relative`} key={index}>
+                      //   <div
+                      //     style={{
+                      //       backgroundImage: `url(${ele.imageUrl})`,
+                      //     }}
+                      //     className="h-[412px] rounded-[16px]"
+                      //   ></div>
+
+                      //   <div className="absolute w-full">
+                      //     <UserInput
+                      //       key={index}
+                      //       image={ele.imageUrl}
+                      //       onSubmitToVote={() => onSubmitToVote(ele)}
+                      //       style={styles.masterpeice}
+                      //       onSubmit={(value) => {
+                      //         ele.title = value;
+                      //       }}
+                      //     />
+                      //   </div>
+                      // </div>
                     ))}
-                  <div className={styles.emptyImageCell}>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                      alt="Lens Icon"
-                      width="60"
-                      height="60"
-                    />
-                  </div>
-                  <div className={styles.emptyImageCell}>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                      alt="Lens Icon"
-                      width="60"
-                      height="60"
-                    />
-                  </div>
                 </div>
               </div>
             )}

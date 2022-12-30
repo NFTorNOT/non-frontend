@@ -90,7 +90,7 @@
   min-width: 512px;
   background-position: center;
   background-size: cover;
-  overflow: hidden;
+  // overflow: hidden;
 }
 .generatedTitle {
   height: 52px;
@@ -102,7 +102,7 @@
   font-weight: 700;
   font-size: 20px;
   line-height: 160%;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255);
   background: none;
   width: 92%;
   margin: 12px;
@@ -164,6 +164,9 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
+.secondTab::-webkit-scrollbar {
+  display: none;
+}
 
 .imageTryOutputBox {
   display: flex;
@@ -203,4 +206,8 @@
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
+}
+
+.sectionStyle {
+  padding: 15px;
 }
