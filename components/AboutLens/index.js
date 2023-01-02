@@ -7,10 +7,7 @@ const AboutLens = () => {
 
   useEffect(() => {
     const shouldShowOnBoarding = !!localStorage.getItem("shouldShowOnBoarding");
-    console.log({
-      shouldShowOnBoarding,
-      l: localStorage.getItem("shouldShowOnBoarding"),
-    });
+
     if (!shouldShowOnBoarding) {
       setShouldShowInfo(true);
       setTimeout(() => {
