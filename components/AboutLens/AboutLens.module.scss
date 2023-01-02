@@ -1,0 +1,61 @@
+.container {
+  width: 300px;
+  height: 200px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.8) 41.15%
+  );
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))
+    drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  backdrop-filter: blur(60px);
+  border-radius: 12px;
+  position: absolute;
+  right: 0;
+  margin-top: 50px;
+  margin-right: 20px;
+}
+.imageSection {
+  background-image: url("./Lens.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+}
+.cardImage {
+  padding: 24px;
+  height: 100%;
+  width: 100%;
+  background-image: url("./logo.svg");
+  background-repeat: no-repeat;
+  background-position-x: right;
+  z-index: 9;
+}
+.text {
+  z-index: 10;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 1 !important;
+  line-height: 20px;
+}
+
+.subTitle {
+  font-family: "Satoshi Variable";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration-line: underline;
+  font-feature-settings: "salt" on;
+  margin-top: 8px;
+  color: #ffffff;
+}
+
+.image {
+  position: absolute;
+  right: 0;
+}

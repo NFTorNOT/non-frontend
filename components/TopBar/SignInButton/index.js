@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useAuthContext } from "../../../context/AuthContext";
 import Image from "next/image";
@@ -8,12 +8,11 @@ import UserInfo from "../../UserInfo";
 import styles from "./SignInButton.module.scss";
 import WalletConnect from "./WalletConnect/WalletConnect";
 import SignInModal from "../../SignInModal";
-import { useSignInModalContext } from "../../../context/CollectedNFTModalContext";
-import axios from "axios";
 import UserApi from "../../../graphql/UserApi";
 import { useUserContext } from "../../../context/UserContext";
 import { axiosInstance } from "../../../AxiosInstance";
 import EnableDispatcherModal from "../../EnableDispatcherModal";
+import AboutLens from "../../AboutLens";
 
 export const SignIn = ({ onSignIn, isLoading }) => {
   return (
@@ -133,9 +132,10 @@ export default function SignInButton() {
       message: messageText.current,
     };
 
-    // if (userProfileRef.current?.picture) {
-    //   loginParams.lens_profile_image_url = userProfileRef.current?.picture;
-    // }
+    if (userProfileRef.current?.picture) {
+      loginParams.lens_profile_image_url =
+        userProfileRef.current?.picture?.original?.url;
+    }
 
     try {
       const loginResponse = await axiosInstance.post(`/connect`, loginParams);
@@ -177,8 +177,6 @@ export default function SignInButton() {
     }
   }
 
-  console.log({ isConnected, isUserLoggedIn, userProfile });
-
   return (
     isUserLoggedIn !== undefined && (
       <>
@@ -207,6 +205,7 @@ export default function SignInButton() {
             onClose={() => setShouldShowEnableDispatcherModal(false)}
           />
         ) : null}
+        <AboutLens />
       </>
     )
   );

@@ -119,7 +119,7 @@ export default function VoteImage() {
         title: lensPost.title,
         txHash: lensPost.nft_mint_transaction_hash,
         description: textObj.text,
-        handle: userObj.lens_profile_username,
+        handle: userObj?.lens_profile_username,
       });
     }
 
