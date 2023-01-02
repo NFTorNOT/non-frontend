@@ -13,6 +13,7 @@ import { useUserContext } from "../../../context/UserContext";
 import { axiosInstance } from "../../../AxiosInstance";
 import EnableDispatcherModal from "../../EnableDispatcherModal";
 import AboutLens from "../../AboutLens";
+import OpenClaimedHandleModal from "../../OpenClaimedHandalModal";
 
 export const SignIn = ({ onSignIn, isLoading }) => {
   return (
@@ -50,6 +51,8 @@ export default function SignInButton() {
   const { address, isConnected } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [shouldShowEnableDispatcherModal, setShouldShowEnableDispatcherModal] =
+    useState(false);
+  const [shouldShowClaimedHandleModal, setShoouldShowClaimedHandleModal] =
     useState(false);
 
   const handleClose = () => {
@@ -118,6 +121,7 @@ export default function SignInButton() {
       if (defaultProfile) {
         login();
       } else {
+        setShoouldShowClaimedHandleModal(true);
         // createLensProfile();
       }
     } catch (error) {}
@@ -206,6 +210,10 @@ export default function SignInButton() {
           />
         ) : null}
         <AboutLens />
+        <OpenClaimedHandleModal
+          isOpen={shouldShowClaimedHandleModal}
+          onRequestClose={() => setShoouldShowClaimedHandleModal(false)}
+        />
       </>
     )
   );

@@ -98,6 +98,7 @@ function CollectNFT(props) {
   };
 
   useEffect(() => {
+    allData.current = [];
     fetchCollectData();
   }, [isUserLoggedIn]);
 

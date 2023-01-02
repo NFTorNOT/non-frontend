@@ -1,0 +1,54 @@
+.ModalContainer {
+  width: 282px;
+  height: 205px;
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.8) 41.15%
+  );
+  backdrop-filter: blur(60px);
+
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 20px;
+}
+
+.LensInfo {
+  line-height: 160%;
+  font-feature-settings: "salt" on;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.claimText {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 19px;
+  color: rgba(255, 255, 255, 0.8);
+  font-feature-settings: "salt" on;
+  margin: 10px;
+}
+
+.header {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  font-feature-settings: "salt" on;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.buttonText {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 26px;
+
+  text-align: center;
+  font-feature-settings: "salt" on;
+
+  color: #00501e;
+}

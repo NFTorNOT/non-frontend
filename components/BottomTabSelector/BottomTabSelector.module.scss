@@ -80,6 +80,12 @@ $twitter-fill-color: #1da1f2;
   transition: width 1s;
 }
 
+.collectedNfts {
+  position: absolute;
+  left: 23%;
+  top: 85%;
+}
+
 .collectedNfts div:first-child {
   transform: rotate(6deg) !important;
   transition-delay: 0.25s;

@@ -52,7 +52,8 @@ const EnableDispatcherModal = ({ onClose }) => {
   };
   const customModalStyles = {
     content: {
-      background: "#FFFFFF",
+      background:
+        "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 41.15%)",
       height: "fit-content",
       width: "fit-content",
       margin: "auto",
