@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { useAuthContext } from "../../../context/AuthContext";
 import Image from "next/image";
@@ -8,12 +8,12 @@ import UserInfo from "../../UserInfo";
 import styles from "./SignInButton.module.scss";
 import WalletConnect from "./WalletConnect/WalletConnect";
 import SignInModal from "../../SignInModal";
-import { useSignInModalContext } from "../../../context/SignInModalContext";
-import axios from "axios";
 import UserApi from "../../../graphql/UserApi";
 import { useUserContext } from "../../../context/UserContext";
 import { axiosInstance } from "../../../AxiosInstance";
 import EnableDispatcherModal from "../../EnableDispatcherModal";
+import AboutLens from "../../AboutLens";
+import OpenClaimedHandleModal from "../../OpenClaimedHandalModal";
 
 export const SignIn = ({ onSignIn, isLoading }) => {
   return (
@@ -38,7 +38,6 @@ export const SignIn = ({ onSignIn, isLoading }) => {
 };
 export default function SignInButton() {
   const { isUserLoggedIn } = useAuthContext();
-  const { setIsSignInProcess } = useSignInModalContext();
   const [open, setOpen] = useState(false);
   const { signMessageAsync } = useSignMessage();
   const { setIsUserLoggedIn } = useAuthContext();
@@ -53,14 +52,14 @@ export default function SignInButton() {
   const [isLoading, setIsLoading] = useState(false);
   const [shouldShowEnableDispatcherModal, setShouldShowEnableDispatcherModal] =
     useState(false);
+  const [shouldShowClaimedHandleModal, setShoouldShowClaimedHandleModal] =
+    useState(false);
 
   const handleClose = () => {
     setOpen(false);
-    setIsSignInProcess(false);
   };
   const handleOpen = () => {
     setOpen(true);
-    setIsSignInProcess(true);
   };
 
   async function onSignIn() {
@@ -122,6 +121,7 @@ export default function SignInButton() {
       if (defaultProfile) {
         login();
       } else {
+        setShoouldShowClaimedHandleModal(true);
         // createLensProfile();
       }
     } catch (error) {}
@@ -136,9 +136,10 @@ export default function SignInButton() {
       message: messageText.current,
     };
 
-    // if (userProfileRef.current?.picture) {
-    //   loginParams.lens_profile_image_url = userProfileRef.current?.picture;
-    // }
+    if (userProfileRef.current?.picture) {
+      loginParams.lens_profile_image_url =
+        userProfileRef.current?.picture?.original?.url;
+    }
 
     try {
       const loginResponse = await axiosInstance.post(`/connect`, loginParams);
@@ -180,8 +181,6 @@ export default function SignInButton() {
     }
   }
 
-  console.log({ isConnected, isUserLoggedIn, userProfile });
-
   return (
     isUserLoggedIn !== undefined && (
       <>
@@ -210,6 +209,11 @@ export default function SignInButton() {
             onClose={() => setShouldShowEnableDispatcherModal(false)}
           />
         ) : null}
+        <AboutLens />
+        <OpenClaimedHandleModal
+          isOpen={shouldShowClaimedHandleModal}
+          onRequestClose={() => setShoouldShowClaimedHandleModal(false)}
+        />
       </>
     )
   );

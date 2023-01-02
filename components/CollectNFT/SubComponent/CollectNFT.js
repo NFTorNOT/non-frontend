@@ -98,6 +98,7 @@ function CollectNFT(props) {
   };
 
   useEffect(() => {
+    allData.current = [];
     fetchCollectData();
   }, [isUserLoggedIn]);
 
@@ -195,13 +196,13 @@ function CollectNFT(props) {
 
       {allData.current.length > 0 && !isLoading && (
         <div
-          className={`${styles.scroll} grid grid-cols-2 gap-5 max-h-[512px] overflow-y-scroll mt-[16px]`}
+          className={`${styles.scroll} grid grid-cols-2 gap-5  max-h-[512px] overflow-y-scroll mt-[16px]`}
           onScroll={handleScroll}
         >
           {allData.current.length > 0 &&
             allData.current.map((ele, index) => {
               return (
-                <div key={index} className="rounded-[12px] relative">
+                <div key={index} className="w-[512px] rounded-[12px] relative">
                   <img className="w-full" src={ele.image} alt="Lens Icon" />
                   <div className={`${styles.nftDetails} p-[15px]`}>
                     <div className="flex items-start justify-between">
@@ -218,15 +219,15 @@ function CollectNFT(props) {
                     <div className="flex justify-between items-center mt-[14px] mb-[22px]">
                       <div className="flex items-center font-medium text-[#ffffff99] text-[16px] leading-[26px]">
                         <span>{ele?.handle}</span>
-                        <span>.</span>
-                        <span>Follow</span>
+                        {/* <span>.</span>
+                        <span>Follow</span> */}
                       </div>
                       <div className="flex items-center font-medium text-[#ffffff99] text-[16px] leading-[26px]">
                         <span></span>
                         <span>Show Prompt</span>
                       </div>
                     </div>
-                    {ele.hasCollected ? (
+                    {ele?.hasCollected ? (
                       <button
                         className={`${styles.alreadyCollectedButton} flex items-center justify-center py-[7px]`}
                         onClick={() => {}}
