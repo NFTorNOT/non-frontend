@@ -1,5 +1,6 @@
+import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
-import { DEFAULT_TAB } from "../components/Main/TabItems";
+import { DEFAULT_TAB, TabNames } from "../components/Main/TabItems";
 
 export const BottomTabContext = React.createContext({
   currentTab: false,
@@ -16,7 +17,13 @@ export function useBottomTab() {
 }
 
 export const BottomTabProvider = ({ children }) => {
-  const [currentTab, setCurrentTab] = useState(DEFAULT_TAB);
+  const router = useRouter();
+  if (router.pathname == "/collect") {
+  }
+  console.log({ router });
+  const [currentTab, setCurrentTab] = useState(
+    router.pathname == "/collect" ? TabNames.NftOfTheDay : DEFAULT_TAB
+  );
 
   function onTabChange(tab) {
     setCurrentTab(tab);

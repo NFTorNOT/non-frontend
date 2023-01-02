@@ -8,7 +8,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { AuthProvider } from "../context/AuthContext";
 import { BottomTabProvider } from "../context/BottomTabContext";
 import { UserProvider } from "../context/UserContext";
-import { SignInModalProvider } from "../context/SignInModalContext";
+import { CollectedNFTModalProvider } from "../context/CollectedNFTModalContext";
 
 function App({ Component, pageProps }) {
   const { chains, provider } = configureChains(
@@ -35,11 +35,11 @@ function App({ Component, pageProps }) {
         <AuthProvider>
           <UserProvider>
             <BottomTabProvider>
-              <SignInModalProvider>
+              <CollectedNFTModalProvider>
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>
-              </SignInModalProvider>
+              </CollectedNFTModalProvider>
             </BottomTabProvider>
           </UserProvider>
         </AuthProvider>

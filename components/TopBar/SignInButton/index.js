@@ -8,7 +8,7 @@ import UserInfo from "../../UserInfo";
 import styles from "./SignInButton.module.scss";
 import WalletConnect from "./WalletConnect/WalletConnect";
 import SignInModal from "../../SignInModal";
-import { useSignInModalContext } from "../../../context/SignInModalContext";
+import { useSignInModalContext } from "../../../context/CollectedNFTModalContext";
 import axios from "axios";
 import UserApi from "../../../graphql/UserApi";
 import { useUserContext } from "../../../context/UserContext";
@@ -38,7 +38,6 @@ export const SignIn = ({ onSignIn, isLoading }) => {
 };
 export default function SignInButton() {
   const { isUserLoggedIn } = useAuthContext();
-  const { setIsSignInProcess } = useSignInModalContext();
   const [open, setOpen] = useState(false);
   const { signMessageAsync } = useSignMessage();
   const { setIsUserLoggedIn } = useAuthContext();
@@ -56,11 +55,9 @@ export default function SignInButton() {
 
   const handleClose = () => {
     setOpen(false);
-    setIsSignInProcess(false);
   };
   const handleOpen = () => {
     setOpen(true);
-    setIsSignInProcess(true);
   };
 
   async function onSignIn() {

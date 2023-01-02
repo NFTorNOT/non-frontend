@@ -13,6 +13,7 @@ import ClickOnHot from "./svg/clickOnHot";
 import { ReactionTypes } from "../../utils/Constants";
 import VoteCard from "./voteCard";
 import { axiosInstance } from "../../AxiosInstance";
+import { useCollectedNFTModalContext } from "../../context/CollectedNFTModalContext";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -40,7 +41,8 @@ export default function VoteImage() {
 
   let hasNextPageIdentifier = useRef(null);
 
-  let themes = [];
+  const { setIsUpvoted, isUpvoted } = useCollectedNFTModalContext();
+
   async function fetchLensPost() {
     const lensPostData = await axiosInstance.get(`/nfts`, {
       params: {
@@ -232,6 +234,10 @@ export default function VoteImage() {
       alertUserToSignIn();
       return;
     }
+    if (dir == "right") {
+      setIsUpvoted(!isUpvoted);
+    }
+
     submitVote(dir);
     swipeAnimation(dir);
     await loadMore();
@@ -245,7 +251,6 @@ export default function VoteImage() {
       await childRefs.current[imageIndex]?.swipe(dir);
     }
   };
-  console.log({ selectedTheme });
   return (
     <div className="flex items-center justify-center flex-col">
       <TrendingThemeDefault

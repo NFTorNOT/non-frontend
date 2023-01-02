@@ -18,6 +18,8 @@ $twitter-fill-color: #1da1f2;
     border-radius: 0px 0px 20px 20px;
     font-size: 14px;
   }
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
 }
 
 .tabContainer {
@@ -76,4 +78,18 @@ $twitter-fill-color: #1da1f2;
 .howItWorks:hover .hiwSpace {
   width: 90px;
   transition: width 1s;
+}
+
+.collectedNfts div:first-child {
+  transform: rotate(6deg) !important;
+  transition-delay: 0.25s;
+  transition-duration: 2s;
+  object-fit: contain;
+}
+
+.collectedNfts div:last-child {
+  transform: rotate(-6deg) !important;
+  transition-delay: 0.25s;
+  transition-duration: 2s;
+  object-fit: contain;
 }
