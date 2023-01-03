@@ -9,6 +9,7 @@ import { axiosInstance } from "../../AxiosInstance";
 import { useEffect, useState } from "react";
 import { useCollectedNFTModalContext } from "../../context/CollectedNFTModalContext";
 import { useAuthContext } from "../../context/AuthContext";
+import { useRouter } from "next/router";
 
 export default function BottomTabSelector() {
   const { currentTab, onTabChange } = useBottomTab();
@@ -76,6 +77,9 @@ export default function BottomTabSelector() {
     }
   }
 
+  const { route } = useRouter();
+  console.log({ route });
+
   useEffect(() => {
     setTimeout(() => {
       fetchRecentUpVotedNFTS();
@@ -83,7 +87,9 @@ export default function BottomTabSelector() {
   }, [isUpvoted]);
   return (
     <>
-      <div className={styles.bottomContainer}></div>
+      {route == "/collect" ? (
+        <div className={styles.bottomContainer}></div>
+      ) : null}
       <div className={`${styles.background} grid grid-cols-5 items-center`}>
         <div className="flex items-center mt-[12px] md:mt-0 justify-items-start">
           <div

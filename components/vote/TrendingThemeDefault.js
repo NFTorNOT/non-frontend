@@ -19,9 +19,9 @@ function TrendingThemeDefault({ selectedTheme, trendingThemes }) {
             {currentTrendingThemes.map((item, index) => (
               <div className="flex items-center" key={index}>
                 <span
-                  className={`text-[30px] md:text-[48px] font-bold ${
+                  className={`text-[30px] md:text-[48px] ${
                     selectedTheme == item.name
-                      ? "text-[#fff]"
+                      ? "text-[#fff] font-bold"
                       : "text-[#ffffff99]"
                   }`}
                 >
