@@ -29,6 +29,7 @@ export default function UserInfo() {
         let userDetails = Object.values(users).find((user) => {
           return user.id == currentUser.user_id;
         });
+        userDetails.isFirstTimeUser = currentUser?.is_first_time_user;
 
         let userImage = Object.values(images)?.find((image) => {
           return image.id == userDetails.lens_profile_image_id;

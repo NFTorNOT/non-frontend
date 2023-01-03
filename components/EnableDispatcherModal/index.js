@@ -60,6 +60,7 @@ const EnableDispatcherModal = ({ onClose }) => {
       backdropFilter: "blur(60px)",
       borderRadius: "16px",
       padding: "0px",
+      borderColor: "#000000",
     },
     overlay: {
       background: "rgba(0, 0, 0, 0.6)",
@@ -72,18 +73,16 @@ const EnableDispatcherModal = ({ onClose }) => {
       isOpen={openDispatcherModal}
       style={customModalStyles}
     >
-      <div
-        className={`flex flex-col justify-start items-start bg-[#FFFFFF] rounded-[16px] backdrop-blur-3xl gap-[16px] p-[40px] ${styles.ModalContainer}`}
-      >
+      <div className={`${styles.ModalContainer}`}>
         <div>
           <div
-            className={`flex justify-center box-border items-center w-[234px] h-[40px] bg-[#ABFE2C] text-[#00501E] backdrop-blur rounded-[4px] gap-[8px] cursor-pointer border-[1px] border-solid border-black/20`}
+            className={`flex justify-center box-border items-center w-[234px] h-[40px] bg-[#ABFE2C] text-[#00501E] backdrop-blur rounded-[4px]  cursor-pointer border-[1px] border-solid border-black/20`}
             onClick={enableDispatcher}
           >
             {isLoading ? (
-              <span>Enabling...</span>
+              <span className={styles.title}>Enabling...</span>
             ) : (
-              <span>Enable Dispatcher</span>
+              <span className={styles.title}>Enable Dispatcher</span>
             )}
           </div>
         </div>

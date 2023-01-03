@@ -14,6 +14,7 @@ import { axiosInstance } from "../../../AxiosInstance";
 import EnableDispatcherModal from "../../EnableDispatcherModal";
 import AboutLens from "../../AboutLens";
 import OpenClaimedHandleModal from "../../OpenClaimedHandalModal";
+import { useRouter } from "next/router";
 
 export const SignIn = ({ onSignIn, isLoading }) => {
   return (
@@ -47,6 +48,7 @@ export default function SignInButton() {
   const { setUserProfile, userProfile } = useUserContext();
   const accessTokenRef = useRef();
   const refreshTokenRef = useRef();
+  const router = useRouter();
 
   const { address, isConnected } = useAccount();
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +92,7 @@ export default function SignInButton() {
                 getDefaultProfile();
               })
               .catch((error) => {
-                console.log("error signing in: ", error);
+                console.log("error signing in 1: ", error);
                 setIsLoading(false);
               })
               .finally(() => {
@@ -99,12 +101,12 @@ export default function SignInButton() {
               });
           })
           .catch((error) => {
-            console.log("error signing in: ", error);
+            console.log("error signing in 2: ", error);
             setIsLoading(false);
           });
       })
       .catch((error) => {
-        console.log("error signing in: ", error);
+        console.log("error signing in 3: ", error);
         setIsLoading(false);
       });
   }
@@ -154,6 +156,7 @@ export default function SignInButton() {
         let userDetails = Object.values(users).find((user) => {
           return user.id == currentUser.user_id;
         });
+        userDetails.isFirstTimeUser = currentUser?.is_first_time_user;
 
         let userImage = Object.values(images)?.find((image) => {
           return image.id == userDetails.lens_profile_image_id;
@@ -180,6 +183,8 @@ export default function SignInButton() {
       setIsUserLoggedIn(false);
     }
   }
+
+  console.log({ shouldShowClaimedHandleModal });
 
   return (
     isUserLoggedIn !== undefined && (
@@ -212,7 +217,10 @@ export default function SignInButton() {
         <AboutLens />
         <OpenClaimedHandleModal
           isOpen={shouldShowClaimedHandleModal}
-          onRequestClose={() => setShoouldShowClaimedHandleModal(false)}
+          onRequestClose={() => {
+            router.reload();
+            setShoouldShowClaimedHandleModal(false);
+          }}
         />
       </>
     )
