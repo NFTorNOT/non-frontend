@@ -18,7 +18,7 @@ export function useAuthContext() {
 export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setIsUserLoggedIn(
-      !!sessionStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY)
+      !!localStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY)
     );
   }, []);
 

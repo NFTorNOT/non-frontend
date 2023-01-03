@@ -16,6 +16,7 @@ import { axiosInstance } from "../../AxiosInstance";
 import EnableDispatcherModal from "../EnableDispatcherModal";
 import UserApi from "../../graphql/UserApi";
 import ImageLoader from "../NONImage/ImageLoader";
+import MagicIcon from "./MagicIcon";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -259,7 +260,7 @@ export default function GenerateNFT() {
                 );
               })}
             </select>
-            <div>Enter Prompt</div>
+            <div className="mt-[24px] mb-[8px]">Enter Prompt</div>
             <textarea
               placeholder="Dramatic sky and buildings painting"
               className={styles.prompt_area}
@@ -268,7 +269,7 @@ export default function GenerateNFT() {
                 setPromt(e.target.value.trim());
               }}
             ></textarea>
-            <div>Filter</div>
+            <div className="mt-[12px] mb-[8px]">Filter</div>
             <div className={styles.generateText}>
               Explore various stylistic filters you can apply
             </div>
@@ -290,19 +291,20 @@ export default function GenerateNFT() {
             </select>
           </>
 
-          <button
-            className={`mt-auto btn btn-primary w-full`}
+          <div
+            className={`${styles.button} mt-auto p-[8px]`}
             onClick={() => {
               submitForGeneration();
             }}
             title="Generate Image"
           >
-            {imageGenerationInProgress ? (
-              <ImageLoader color={"#fff"} height={15} width={15} />
-            ) : (
-              <span>Generate Image</span>
-            )}
-          </button>
+            <div className="flex flex-row justify-between">
+              <span className={styles.generateText}>Generate Image</span>
+              <div>
+                <MagicIcon />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className={`${styles.secondTab}`}>

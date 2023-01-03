@@ -211,3 +211,39 @@
 .sectionStyle {
   padding: 15px;
 }
+
+.button {
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  left: 12px;
+  bottom: 16px;
+
+  /* Orange radial */
+
+  background: radial-gradient(
+    107.14% 107.14% at 50% 80.95%,
+    #fa5c00 0%,
+    #ffb800 100%
+  );
+  /* Strokes/Stroke - solid */
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* Glow shadow */
+
+  box-shadow: 0px 8px 32px rgba(250, 92, 0, 0.32);
+  border-radius: 4px;
+}
+.generateText {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 160%;
+  /* or 22px */
+
+  font-feature-settings: "salt" on;
+
+  /* Whites/White - 100 */
+
+  color: #ffffff;
+}

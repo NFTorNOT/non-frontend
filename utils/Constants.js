@@ -38,3 +38,18 @@ export const TRENDING_THEMES = [
     name: "other",
   },
 ];
+
+export const CURRENT_TRENDING_THEMES = [
+  {
+    id: 1,
+    name: "light",
+  },
+  {
+    id: 2,
+    name: "space",
+  },
+  {
+    id: 3,
+    name: "magical",
+  },
+];

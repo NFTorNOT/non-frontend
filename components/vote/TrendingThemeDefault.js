@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./TrendingTheme.module.scss";
 import TrendingThemeSvg from "./svg/TrendingThemeSvg";
-import { TRENDING_THEMES } from "../../utils/Constants";
+import { CURRENT_TRENDING_THEMES } from "../../utils/Constants";
 
 function TrendingThemeDefault({ selectedTheme, trendingThemes }) {
   console.log({ trendingThemes });
-  const currentTrendingThemes = TRENDING_THEMES;
+  const currentTrendingThemes = CURRENT_TRENDING_THEMES;
 
   return (
     <>

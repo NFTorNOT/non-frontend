@@ -8,6 +8,7 @@ import Link from "next/link";
 import { axiosInstance } from "../../AxiosInstance";
 import { useEffect, useState } from "react";
 import { useCollectedNFTModalContext } from "../../context/CollectedNFTModalContext";
+import { useAuthContext } from "../../context/AuthContext";
 
 export default function BottomTabSelector() {
   const { currentTab, onTabChange } = useBottomTab();
@@ -19,8 +20,23 @@ export default function BottomTabSelector() {
   const { isUpvoted } = useCollectedNFTModalContext();
   const [recentlyCollectedNFTS, setRecentCollectedNFTS] = useState([]);
   const [loading, setIsLoading] = useState(false);
+  const { isUserLoggedIn } = useAuthContext();
+
+  const handlePLGClick = () => {
+    const plgURL = "https://plgworks.com/";
+    window.open(plgURL, "_blank");
+  };
+
+  const handleHowItWorks = () => {
+    const plgURL =
+      "https://www.notion.so/plgworks/NFT-or-Not-61e944ba261f49a2805c73468c92a43a";
+    window.open(plgURL, "_blank");
+  };
 
   async function fetchRecentUpVotedNFTS() {
+    if (!isUserLoggedIn) {
+      return;
+    }
     try {
       setIsLoading(true);
       const recentUpvotedNFTSResponse = await axiosInstance.get(
@@ -67,17 +83,19 @@ export default function BottomTabSelector() {
   }, [isUpvoted]);
   return (
     <>
-      <div className="grid grid-cols-5 items-center">
+      <div className={styles.bottomContainer}></div>
+      <div className={`${styles.background} grid grid-cols-5 items-center`}>
         <div className="flex items-center mt-[12px] md:mt-0 justify-items-start">
           <div
             className={`${styles.howItWorks} flex items-center justify-start cursor-pointer relative`}
           >
             <QuestionMarkIcon />
-            <div
+            <button
+              onClick={handleHowItWorks}
               className={`${styles.hiwText} text-[#ffffff] font-medium absolute w-[100px] left-[25px] top-0`}
             >
               How it works
-            </div>
+            </button>
             <div className={styles.hiwSpace}></div>
           </div>
           <TwitterShareButton
@@ -135,9 +153,12 @@ export default function BottomTabSelector() {
             })}
         </div>
 
-        <div className="font-medium text-[16px] leading-[26px] text-[#ffffff99] text-end items-center">
+        <button
+          className="font-medium text-[16px] leading-[26px] text-[#ffffff99] text-end items-center"
+          onClick={handlePLGClick}
+        >
           Made with <span className="text-[#FA5C00]">🧡</span> by PLG
-        </div>
+        </button>
       </div>
     </>
   );

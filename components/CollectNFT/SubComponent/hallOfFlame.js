@@ -122,7 +122,7 @@ function HallOfFlame(props) {
   };
 
   return (
-    <div className={`${styles.container} min-w-0`}>
+    <div className={`${styles.container} min-w-0 container`}>
       <HallOfFlameModal
         shown={showModal}
         hallOfFlameData={allData.current}
@@ -194,14 +194,14 @@ function HallOfFlame(props) {
           </svg>
         </button>
         <div
-          className={`${styles.carousel} mt-[12px]`}
+          className={`${styles.carousel}  mt-[12px]`}
           onClick={(e) => {
             e.stopPropagation();
           }}
         >
           <Swiper
-            slidesPerView={9}
-            spaceBetween={30}
+            slidesPerView={7.5}
+            spaceBetween={12}
             slidesPerGroup={1}
             loopFillGroupWithBlank={true}
             modules={[Navigation]}
@@ -218,7 +218,7 @@ function HallOfFlame(props) {
             {allData.current.length > 0 &&
               allData.current.map((ele, index) => {
                 return (
-                  <SwiperSlide key={index}>
+                  <SwiperSlide key={index} style={{ height: "125px" }}>
                     <div
                       className={`${styles.carouselItem}`}
                       onClick={() => {
@@ -229,8 +229,8 @@ function HallOfFlame(props) {
                         className={styles.carouselImage}
                         src={ele?.image}
                         alt="Lens Icon"
-                        width="30"
-                        height="30"
+                        width="100"
+                        height="100"
                       />
                       <div
                         className={`${styles.trending} p-[5px] flex items-center`}
@@ -251,52 +251,6 @@ function HallOfFlame(props) {
                   </SwiperSlide>
                 );
               })}
-            {/* <SwiperSlide>
-              <div
-                className={`${styles.carouselItem}`}
-                onClick={() => {
-                  toggleModal(!modalShown);
-                }}
-              >
-                <Image
-                  className={styles.carouselImage}
-                  src="https://static.plgworks.com/assets/images/hon/green.jpg"
-                  alt="Lens Icon"
-                  width="30"
-                  height="30"
-                />
-                <div className={`${styles.trending} p-[5px] flex items-center`}>
-                  <span>
-                    <Image
-                      src="https://static.plgworks.com/assets/images/non/flame-icon.png"
-                      alt="Lens Icon"
-                      width="19"
-                      height="19"
-                    />
-                  </span>
-                  <span className="font-medium text-[16px] leading-[26px] text-[#ffffff] ml-[3px]">
-                    43
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide> */}
-
-            {/* {shouldShowEmptyData
-              ? emptyData.map((ele, index) => {
-                  return (
-                    <SwiperSlide key={index}>
-                      <div className={styles.carouselItem}>
-                        <Image
-                          src="https://static.plgworks.com/assets/images/non/generate-default.png"
-                          alt="Lens Icon"
-                          width="30"
-                          height="30"
-                        />
-                      </div>
-                    </SwiperSlide>
-                  );
-                })
-              : null} */}
           </Swiper>
         </div>
       </div>

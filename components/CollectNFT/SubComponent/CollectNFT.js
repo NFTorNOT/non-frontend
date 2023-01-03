@@ -80,7 +80,7 @@ function CollectNFT(props) {
 
           data.push(postData);
         }
-        allData.current = [...allData.current, ...data];
+        allData.current = [...data, ...allData.current];
         setCollectData(data);
         setTimeout(() => {
           isFirstTimeLoading.current = true;
@@ -93,6 +93,9 @@ function CollectNFT(props) {
   };
 
   const showModal = (ele) => {
+    if (ele.hasCollected) {
+      return;
+    }
     setModalData({ ...ele });
     toggleModal(!modalShown);
   };
@@ -124,7 +127,7 @@ function CollectNFT(props) {
           }}
         />
       ) : null}
-      <div className="text-[#ffffff] font-bold text-[20px] leading-[32px]">
+      <div className="text-[#ffffff] font-bold text-[20px] leading-[32px] ml-[118px] justify-center">
         Collect NFTs
       </div>
 
@@ -150,25 +153,11 @@ function CollectNFT(props) {
               </span>
               <span className="leading-[26px]">NFT's </span>
             </div>
-            <div className="mt-[20px]">
-              <SignInButton />
-            </div>
-            {/* <button
-              className={`flex justify-center box-border items-center px-[24px] py-[7px] bg-[#ABFE2C] text-[#00501E] backdrop-blur rounded-[20px] gap-[8px] cursor-pointer border-[1px] border-solid border-black/20 mt-[20px]`}
-            >
-              <Image
-                src="https://static.plgworks.com/assets/images/non/lens-icon.png"
-                alt="Lens Icon"
-                width="20"
-                height="20"
-              />
-              Sign in with Lens
-            </button> */}
           </div>
         </div>
       ) : null}
 
-      {allData.current.length == 0 && !isLoading ? (
+      {allData.current.length == 0 && !isLoading && isUserLoggedIn ? (
         <div className="bg-[#00000099] text-[#ffffff] text-[20px] mt-[16px] h-[512px] flex items-center justify-center">
           <div className="text-center font-medium text-[16px] ">
             <div>Oops! It's Empty</div>
@@ -196,14 +185,21 @@ function CollectNFT(props) {
 
       {allData.current.length > 0 && !isLoading && (
         <div
-          className={`${styles.scroll} grid grid-cols-2 gap-5  max-h-[512px] overflow-y-scroll mt-[16px]`}
+          className={`${styles.scroll} flex flex-wrap gap-x-[50px] gap-y-[25px] justify-center max-h-[512px] overflow-y-scroll mt-[16px]`}
           onScroll={handleScroll}
         >
           {allData.current.length > 0 &&
             allData.current.map((ele, index) => {
               return (
-                <div key={index} className="w-[512px] rounded-[12px] relative">
-                  <img className="w-full" src={ele.image} alt="Lens Icon" />
+                <div
+                  key={index}
+                  className=" h-[512px] rounded-[16px] relative overflow-hidden"
+                >
+                  <img
+                    className="w-full rounded-[16px]"
+                    src={ele.image}
+                    alt="Lens Icon"
+                  />
                   <div className={`${styles.nftDetails} p-[15px]`}>
                     <div className="flex items-start justify-between">
                       <span className={`${styles.nftTitle}`}>{ele?.title}</span>
@@ -227,33 +223,25 @@ function CollectNFT(props) {
                         <span>Show Prompt</span>
                       </div>
                     </div>
-                    {ele?.hasCollected ? (
-                      <button
-                        className={`${styles.alreadyCollectedButton} flex items-center justify-center py-[7px]`}
-                        onClick={() => {}}
-                      >
-                        <span>
-                          <Collect />
-                        </span>
-                        <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
-                          You have already collected this
-                        </span>
-                      </button>
-                    ) : (
-                      <button
-                        className={`${styles.collectButton} flex items-center justify-center py-[7px]`}
-                        onClick={() => {
-                          showModal(ele);
-                        }}
-                      >
-                        <span>
-                          <Collect />
-                        </span>
-                        <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
-                          Collect Now
-                        </span>
-                      </button>
-                    )}
+                    <button
+                      className={`${
+                        ele.hasCollected
+                          ? styles.alreadyCollectedButton
+                          : styles.collectButton
+                      } flex items-center justify-center py-[7px]`}
+                      onClick={() => {
+                        showModal(ele);
+                      }}
+                    >
+                      <span>
+                        <Collect />
+                      </span>
+                      <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
+                        {ele.hasCollected
+                          ? "You have already collected this"
+                          : "Collect Now"}
+                      </span>
+                    </button>
                   </div>
                 </div>
               );

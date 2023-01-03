@@ -55,7 +55,7 @@ function SubmitForVoteModal({
                 <span>Submit for voting </span>
               </div>
             ) : (
-              <button onClick={() => clickHandler()}>
+              <button className="w-full h-full" onClick={() => clickHandler()}>
                 + Submit for voting{" "}
               </button>
             )}

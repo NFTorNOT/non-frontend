@@ -15,7 +15,7 @@ const authLink = new ApolloLink(async (operation, forward) => {
     await SessionHelper.checkAndUpdateTokens();
   }
 
-  const token = sessionStorage.getItem(
+  const token = localStorage.getItem(
     Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY
   );
 

@@ -31,6 +31,16 @@ $twitter-fill-color: #1da1f2;
   text-align: center;
   color: white;
   cursor: pointer;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: 100px;
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+
   &:hover {
     background: rgba(0, 0, 0, 0.4);
     border-radius: 100px;
@@ -38,6 +48,11 @@ $twitter-fill-color: #1da1f2;
 }
 
 .selectedTab {
+  border-image-source: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
   background: rgba(0, 0, 0, 0.6);
   box-shadow: 0px 8px 32px rgba(250, 92, 0, 0.32);
   border-radius: 100px;
@@ -99,3 +114,17 @@ $twitter-fill-color: #1da1f2;
   transition-duration: 2s;
   object-fit: contain;
 }
+
+.bottomContainer {
+  position: absolute;
+  bottom: 0;
+  height: 109px;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 49.99%);
+}
+
+// .background {
+//   background: rgba(0, 0, 0, 0.6);
+//   backdrop-filter: blur(12px);
+//   border-radius: 100px;
+// }

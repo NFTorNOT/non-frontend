@@ -1,6 +1,6 @@
 .container {
   margin: auto;
-  width: calc(100% - 100px);
+  width: 1104px;
 }
 .carouselItems {
   display: flex;
@@ -12,7 +12,7 @@
   width: 125px;
   height: 125px;
   background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 16px;
+  border-radius: 2px;
   text-align: center;
   color: white;
   align-items: center;
@@ -23,8 +23,8 @@
 .carouselImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 16px;
+  object-fit: contain;
+  border-radius: 2px;
 }
 .prev {
   position: absolute;
