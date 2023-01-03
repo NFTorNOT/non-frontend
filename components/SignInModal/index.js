@@ -13,12 +13,14 @@ const SignInModal = ({
 }) => {
   const customStyles = {
     content: {
-      background: "#FFFFFF",
+      background:
+        "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 41.15%)",
       height: "fit-content",
       width: "fit-content",
       margin: "auto",
       backdropFilter: "blur(60px)",
       borderRadius: "16px",
+      borderColor: "#000000",
       padding: "0px",
     },
     overlay: {
@@ -39,7 +41,7 @@ const SignInModal = ({
   return (
     <Modal onRequestClose={onRequestClose} isOpen={isOpen} style={customStyles}>
       <div
-        className={`flex flex-col justify-start items-start bg-[#FFFFFF] rounded-[16px] backdrop-blur-3xl gap-[16px] p-[40px] ${styles.ModalContainer}`}
+        className={`flex flex-col justify-start items-start rounded-[16px] backdrop-blur-3xl  ${styles.ModalContainer}`}
       >
         <CustomConnectButton onSignInComplete={onSignInComplete} />
         <div
@@ -57,10 +59,10 @@ const SignInModal = ({
             <CheckedCircle />
             Collect other NFTs
           </div>
-          <div className="flex justify-start items-center text-[13px] leading-[160%] font-medium text-[#00000099]">
+          <div className="flex justify-start items-center text-[13px] leading-[160%] font-medium text-[rgba(255, 255, 255, 0.8)]">
             New to Lens?
             <span
-              className="underline text-[#00501E]"
+              className="underline ml-2 text-[#ADFF00]"
               onClick={() => {
                 window.open("https://claim.lens.xyz/", "_blank");
               }}
