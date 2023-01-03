@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useAuthContext } from "../../context/AuthContext";
 import { useUserContext } from "../../context/UserContext";
 import styles from "./AboutLens.module.scss";
 const AboutLens = () => {
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
+  const { isUserLoggedIn } = useAuthContext();
   const { userProfile } = useUserContext();
 
   useEffect(() => {
-    if (userProfile?.isFirstTimeUser) {
+    if (!isUserLoggedIn || userProfile?.isFirstTimeUser) {
       setShouldShowInfo(true);
       setTimeout(() => {
         setShouldShowInfo(false);
       }, 7000);
     }
     return () => {};
-  }, [userProfile]);
+  }, [userProfile, isUserLoggedIn]);
 
   return shouldShowInfo ? (
     <div className={styles.container}>
