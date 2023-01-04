@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
-import { DEFAULT_TAB, TabNames } from "../components/Main/TabItems";
+import { DEFAULT_TAB, TabItems, TabNames } from "../components/Main/TabItems";
 
 export const BottomTabContext = React.createContext({
   currentTab: false,
@@ -20,10 +20,17 @@ export const BottomTabProvider = ({ children }) => {
   const router = useRouter();
   if (router.pathname == "/collect") {
   }
-  console.log({ router });
-  const [currentTab, setCurrentTab] = useState(
-    router.pathname == "/collect" ? TabNames.NftOfTheDay : DEFAULT_TAB
-  );
+  let tab = "";
+
+  if (router.pathname == "/collect") {
+    tab = TabItems[TabNames.NftOfTheDay];
+  } else if (router.pathname == "/generate-image") {
+    tab = TabItems[TabNames.GenerateImage];
+  } else {
+    tab = DEFAULT_TAB;
+  }
+
+  const [currentTab, setCurrentTab] = useState(tab);
 
   function onTabChange(tab) {
     setCurrentTab(tab);

@@ -17,9 +17,11 @@ import EnableDispatcherModal from "../EnableDispatcherModal";
 import UserApi from "../../graphql/UserApi";
 import ImageLoader from "../NONImage/ImageLoader";
 import MagicIcon from "./MagicIcon";
+import { useRouter } from "next/router";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
+  const router = useRouter();
   const { address } = useAccount();
   const { userProfile } = useUserContext();
   const { isUserLoggedIn } = useAuthContext();
@@ -27,9 +29,9 @@ export default function GenerateNFT() {
   var sectionStyle = {
     backgroundImage: `url(${image})`,
   };
-  const [prompt, setPromt] = useState("");
-  const [filter, setfilter] = useState("CINEMATIC");
-  const [theme, setTheme] = useState([]);
+  const [prompt, setPromt] = useState(router.query["prompt"] || "");
+  const [filter, setfilter] = useState(router.query["filter"] || "CINEMATIC");
+  const [theme, setTheme] = useState("");
   const [selectedImageData, setSelectedImageData] = useState();
 
   const lensMetadataIpfsObjectId = useRef();
@@ -71,7 +73,8 @@ export default function GenerateNFT() {
         themes.push(theme);
       }
       trendingThemes.current = [...themes];
-      setTheme(trendingThemes.current[0]?.name);
+
+      setTheme(router.query["theme"] || trendingThemes.current[0]?.name);
     } catch (error) {
       console.log({ error });
     }
@@ -175,11 +178,12 @@ export default function GenerateNFT() {
       .post(`/submit-to-vote`, {
         image_url: selectedImageData?.imageUrl,
         title: selectedImageData?.title,
-        description: selectedImageData?.prompt,
+        description: selectedImageData?.prompt + "," + FilterToText[filter],
         theme_name: selectedImageData?.theme,
         image_ipfs_object_id: imageIpfsObjectId.current.id,
         lens_metadata_ipfs_object_id: lensMetadataIpfsObjectId.current.id,
         lens_publication_id: submittedImagePublicationId.current,
+        filter: filter,
       })
       .then((response) => {
         onTabChange(TabItems[TabNames.VoteImage]);
@@ -245,6 +249,7 @@ export default function GenerateNFT() {
               Select a theme that the prompt describes
             </div>
             <select
+              value={theme}
               className={styles.dropdown}
               name="Themes"
               id="Themes"
@@ -263,6 +268,7 @@ export default function GenerateNFT() {
             <div className="mt-[24px] mb-[8px]">Enter Prompt</div>
             <textarea
               placeholder="Dramatic sky and buildings painting"
+              value={prompt}
               className={styles.prompt_area}
               maxLength={250}
               onChange={(e) => {
@@ -275,6 +281,7 @@ export default function GenerateNFT() {
             </div>
             <select
               className={styles.dropdown}
+              value={filter}
               name="filters"
               id="filters"
               onChange={(e) => {

@@ -5,6 +5,10 @@ import ShareModal from "./shareModal";
 import HidePromptSvg from "./svg/hidePromptSvg";
 import ShowPromptSvg from "./svg/showPromptSvg";
 import LensSvg from "./svg/lensSvg";
+import RemixSvg from "./svg/remixSvg";
+import { useBottomTab } from "../../context/BottomTabContext";
+import { TabItems, TabNames } from "../Main/TabItems";
+import Router from "next/router";
 
 export default function VoteCard(props) {
   const character = props.character;
@@ -23,6 +27,8 @@ export default function VoteCard(props) {
 
   const promtStatusText = showPrompt ? "Hide Prompt" : "Show Prompt";
   const promtStatusIcon = showPrompt ? <HidePromptSvg /> : <ShowPromptSvg />;
+
+  const { onTabChange } = useBottomTab();
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -103,6 +109,18 @@ export default function VoteCard(props) {
     setShowPrompt(!showPrompt);
   };
 
+  const onRemixClick = () => {
+    onTabChange(TabItems[TabNames.GenerateImage]);
+    Router.push({
+      pathname: "/generate-image",
+      query: {
+        theme: character?.themeName,
+        prompt: character?.description,
+        filter: character?.filter,
+      },
+    });
+  };
+
   useEffect(() => {
     const titleHeight = titleWrapperRef.current?.clientHeight;
     const wrapHeight = bioParentWrapperRef.current?.clientHeight;
@@ -142,12 +160,12 @@ export default function VoteCard(props) {
             {character.title}
           </div>
           <div className="text-[#ffffff] flex items-center">
-            <div
+            {/* <div
               className={`cursor-pointer mr-[20px] ${styles.shareSvg}`}
               onClick={() => setSocialShareModal(true)}
             >
               <ShareSVG />
-            </div>
+            </div> */}
             <div className={`cursor-pointer ${styles.lensSvg}`}>
               <LensSvg />
             </div>
@@ -157,15 +175,25 @@ export default function VoteCard(props) {
         <div className={`${styles.showPrompt}`} ref={handleWrapperRef}>
           <div className={styles.id}>@{character.handle}</div>
           <div
-            className="text-white cursor-pointer transition flex items-center gap-1"
+            className="text-white text-opacity-60 cursor-pointer transition flex items-center gap-1"
             onClick={togglePrompt}
           >
             {promtStatusIcon} {promtStatusText}
           </div>
         </div>
 
-        <div className={`${styles.description}`} ref={descriptionWrapperRef}>
+        <div
+          className={`${styles.description} flex items-center justify-between`}
+          ref={descriptionWrapperRef}
+        >
           {character.description}
+          <div className={`cursor-pointer`} onClick={() => onRemixClick()}>
+            <RemixSvg />
+          </div>
+        </div>
+
+        <div className={`${styles.filter} flex items-center justify-between`}>
+          Filter - {character.filter}
         </div>
       </div>
     </div>
