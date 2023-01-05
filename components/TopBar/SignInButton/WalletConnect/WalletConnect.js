@@ -7,8 +7,8 @@ export default function WalletConnect({
   openSignInModal,
   onSignIn,
   isLoading,
+  showSquareLoginButton,
 }) {
-  console.log("coming here");
   return (
     <ConnectButton.Custom>
       {({
@@ -64,7 +64,13 @@ export default function WalletConnect({
                 );
               }
 
-              return <SignIn onSignIn={onSignIn} isLoading={isLoading} />;
+              return (
+                <SignIn
+                  onSignIn={onSignIn}
+                  isLoading={isLoading}
+                  showSquareLoginButton={showSquareLoginButton}
+                />
+              );
             })()}
           </div>
         );

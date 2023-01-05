@@ -14,6 +14,7 @@ import { ReactionTypes } from "../../utils/Constants";
 import VoteCard from "./voteCard";
 import { axiosInstance } from "../../AxiosInstance";
 import { useCollectedNFTModalContext } from "../../context/CollectedNFTModalContext";
+import CustomSignInModal from "../CustomSignInModal";
 
 export default function VoteImage() {
   const ipfs = "0x34...2745";
@@ -25,6 +26,7 @@ export default function VoteImage() {
   const [themesData, setThemesData] = useState([]);
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
+  const [shouldShowSignInModal, setShouldShowSignInModal] = useState(false);
   const [data, setData] = useState([]);
   const allTrendingThemes = useRef([]);
 
@@ -201,7 +203,7 @@ export default function VoteImage() {
 
   const submitVote = (dir) => {
     if (!isUserLoggedIn) {
-      alertUserToSignIn();
+      setShouldShowSignInModal(true);
       return;
     }
     if (isVoteInProgress.current) {
@@ -232,7 +234,7 @@ export default function VoteImage() {
 
   const swiped = async (dir) => {
     if (!isUserLoggedIn) {
-      alertUserToSignIn();
+      setShouldShowSignInModal(true);
       return;
     }
     if (dir == "right") {
@@ -258,12 +260,18 @@ export default function VoteImage() {
         selectedTheme={selectedTheme}
         trendingThemes={allTrendingThemes.current}
       />
+
       <div className="relative md:flex justify-center md:items-center mt-[40px]">
-        <NFTContractInfoModal
+        {/* <NFTContractInfoModal
           visible={nftDetailsModal}
           onClose={() => setNftDetailsModal(false)}
           ipfsCid={ipfs}
           txHash={consumedData.current[imageIndex]?.txHash}
+        /> */}
+
+        <CustomSignInModal
+          isOpen={shouldShowSignInModal}
+          onRequestClose={() => setShouldShowSignInModal(false)}
         />
 
         <div
@@ -289,7 +297,7 @@ export default function VoteImage() {
               disabled={isNotButtonClicked}
               onClick={() => {
                 if (!isUserLoggedIn) {
-                  alertUserToSignIn();
+                  setShouldShowSignInModal(true);
                   return;
                 }
                 swiped("left");
@@ -316,7 +324,7 @@ export default function VoteImage() {
               disabled={isHotButtonClicked}
               onClick={() => {
                 if (!isUserLoggedIn) {
-                  alertUserToSignIn();
+                  setShouldShowSignInModal(true);
                   return;
                 }
                 swiped("right");
