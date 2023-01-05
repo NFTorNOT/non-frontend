@@ -34,7 +34,6 @@ const CustomConnectButton = ({ onSignInComplete }) => {
             })}
           >
             {(() => {
-              console.log("coming here", connected);
               if (!connected) {
                 return (
                   <div
@@ -43,7 +42,7 @@ const CustomConnectButton = ({ onSignInComplete }) => {
                     }}
                   >
                     <div
-                      className={`flex justify-center box-border items-center w-[234px] h-[40px] bg-[#ABFE2C] text-[#00501E] backdrop-blur rounded-[4px] gap-[8px] cursor-pointer border-[1px] border-solid border-black/20`}
+                      className={`flex justify-center box-border items-center w-[214px] h-[40px] bg-[#ABFE2C] text-[#00501E] backdrop-blur rounded-[4px] gap-[8px] cursor-pointer border-[1px] border-solid border-black/20`}
                     >
                       <Image
                         src="https://static.plgworks.com/assets/images/non/lens-icon.png"

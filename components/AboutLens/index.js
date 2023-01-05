@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuthContext } from "../../context/AuthContext";
 import { useUserContext } from "../../context/UserContext";
 import styles from "./AboutLens.module.scss";
-const AboutLens = () => {
+const AboutLens = ({ isOpen }) => {
   const [shouldShowInfo, setShouldShowInfo] = useState(false);
   const { isUserLoggedIn } = useAuthContext();
   const { userProfile } = useUserContext();
@@ -17,7 +17,7 @@ const AboutLens = () => {
     return () => {};
   }, [userProfile, isUserLoggedIn]);
 
-  return shouldShowInfo ? (
+  return shouldShowInfo && !isOpen ? (
     <div className={styles.container}>
       <div className={styles.imageSection}>
         <div className={styles.text}>

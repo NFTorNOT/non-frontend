@@ -15,14 +15,36 @@ import EnableDispatcherModal from "../../EnableDispatcherModal";
 import AboutLens from "../../AboutLens";
 import OpenClaimedHandleModal from "../../OpenClaimedHandalModal";
 import { useRouter } from "next/router";
+import ImageLoader from "../../NONImage/ImageLoader";
 
-export const SignIn = ({ onSignIn, isLoading }) => {
-  return (
+export const SignIn = ({ onSignIn, isLoading, showSquareLoginButton }) => {
+  return showSquareLoginButton ? (
+    <div onClick={onSignIn}>
+      <div
+        className={`flex justify-center box-border items-center w-[214px] h-[40px] bg-[#ABFE2C] text-[#00501E] backdrop-blur rounded-[4px] gap-[8px] cursor-pointer border-[1px] border-solid border-black/20`}
+      >
+        {isLoading ? (
+          <ImageLoader color={"#01501E"} height={15} width={15} />
+        ) : (
+          <Image
+            src="https://static.plgworks.com/assets/images/non/lens-icon.png"
+            alt="Lens Icon"
+            width="20"
+            height="20"
+          />
+        )}
+        Sign in with Lens
+      </div>
+    </div>
+  ) : (
     <div
       className={`${styles.btnContainer} btn btn-green px-[10px] md:px-[20px] transition`}
     >
       {isLoading ? (
-        <span>Signing in...</span>
+        <div className="flex flex-row justify-between">
+          <ImageLoader color={"#01501E"} height={15} width={15} />
+          Sign in with lens
+        </div>
       ) : (
         <>
           <Image
@@ -37,7 +59,12 @@ export const SignIn = ({ onSignIn, isLoading }) => {
     </div>
   );
 };
-export default function SignInButton() {
+export default function SignInButton({
+  onSuccess,
+  isSignInModalOpen,
+  isWalletConnected,
+  showSquareLoginButton,
+}) {
   const { isUserLoggedIn } = useAuthContext();
   const [open, setOpen] = useState(false);
   const { signMessageAsync } = useSignMessage();
@@ -171,6 +198,7 @@ export default function SignInButton() {
         });
         setUserProfile(userDetails);
         setIsUserLoggedIn(true);
+        onSuccess?.();
 
         const dispatcherAddress = userProfileRef?.current?.dispatcher?.address;
 
@@ -184,7 +212,12 @@ export default function SignInButton() {
     }
   }
 
-  console.log({ shouldShowClaimedHandleModal });
+  console.log({ isWalletConnected });
+  if (isWalletConnected) {
+    onSignIn();
+  }
+
+  console.log({ shouldShowClaimedHandleModal, isWalletConnected });
 
   return (
     isUserLoggedIn !== undefined && (
@@ -197,6 +230,7 @@ export default function SignInButton() {
               openSignInModal={handleOpen}
               onSignIn={onSignIn}
               isLoading={isLoading}
+              showSquareLoginButton={showSquareLoginButton}
             />
           </>
         )}
@@ -214,7 +248,7 @@ export default function SignInButton() {
             onClose={() => setShouldShowEnableDispatcherModal(false)}
           />
         ) : null}
-        <AboutLens />
+        <AboutLens isOpen={isSignInModalOpen} />
         <OpenClaimedHandleModal
           isOpen={shouldShowClaimedHandleModal}
           onRequestClose={() => {

@@ -18,6 +18,8 @@ import UserApi from "../../graphql/UserApi";
 import ImageLoader from "../NONImage/ImageLoader";
 import MagicIcon from "./MagicIcon";
 import { useRouter } from "next/router";
+import CustomSignInModal from "../CustomSignInModal";
+import { toast, Toaster } from "react-hot-toast";
 
 export default function GenerateNFT() {
   const [image, setImage] = useState("");
@@ -33,6 +35,7 @@ export default function GenerateNFT() {
   const [filter, setfilter] = useState(router.query["filter"] || "CINEMATIC");
   const [theme, setTheme] = useState("");
   const [selectedImageData, setSelectedImageData] = useState();
+  const [shouldShowSignInModal, setShouldShowSignInModal] = useState(false);
 
   const lensMetadataIpfsObjectId = useRef();
   const imageIpfsObjectId = useRef();
@@ -50,7 +53,7 @@ export default function GenerateNFT() {
   const [shouldShowEnableDispatcherModal, setShouldShowEnableDispatcherModal] =
     useState(false);
   const userProfileRef = useRef();
-  let regex = /[`!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?~]/;
+  let regex = /[`!@#$%^&*()_+\=\[\]{};':"\\|<>\/?~]/;
 
   const generatedImagesRef = useRef([]);
 
@@ -85,13 +88,13 @@ export default function GenerateNFT() {
   }, []);
 
   const submitForGeneration = () => {
-    if (!prompt) {
-      alert("prompt is required for image generaration");
+    if (!prompt.trim()) {
+      toast.error("Prompt is required for image generaration.");
       return;
     }
 
-    if (regex.test(prompt)) {
-      alert("Prompt can not contain special characters");
+    if (regex.test(prompt.trim())) {
+      toast.error("Prompt can not contain special characters.");
       return;
     }
 
@@ -100,7 +103,7 @@ export default function GenerateNFT() {
     axiosInstance
       .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/image-suggestions`, {
         params: {
-          prompt: prompt,
+          prompt: prompt.trim(),
           art_style: FilterToText[filter],
         },
       })
@@ -124,7 +127,7 @@ export default function GenerateNFT() {
 
           let data = {
             imageUrl: image.image_url,
-            prompt: prompt,
+            prompt: prompt.trim(),
             theme: theme,
             filter: filter,
           };
@@ -143,6 +146,10 @@ export default function GenerateNFT() {
   };
 
   async function onSubmitToVote(ele) {
+    if (!isUserLoggedIn) {
+      setShouldShowSignInModal(true);
+      return;
+    }
     console.log({ ele });
     setSelectedImageData(ele);
     setsubmitToVoteModal(true);
@@ -178,7 +185,8 @@ export default function GenerateNFT() {
       .post(`/submit-to-vote`, {
         image_url: selectedImageData?.imageUrl,
         title: selectedImageData?.title,
-        description: selectedImageData?.prompt + "," + FilterToText[filter],
+        description:
+          selectedImageData?.prompt.trim() + "," + FilterToText[filter],
         theme_name: selectedImageData?.theme,
         image_ipfs_object_id: imageIpfsObjectId.current.id,
         lens_metadata_ipfs_object_id: lensMetadataIpfsObjectId.current.id,
@@ -214,7 +222,7 @@ export default function GenerateNFT() {
       .post(`/store-on-ipfs`, {
         image_url: selectedImageData?.imageUrl,
         title: selectedImageData?.title,
-        description: selectedImageData?.prompt,
+        description: selectedImageData?.prompt.trim(),
       })
       .then((response) => {
         const apiResponseData = response.data.data;
@@ -242,6 +250,17 @@ export default function GenerateNFT() {
   return (
     <>
       <div className={`${styles.generateNFT} container `}>
+        {shouldShowSignInModal ? (
+          <CustomSignInModal
+            isOpen={shouldShowSignInModal}
+            onRequestClose={() => setShouldShowSignInModal(false)}
+          />
+        ) : null}
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{ duration: 4000 }}
+        />
         <div className={styles.enter_prompt_container}>
           <>
             <div>Themes</div>
@@ -272,7 +291,7 @@ export default function GenerateNFT() {
               className={styles.prompt_area}
               maxLength={250}
               onChange={(e) => {
-                setPromt(e.target.value.trim());
+                setPromt(e.target.value);
               }}
             ></textarea>
             <div className="mt-[12px] mb-[8px]">Filter</div>
