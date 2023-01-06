@@ -3,11 +3,10 @@ import Image from "next/image";
 import styles from "./CollectNFT.module.scss";
 import collectNFTModalStyles from "./collectModal.module.scss";
 import CollectNFTModal from "./collectNFTModal";
-import Collect from "./SVG/collect";
 import { axiosInstance } from "../../../AxiosInstance";
 import { useAuthContext } from "../../../context/AuthContext";
 import { ClipLoader } from "react-spinners";
-import SignInButton from "../../TopBar/SignInButton";
+import Card from "../../Card";
 
 function CollectNFT(props) {
   const [modalShown, toggleModal] = useState(false);
@@ -185,65 +184,69 @@ function CollectNFT(props) {
 
       {allData.current.length > 0 && !isLoading && (
         <div
-          className={`${styles.scroll} flex flex-wrap gap-x-[50px] gap-y-[25px] justify-center max-h-[512px] overflow-y-scroll mt-[16px]`}
+          className={`${styles.scroll} flex flex-wrap  gap-y-[25px] justify-center max-h-[512px] overflow-y-scroll mt-[16px]`}
           onScroll={handleScroll}
         >
           {allData.current.length > 0 &&
             allData.current.map((ele, index) => {
               return (
-                <div
-                  key={index}
-                  className=" h-[512px] rounded-[16px] relative overflow-hidden"
-                >
-                  <img
-                    className="w-full rounded-[16px]"
-                    src={ele.image}
-                    alt="Lens Icon"
-                  />
-                  <div className={`${styles.nftDetails} p-[15px]`}>
-                    <div className="flex items-start justify-between">
-                      <span className={`${styles.nftTitle}`}>{ele?.title}</span>
-                      <span>
-                        <Image
-                          src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
-                          alt="Lens icon"
-                          width="20"
-                          height="20"
-                        />
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center mt-[14px] mb-[22px]">
-                      <div className="flex items-center font-medium text-[#ffffff99] text-[16px] leading-[26px]">
-                        <span>{ele?.handle}</span>
-                        {/* <span>.</span>
-                        <span>Follow</span> */}
-                      </div>
-                      <div className="flex items-center font-medium text-[#ffffff99] text-[16px] leading-[26px]">
-                        <span></span>
-                        <span>Show Prompt</span>
-                      </div>
-                    </div>
-                    <button
-                      className={`${
-                        ele.hasCollected
-                          ? styles.alreadyCollectedButton
-                          : styles.collectButton
-                      } flex items-center justify-center py-[7px]`}
-                      onClick={() => {
-                        showModal(ele);
-                      }}
-                    >
-                      <span>
-                        <Collect />
-                      </span>
-                      <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
-                        {ele.hasCollected
-                          ? "You have already collected this"
-                          : "Collect Now"}
-                      </span>
-                    </button>
-                  </div>
-                </div>
+                <Card
+                  cardDetails={ele}
+                  showCollectModal={() => showModal(ele)}
+                />
+                // <div
+                //   key={index}
+                //   className=" h-[512px] rounded-[16px] relative overflow-hidden"
+                // >
+                //   <img
+                //     className="w-full rounded-[16px]"
+                //     src={ele.image}
+                //     alt="Lens Icon"
+                //   />
+                //   <div className={`${styles.nftDetails} p-[15px]`}>
+                //     <div className="flex items-start justify-between">
+                //       <span className={`${styles.nftTitle}`}>{ele?.title}</span>
+                //       <span>
+                //         <Image
+                //           src="https://static.plgworks.com/assets/images/non/vote/lens-icon.png"
+                //           alt="Lens icon"
+                //           width="20"
+                //           height="20"
+                //         />
+                //       </span>
+                //     </div>
+                //     <div className="flex justify-between items-center mt-[14px] mb-[22px]">
+                //       <div className="flex items-center font-medium text-[#ffffff99] text-[16px] leading-[26px]">
+                //         <span>{ele?.handle}</span>
+                //         {/* <span>.</span>
+                //         <span>Follow</span> */}
+                //       </div>
+                //       <div className="flex items-center font-medium text-[#ffffff99] text-[16px] leading-[26px]">
+                //         <span></span>
+                //         <span>Show Prompt</span>
+                //       </div>
+                //     </div>
+                //     <button
+                //       className={`${
+                //         ele.hasCollected
+                //           ? styles.alreadyCollectedButton
+                //           : styles.collectButton
+                //       } flex items-center justify-center py-[7px]`}
+                //       onClick={() => {
+                //         showModal(ele);
+                //       }}
+                //     >
+                //       <span>
+                //         <Collect />
+                //       </span>
+                //       <span className="font-bold text-[16px] leading-[26px] ml-[8px]">
+                //         {ele.hasCollected
+                //           ? "You have already collected this"
+                //           : "Collect Now"}
+                //       </span>
+                //     </button>
+                //   </div>
+                // </div>
               );
             })}
 
