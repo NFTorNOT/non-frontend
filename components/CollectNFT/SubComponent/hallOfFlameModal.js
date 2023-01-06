@@ -1,13 +1,13 @@
-import React, { useRef } from "react";
+import React from "react";
 import styles from "./hallOfFlameModal.module.scss";
 import Image from "next/image";
-import Collect from "./SVG/collect";
 import LeftArrow from "./SVG/leftArrow";
 import RightArrow from "./SVG/rightArrow";
 import HofCross from "./SVG/hofCross";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
 import { TRENDING_THEMES } from "../../../utils/Constants";
+import Card from "../../Card";
 
 function HallOfFlameModal({
   shown,
@@ -35,12 +35,6 @@ function HallOfFlameModal({
         <button onClick={close} className="absolute top-0 right-0">
           <HofCross />
         </button>
-        <button className="modalPrev absolute top-0 bottom-0 left-[450px]">
-          <LeftArrow />
-        </button>
-        <button className="modalNext absolute top-0 bottom-0 right-[450px]">
-          <RightArrow />
-        </button>
 
         <Swiper
           initialSlide={initialSlide}
@@ -48,7 +42,6 @@ function HallOfFlameModal({
           spaceBetween={30}
           slidesPerGroup={1}
           modules={[Navigation]}
-          className={`${styles.carouselItems} flex items-center rounded-[10px]`}
           navigation={{
             enabled: true,
             nextEl: ".modalNext",
@@ -74,7 +67,7 @@ function HallOfFlameModal({
                         />
                       </span>
                     </div>
-                    <div className="flex items-center justify-center mt-[15px] font-bold text-[20px]">
+                    <div className="flex items-center justify-center mt-[15px] font-bold text-[20px] pb-[15px]">
                       {Themes.length > 0 &&
                         Themes.map((item, index) => {
                           return (
@@ -97,7 +90,20 @@ function HallOfFlameModal({
                           );
                         })}
                     </div>
-                    <div
+
+                    <div className="flex items-center justify-center">
+                      <div className="modalPrev mr-[60px]">
+                        <LeftArrow />
+                      </div>
+                      <Card
+                        cardDetails={ele}
+                        showCollectModal={() => onCollectNow(ele)}
+                      />
+                      <div className="modalNext ml-[60px]">
+                        <RightArrow />
+                      </div>
+                    </div>
+                    {/* <div
                       className={`${styles.card} flex items-center justify-center mt-[20px]`}
                       style={{
                         backgroundImage: `url(${ele.image})`,
@@ -164,7 +170,7 @@ function HallOfFlameModal({
                           </button>
                         )}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </SwiperSlide>
               );
