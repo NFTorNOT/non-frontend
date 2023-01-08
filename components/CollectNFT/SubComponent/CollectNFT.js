@@ -101,7 +101,9 @@ function CollectNFT(props) {
 
   useEffect(() => {
     allData.current = [];
-    fetchCollectData();
+    if (isUserLoggedIn) {
+      fetchCollectData();
+    }
   }, [isUserLoggedIn]);
 
   const handleScroll = (event) => {

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useAccount } from "wagmi";
 import { Constants } from "../utils/Constants";
 
 export const AuthContext = React.createContext({
@@ -16,9 +17,12 @@ export function useAuthContext() {
 }
 
 export const AuthProvider = ({ children }) => {
+  const { isConnected } = useAccount();
+
   useEffect(() => {
     setIsUserLoggedIn(
-      !!localStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY)
+      isConnected &&
+        !!localStorage.getItem(Constants.SESSION_STORAGE_ACCESS_TOKEN_KEY)
     );
   }, []);
 

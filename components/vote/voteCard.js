@@ -35,7 +35,7 @@ export default function VoteCard(props) {
       return;
     }
     if (bioParentWrapperRef && bioParentWrapperRef.current) {
-      setWrapperTransY(bioParentWrapperRef.current.clientHeight);
+      setWrapperTransY(bioParentWrapperRef.current?.clientHeight);
     }
   }, []);
 
@@ -54,7 +54,7 @@ export default function VoteCard(props) {
       return;
     }
     // title hide Animation
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
     // Do we really need to do anything?
     if (wrapperTransY < wrapHeight) {
       setWrapperTransY(wrapHeight);
@@ -63,8 +63,8 @@ export default function VoteCard(props) {
 
   const showTitle = () => {
     // title Show Animation
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
+    const titleHeight = titleWrapperRef.current?.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
 
     // Do we really need to do anything?
     if (wrapperTransY >= wrapHeight - titleHeight) {
@@ -75,9 +75,9 @@ export default function VoteCard(props) {
   };
 
   const showHandle = () => {
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
-    const handleHeight = handleWrapperRef.current.clientHeight;
+    const titleHeight = titleWrapperRef.current?.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
+    const handleHeight = handleWrapperRef.current?.clientHeight;
 
     if (wrapperTransY <= wrapHeight - titleHeight) {
       //Check if handle is visible.
@@ -92,8 +92,8 @@ export default function VoteCard(props) {
   };
 
   useEffect(() => {
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
+    const titleHeight = titleWrapperRef.current?.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
 
     if (wrapperTransY === wrapHeight - titleHeight) {
       // Showing title, show handle soon.
@@ -156,7 +156,7 @@ export default function VoteCard(props) {
           className={`${styles.card_title} flex justify-between items-center`}
           ref={titleWrapperRef}
         >
-          <div className={`${styles.card_title_text} mr-[25px]`}>
+          <div className={`${styles.card_title_text} mr-[25px] ml-[16px]`}>
             {character.title}
           </div>
           <div className="text-[#ffffff] flex items-center">
@@ -166,16 +166,18 @@ export default function VoteCard(props) {
             >
               <ShareSVG />
             </div> */}
-            <div className={`cursor-pointer ${styles.lensSvg}`}>
+            <div className={`cursor-pointer ${styles.lensSvg} mr-[16px]`}>
               <LensSvg />
             </div>
           </div>
         </div>
 
-        <div className={`${styles.showPrompt}`} ref={handleWrapperRef}>
-          <div className={styles.id}>@{character.handle}</div>
+        <div className={`${styles.showPrompt} `} ref={handleWrapperRef}>
+          <div className={`${styles.id} ml-[16px] mb-[16px]`}>
+            @{character.handle}
+          </div>
           <div
-            className="text-white text-opacity-60 cursor-pointer transition flex items-center gap-1"
+            className="text-white text-opacity-60 cursor-pointer transition flex items-center gap-1 mr-[16px] mb-[16px]"
             onClick={togglePrompt}
           >
             {promtStatusIcon} {promtStatusText}
@@ -183,16 +185,21 @@ export default function VoteCard(props) {
         </div>
 
         <div
-          className={`${styles.description} flex items-center justify-between`}
+          className={`${styles.description} flex items-center justify-between ml-[16px]`}
           ref={descriptionWrapperRef}
         >
           {character.description}
-          <div className={`cursor-pointer`} onClick={() => onRemixClick()}>
+          <div
+            className={`cursor-pointer mr-[16px]`}
+            onClick={() => onRemixClick()}
+          >
             <RemixSvg />
           </div>
         </div>
 
-        <div className={`${styles.filter} flex items-center justify-between`}>
+        <div
+          className={`${styles.filter} flex items-center justify-between ml-[16px]`}
+        >
           Filter - {character.filter}
         </div>
       </div>
