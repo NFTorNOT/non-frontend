@@ -13,6 +13,7 @@ import VoteCard from "./voteCard";
 import { axiosInstance } from "../../AxiosInstance";
 import { useCollectedNFTModalContext } from "../../context/CollectedNFTModalContext";
 import CustomSignInModal from "../CustomSignInModal";
+import TrendingThemeModal from "../TrendingThemeModal";
 
 export default function VoteImage() {
   const { userProfile } = useUserContext();
@@ -23,6 +24,10 @@ export default function VoteImage() {
   const [isNotButtonClicked, setIsNotButtonClicked] = useState(false);
   const [isHotButtonClicked, setIsHotButtonClicked] = useState(false);
   const [shouldShowSignInModal, setShouldShowSignInModal] = useState(false);
+  const [
+    shouldShowWhatIsTremdingThemeModal,
+    setShouldShowWhatIsTrendingThemeModal,
+  ] = useState(false);
   const [data, setData] = useState([]);
   const allTrendingThemes = useRef([]);
 
@@ -311,6 +316,9 @@ export default function VoteImage() {
       <TrendingThemeDefault
         selectedTheme={selectedTheme}
         trendingThemes={allTrendingThemes.current}
+        showTrendingThemeModal={() => {
+          setShouldShowWhatIsTrendingThemeModal(true);
+        }}
       />
 
       <div className="relative md:flex justify-center md:items-center mt-[40px]">
@@ -324,6 +332,11 @@ export default function VoteImage() {
         <CustomSignInModal
           isOpen={shouldShowSignInModal}
           onRequestClose={() => setShouldShowSignInModal(false)}
+        />
+
+        <TrendingThemeModal
+          isOpen={shouldShowWhatIsTremdingThemeModal}
+          onRequestClose={() => setShouldShowWhatIsTrendingThemeModal(false)}
         />
 
         <div

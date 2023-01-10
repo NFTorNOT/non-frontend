@@ -71,13 +71,13 @@
   align-items: center;
   justify-content: space-between;
 }
-.showPromptHover {
-  opacity: 0.6;
-}
+// .showPromptHover {
+//   opacity: 0.6;
+// }
 
-.showPrompt:hover {
-  opacity: 1;
-}
+// .showPrompt:hover {
+//   opacity: 1;
+// }
 
 .description {
   color: rgba(255, 255, 255, 0.8);
@@ -307,7 +307,29 @@
   // }
 }
 
+// .tooltip {
+//   svg {
+//     path {
+//       fill-opacity: 0.6;
+//     }
+//   }
+//   &:hover {
+//     svg {
+//       path {
+//         fill: #adff00;
+//         fill-opacity: 1;
+//       }
+//     }
+//   }
+// }
+
 .tooltip {
+  position: relative;
+  display: inline-block;
+
+  // background: black;
+  // opacity: 0.6;
+  // backdrop-filter: blur(8px);
   svg {
     path {
       fill-opacity: 0.6;
@@ -318,28 +340,6 @@
       path {
         fill: #adff00;
         fill-opacity: 1;
-      }
-    }
-  }
-}
-
-.tooltip {
-  position: relative;
-  display: inline-block;
-  // border-bottom: 1px dotted black;
-  // background: black;
-  // opacity: 0.6;
-  backdrop-filter: blur(8px);
-  svg {
-    path {
-      stroke-opacity: 0.6;
-    }
-  }
-  &:hover {
-    svg {
-      path {
-        stroke: #adff00;
-        stroke-opacity: 1;
       }
     }
   }
@@ -377,7 +377,9 @@
   z-index: 10;
 }
 
-.shareSvg {
+.tooltipRemix {
+  position: relative;
+  display: inline-block;
   svg {
     path {
       stroke-opacity: 0.6;
@@ -386,11 +388,43 @@
   &:hover {
     svg {
       path {
-        stroke: #adff00;
+        stroke: #fff;
         stroke-opacity: 1;
       }
     }
   }
+}
+
+.tooltipRemix .tooltipRemixText {
+  visibility: hidden;
+  width: 120px;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 10;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -70px;
+  background: black;
+  opacity: 0.6;
+}
+
+.tooltipRemix .tooltipRemixText::after {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  z-index: 10;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltipRemix:hover .tooltipRemixText {
+  visibility: visible;
+  z-index: 10;
 }
 
 .filter {

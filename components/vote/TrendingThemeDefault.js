@@ -3,7 +3,11 @@ import styles from "./TrendingTheme.module.scss";
 import TrendingThemeSvg from "./svg/TrendingThemeSvg";
 import { CURRENT_TRENDING_THEMES } from "../../utils/Constants";
 
-function TrendingThemeDefault({ selectedTheme, trendingThemes }) {
+function TrendingThemeDefault({
+  selectedTheme,
+  trendingThemes,
+  showTrendingThemeModal,
+}) {
   const currentTrendingThemes = CURRENT_TRENDING_THEMES;
   const [shouldShowThemeInBold, setShouldShowdThemeInBold] = useState(true);
 
@@ -15,7 +19,10 @@ function TrendingThemeDefault({ selectedTheme, trendingThemes }) {
     <>
       <div className={`flex items-center justify-center w-full z-10`}>
         <div className={`${styles.themesNameAnimation}`}>
-          <div className="flex items-center justify-center text-[20px] md:text-[40px] gap-[5px]">
+          <div
+            className="flex items-center justify-center text-[20px] md:text-[40px] gap-[5px] cursor-pointer"
+            onClick={() => showTrendingThemeModal()}
+          >
             {shouldShowThemeInBold ? (
               <div className={`${styles.themeBoldHeading}`}>
                 Trending Themes
