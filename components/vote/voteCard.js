@@ -1,6 +1,5 @@
 import styles from "./Vote.module.scss";
 import React, { useEffect, useRef, useState } from "react";
-import ShareModal from "./shareModal";
 import HidePromptSvg from "./svg/hidePromptSvg";
 import ShowPromptSvg from "./svg/showPromptSvg";
 import LensSvg from "./svg/lensSvg";
@@ -19,7 +18,6 @@ export default function VoteCard(props) {
   const descriptionWrapperRef = useRef();
 
   const [wrapperTransY, setWrapperTransY] = useState(1000);
-  const [socialShareModal, setSocialShareModal] = useState(false);
   const [showHandleTimeout, setShowHandleTimeout] = useState(0);
 
   const [showPrompt, setShowPrompt] = useState(false);
@@ -148,10 +146,6 @@ export default function VoteCard(props) {
       onMouseLeave={cardTransOut}
       {...props}
     >
-      <ShareModal
-        visible={socialShareModal}
-        onClose={() => setSocialShareModal(false)}
-      />
       <div
         className={`${styles.card_title_overlay}`}
         ref={bioParentWrapperRef}
@@ -165,12 +159,6 @@ export default function VoteCard(props) {
             {character.title}
           </div>
           <div className="text-[#ffffff] flex items-center">
-            {/* <div
-              className={`cursor-pointer mr-[20px] ${styles.shareSvg}`}
-              onClick={() => setSocialShareModal(true)}
-            >
-              <ShareSVG />
-            </div> */}
             <div
               className={`cursor-pointer ${styles.tooltip}`}
               onClick={ViewOnLensClick}
@@ -184,7 +172,7 @@ export default function VoteCard(props) {
         <div className={`${styles.showPrompt} `} ref={handleWrapperRef}>
           <div className={`${styles.id} mb-[16px]`}>@{character.handle}</div>
           <div
-            className={`${styles.showPromptHover}  text-white  cursor-pointer transition flex items-center gap-1 mb-[16px]`}
+            className={`${styles.showPromptHover} opacity-60 hover:opacity-100 text-[#fff] cursor-pointer transition flex items-center gap-1 mb-[16px]`}
             onClick={togglePrompt}
           >
             {promtStatusIcon} {promtStatusText}
@@ -197,11 +185,11 @@ export default function VoteCard(props) {
         >
           {character.description}
           <div
-            className={`cursor-pointer ml-[8px]  ${styles.tooltip}`}
+            className={`cursor-pointer ml-[8px]  ${styles.tooltipRemix}`}
             onClick={() => onRemixClick()}
           >
             <RemixSvg />
-            <span className={styles.tooltiptext}>Remix</span>
+            <span className={styles.tooltipRemixText}>Remix</span>
           </div>
         </div>
       </div>

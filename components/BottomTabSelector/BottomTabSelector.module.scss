@@ -50,6 +50,7 @@ $twitter-fill-color: #1da1f2;
 
 .tabContainer {
   display: flex;
+  font-weight: bold;
   align-items: center;
   justify-content: center;
   flex: 1;
@@ -126,8 +127,8 @@ $twitter-fill-color: #1da1f2;
 
 .collectedNfts {
   position: absolute;
-  left: 31%;
-  top: 85%;
+  left: 32%;
+  top: 88%;
   transition: transform 0.6s easeInSine;
   transition: all;
 }
