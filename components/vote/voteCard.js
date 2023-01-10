@@ -161,7 +161,7 @@ export default function VoteCard(props) {
           className={`${styles.card_title} flex justify-between items-center`}
           ref={titleWrapperRef}
         >
-          <div className={`${styles.card_title_text} mr-[25px] ml-[16px]`}>
+          <div className={`${styles.card_title_text} mr-[25px]`}>
             {character.title}
           </div>
           <div className="text-[#ffffff] flex items-center">
@@ -172,7 +172,7 @@ export default function VoteCard(props) {
               <ShareSVG />
             </div> */}
             <div
-              className={`cursor-pointer ${styles.tooltip} mr-[16px]`}
+              className={`cursor-pointer ${styles.tooltip}`}
               onClick={ViewOnLensClick}
             >
               <LensSvg />
@@ -182,11 +182,9 @@ export default function VoteCard(props) {
         </div>
 
         <div className={`${styles.showPrompt} `} ref={handleWrapperRef}>
-          <div className={`${styles.id} ml-[16px] mb-[16px]`}>
-            @{character.handle}
-          </div>
+          <div className={`${styles.id} mb-[16px]`}>@{character.handle}</div>
           <div
-            className="text-white text-opacity-60 cursor-pointer transition flex items-center gap-1 mr-[16px] mb-[16px]"
+            className={`${styles.showPromptHover}  text-white  cursor-pointer transition flex items-center gap-1 mb-[16px]`}
             onClick={togglePrompt}
           >
             {promtStatusIcon} {promtStatusText}
@@ -194,23 +192,17 @@ export default function VoteCard(props) {
         </div>
 
         <div
-          className={`${styles.description} flex items-center justify-between ml-[16px]`}
+          className={`${styles.description} flex items-center justify-between`}
           ref={descriptionWrapperRef}
         >
           {character.description}
           <div
-            className={`cursor-pointer  ${styles.tooltip} mr-[16px]`}
+            className={`cursor-pointer ml-[8px]  ${styles.tooltip}`}
             onClick={() => onRemixClick()}
           >
             <RemixSvg />
             <span className={styles.tooltiptext}>Remix</span>
           </div>
-        </div>
-
-        <div
-          className={`${styles.filter} flex items-center justify-between ml-[16px]`}
-        >
-          Filter - {character.filter}
         </div>
       </div>
     </div>

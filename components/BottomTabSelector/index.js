@@ -120,7 +120,7 @@ export default function BottomTabSelector() {
           </TwitterShareButton>
         </div>
         <div
-          className={`${styles.container} w-[640px] m-auto grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] col-span-3 relative z-10`}
+          className={`${styles.container} w-[640px] h-[56px] m-auto grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] col-span-3 relative z-10`}
         >
           {Object.values(TabItems).map((tab) => {
             const isSelected = tab.id === currentTab.id;

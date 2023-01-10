@@ -18,7 +18,18 @@ $twitter-fill-color: #1da1f2;
     border-radius: 0px 0px 20px 20px;
     font-size: 14px;
   }
-  background: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
   backdrop-filter: blur(12px);
   animation: transformBottomBar;
   animation-duration: 2s;
@@ -46,23 +57,25 @@ $twitter-fill-color: #1da1f2;
   text-align: center;
   color: white;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(255, 255, 255, 0.01);
   backdrop-filter: blur(8px);
   border-radius: 100px;
-  border: 1px solid;
-  border-image-source: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
-
   &:hover {
-    background: rgba(0, 0, 0, 0.4);
+    height: 40px;
+    // background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    // border-image-source: linear-gradient(
+    //   180deg,
+    //   rgba(255, 255, 255, 0.2) 0%,
+    //   rgba(0, 0, 0, 0.2) 100%
+    // );
     border-radius: 100px;
   }
 }
 
 .selectedTab {
+  height: 40px;
   border-image-source: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0.2) 0%,
@@ -70,6 +83,7 @@ $twitter-fill-color: #1da1f2;
   );
   background: rgba(0, 0, 0, 0.6);
   box-shadow: 0px 8px 32px rgba(250, 92, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 100px;
   cursor: default;
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {

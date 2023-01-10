@@ -13,7 +13,6 @@ import VoteCard from "./voteCard";
 import { axiosInstance } from "../../AxiosInstance";
 import { useCollectedNFTModalContext } from "../../context/CollectedNFTModalContext";
 import CustomSignInModal from "../CustomSignInModal";
-import "react-tooltip/dist/react-tooltip.css";
 
 export default function VoteImage() {
   const { userProfile } = useUserContext();
@@ -329,7 +328,7 @@ export default function VoteImage() {
 
         <div
           id="vote-card"
-          className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px] cursor-grab ${styles.voteCards}`}
+          className={`${styles.cardContainer} flex justify-center mt-[25px] mb-[15px] order-2 aspect-[512/512] h-[520px] cursor-grab ${styles.voteCards}`}
         >
           {data.length > 0 &&
             data.map((character, index) => (

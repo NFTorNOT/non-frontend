@@ -67,16 +67,25 @@
 
 .showPrompt {
   display: flex;
-  padding-bottom: 8px;
+  // padding-bottom: 8px;
   align-items: center;
   justify-content: space-between;
 }
+.showPromptHover {
+  opacity: 0.6;
+}
+
+.showPrompt:hover {
+  opacity: 1;
+}
+
 .description {
   color: rgba(255, 255, 255, 0.8);
   font-style: normal;
   font-weight: 400;
-  line-height: 18px;
-  padding-bottom: 4px;
+  line-height: 140%;
+  font-size: 13px;
+  padding-bottom: 16px;
 }
 .id {
   font-weight: 500;
@@ -182,8 +191,9 @@
   position: absolute;
   max-width: 300px;
   height: 300px;
-  box-shadow: 1px 1px 6px 0px rgb(0 0 0 / 30%);
-  border-radius: 20px;
+  // box-shadow: 1px 1px 6px 0px rgb(0 0 0 / 30%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   background-size: cover;
   background-position: center;
   display: grid;
