@@ -1,6 +1,5 @@
 import styles from "./Vote.module.scss";
 import React, { useEffect, useRef, useState } from "react";
-import ShareSVG from "./svg/socialShare";
 import ShareModal from "./shareModal";
 import HidePromptSvg from "./svg/hidePromptSvg";
 import ShowPromptSvg from "./svg/showPromptSvg";
@@ -35,7 +34,7 @@ export default function VoteCard(props) {
       return;
     }
     if (bioParentWrapperRef && bioParentWrapperRef.current) {
-      setWrapperTransY(bioParentWrapperRef.current.clientHeight);
+      setWrapperTransY(bioParentWrapperRef.current?.clientHeight);
     }
   }, []);
 
@@ -54,7 +53,7 @@ export default function VoteCard(props) {
       return;
     }
     // title hide Animation
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
     // Do we really need to do anything?
     if (wrapperTransY < wrapHeight) {
       setWrapperTransY(wrapHeight);
@@ -63,8 +62,8 @@ export default function VoteCard(props) {
 
   const showTitle = () => {
     // title Show Animation
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
+    const titleHeight = titleWrapperRef.current?.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
 
     // Do we really need to do anything?
     if (wrapperTransY >= wrapHeight - titleHeight) {
@@ -75,9 +74,9 @@ export default function VoteCard(props) {
   };
 
   const showHandle = () => {
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
-    const handleHeight = handleWrapperRef.current.clientHeight;
+    const titleHeight = titleWrapperRef.current?.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
+    const handleHeight = handleWrapperRef.current?.clientHeight;
 
     if (wrapperTransY <= wrapHeight - titleHeight) {
       //Check if handle is visible.
@@ -92,8 +91,8 @@ export default function VoteCard(props) {
   };
 
   useEffect(() => {
-    const titleHeight = titleWrapperRef.current.clientHeight;
-    const wrapHeight = bioParentWrapperRef.current.clientHeight;
+    const titleHeight = titleWrapperRef.current?.clientHeight;
+    const wrapHeight = bioParentWrapperRef.current?.clientHeight;
 
     if (wrapperTransY === wrapHeight - titleHeight) {
       // Showing title, show handle soon.
@@ -119,6 +118,12 @@ export default function VoteCard(props) {
         filter: character?.filter,
       },
     });
+  };
+
+  const ViewOnLensClick = () => {
+    let viewLensUrl =
+      "https://testnet.lenster.xyz/posts/" + character?.publicationId;
+    window.open(viewLensUrl, "_blank");
   };
 
   useEffect(() => {
@@ -166,16 +171,20 @@ export default function VoteCard(props) {
             >
               <ShareSVG />
             </div> */}
-            <div className={`cursor-pointer ${styles.lensSvg}`}>
+            <div
+              className={`cursor-pointer ${styles.tooltip}`}
+              onClick={ViewOnLensClick}
+            >
               <LensSvg />
+              <span className={styles.tooltiptext}>View On Lens</span>
             </div>
           </div>
         </div>
 
-        <div className={`${styles.showPrompt}`} ref={handleWrapperRef}>
-          <div className={styles.id}>@{character.handle}</div>
+        <div className={`${styles.showPrompt} `} ref={handleWrapperRef}>
+          <div className={`${styles.id} mb-[16px]`}>@{character.handle}</div>
           <div
-            className="text-white text-opacity-60 cursor-pointer transition flex items-center gap-1"
+            className={`${styles.showPromptHover}  text-white  cursor-pointer transition flex items-center gap-1 mb-[16px]`}
             onClick={togglePrompt}
           >
             {promtStatusIcon} {promtStatusText}
@@ -187,13 +196,13 @@ export default function VoteCard(props) {
           ref={descriptionWrapperRef}
         >
           {character.description}
-          <div className={`cursor-pointer`} onClick={() => onRemixClick()}>
+          <div
+            className={`cursor-pointer ml-[8px]  ${styles.tooltip}`}
+            onClick={() => onRemixClick()}
+          >
             <RemixSvg />
+            <span className={styles.tooltiptext}>Remix</span>
           </div>
-        </div>
-
-        <div className={`${styles.filter} flex items-center justify-between`}>
-          Filter - {character.filter}
         </div>
       </div>
     </div>

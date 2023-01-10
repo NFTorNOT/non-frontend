@@ -18,8 +18,34 @@ $twitter-fill-color: #1da1f2;
     border-radius: 0px 0px 20px 20px;
     font-size: 14px;
   }
-  background: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
   backdrop-filter: blur(12px);
+  animation: transformBottomBar;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  transform-origin: 0%;
+}
+
+@keyframes transformBottomBar {
+  0% {
+    margin-top: 100%;
+    transform: translate(0%, 0%);
+  }
+  100% {
+    transform: translate(0%, 50%);
+    margin-top: 0%;
+  }
 }
 
 .tabContainer {
@@ -31,23 +57,25 @@ $twitter-fill-color: #1da1f2;
   text-align: center;
   color: white;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(255, 255, 255, 0.01);
   backdrop-filter: blur(8px);
   border-radius: 100px;
-  border: 1px solid;
-  border-image-source: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
-
   &:hover {
-    background: rgba(0, 0, 0, 0.4);
+    height: 40px;
+    // background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    // border-image-source: linear-gradient(
+    //   180deg,
+    //   rgba(255, 255, 255, 0.2) 0%,
+    //   rgba(0, 0, 0, 0.2) 100%
+    // );
     border-radius: 100px;
   }
 }
 
 .selectedTab {
+  height: 40px;
   border-image-source: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0.2) 0%,
@@ -55,6 +83,7 @@ $twitter-fill-color: #1da1f2;
   );
   background: rgba(0, 0, 0, 0.6);
   box-shadow: 0px 8px 32px rgba(250, 92, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 100px;
   cursor: default;
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
@@ -97,8 +126,19 @@ $twitter-fill-color: #1da1f2;
 
 .collectedNfts {
   position: absolute;
-  left: 23%;
+  left: 31%;
   top: 85%;
+  transition: transform 0.6s easeInSine;
+  transition: all;
+}
+
+@keyframes moveitback {
+  0% {
+    transform: translateY(60px);
+  }
+  100% {
+    transform: translateY(0) scale3d(0.96, 0.96, 1);
+  }
 }
 
 .collectedNfts div:first-child {
@@ -121,6 +161,14 @@ $twitter-fill-color: #1da1f2;
   height: 109px;
   width: 100%;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 49.99%);
+}
+
+.madeWithPLG {
+  align-items: center;
+}
+
+.madeWithPLG:hover {
+  color: #fff;
 }
 
 // .background {

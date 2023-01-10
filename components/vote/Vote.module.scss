@@ -67,16 +67,25 @@
 
 .showPrompt {
   display: flex;
-  padding-bottom: 8px;
+  // padding-bottom: 8px;
   align-items: center;
   justify-content: space-between;
 }
+.showPromptHover {
+  opacity: 0.6;
+}
+
+.showPrompt:hover {
+  opacity: 1;
+}
+
 .description {
   color: rgba(255, 255, 255, 0.8);
   font-style: normal;
   font-weight: 400;
-  line-height: 18px;
-  padding-bottom: 4px;
+  line-height: 140%;
+  font-size: 13px;
+  padding-bottom: 16px;
 }
 .id {
   font-weight: 500;
@@ -182,8 +191,9 @@
   position: absolute;
   max-width: 300px;
   height: 300px;
-  box-shadow: 1px 1px 6px 0px rgb(0 0 0 / 30%);
-  border-radius: 20px;
+  // box-shadow: 1px 1px 6px 0px rgb(0 0 0 / 30%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   background-size: cover;
   background-position: center;
   display: grid;
@@ -239,38 +249,65 @@
 .buttonClassHot {
   margin-left: 60px;
   padding: 8px;
-  align-self: center;
-  border-radius: 100px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.12),
-    0px 1px 2px rgba(0, 0, 0, 0.2);
-  @media screen and (min-width: 568px) {
-    padding: 12px;
+  svg {
+    path {
+      fill-opacity: 1;
+    }
   }
   &:hover {
-    background: rgba(0, 0, 0, 0.4);
+    svg {
+      path {
+        fill-opacity: 0.9;
+      }
+    }
   }
+  // margin-left: 60px;
+  // padding: 8px;
+  // align-self: center;
+  // border-radius: 100px;
+  // background: rgba(0, 0, 0, 0.6);
+  // border: 1px solid rgba(255, 255, 255, 0.2);
+  // box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.12),
+  //   0px 1px 2px rgba(0, 0, 0, 0.2);
+  // @media screen and (min-width: 568px) {
+  //   padding: 12px;
+  // }
+  // &:hover {
+  //   background: rgba(0, 0, 0, 0.4);
+  // }
 }
 
 .buttonClassNot {
   margin-right: 60px;
   padding: 8px;
-  align-self: center;
-  border-radius: 100px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.12),
-    0px 1px 2px rgba(0, 0, 0, 0.2);
-  @media screen and (min-width: 568px) {
-    padding: 12px;
+  svg {
+    path {
+      fill-opacity: 1;
+    }
   }
   &:hover {
-    background: rgba(0, 0, 0, 0.4);
+    svg {
+      path {
+        fill-opacity: 0.9;
+      }
+    }
   }
+  // align-self: center;
+  // border-radius: 100px;
+  // background: rgba(0, 0, 0, 0.6);
+  // backdrop-filter: blur(8px);
+  // border: 1px solid rgba(255, 255, 255, 0.2);
+  // box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.12),
+  //   0px 1px 2px rgba(0, 0, 0, 0.2);
+  // @media screen and (min-width: 568px) {
+  //   padding: 12px;
+  // }
+  // &:hover {
+  //   background: rgba(0, 0, 0, 0.4);
+  // }
 }
 
-.lensSvg {
+.tooltip {
   svg {
     path {
       fill-opacity: 0.6;
@@ -284,6 +321,60 @@
       }
     }
   }
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  // border-bottom: 1px dotted black;
+  // background: black;
+  // opacity: 0.6;
+  backdrop-filter: blur(8px);
+  svg {
+    path {
+      stroke-opacity: 0.6;
+    }
+  }
+  &:hover {
+    svg {
+      path {
+        stroke: #adff00;
+        stroke-opacity: 1;
+      }
+    }
+  }
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 10;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -70px;
+  background: black;
+  opacity: 0.6;
+}
+
+.tooltip .tooltiptext::after {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  z-index: 10;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  z-index: 10;
 }
 
 .shareSvg {
@@ -313,9 +404,10 @@
 }
 
 .voteCards {
+  animation: hot;
   .voteCard {
     &:last-child {
-      transform: rotate(0deg) scale(1) !important;
+      // transform: rotate(0deg) scale(1) !important;
       transition-delay: 0.25s;
       transition-duration: 1s;
     }
@@ -331,5 +423,36 @@
       transition-delay: 0.25s;
       transition-duration: 1s;
     }
+  }
+}
+
+.viewOnLensText {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+  font-feature-settings: "salt" on;
+  color: #ffffff;
+}
+
+@keyframes hot {
+  from {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(40deg) translateY(-80px);
+    opacity: 0;
+  }
+}
+
+@keyframes not {
+  from {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(-40deg) translateY(-80px);
+    opacity: 0;
   }
 }

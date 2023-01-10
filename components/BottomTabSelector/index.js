@@ -35,7 +35,7 @@ export default function BottomTabSelector() {
   };
 
   async function fetchRecentUpVotedNFTS() {
-    if (!isUserLoggedIn) {
+    if (!isUserLoggedIn && isUserLoggedIn !== undefined) {
       return;
     }
     try {
@@ -78,13 +78,13 @@ export default function BottomTabSelector() {
   }
 
   const { route } = useRouter();
-  console.log({ route });
 
   useEffect(() => {
     setTimeout(() => {
       fetchRecentUpVotedNFTS();
-    }, 1000);
+    }, 3000);
   }, [isUpvoted]);
+
   return (
     <>
       {route == "/collect" ? (
@@ -120,7 +120,7 @@ export default function BottomTabSelector() {
           </TwitterShareButton>
         </div>
         <div
-          className={`${styles.container} grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] w-full col-span-3 relative z-10`}
+          className={`${styles.container} w-[640px] h-[56px] m-auto grid grid-cols-3 content-center gap-[8px] p-[8px] md:rounded-[100px] col-span-3 relative z-10`}
         >
           {Object.values(TabItems).map((tab) => {
             const isSelected = tab.id === currentTab.id;
@@ -160,7 +160,7 @@ export default function BottomTabSelector() {
         </div>
 
         <button
-          className="font-medium text-[16px] leading-[26px] text-[#ffffff99] text-end items-center"
+          className={`${styles.madeWithPLG}  font-medium text-[16px] leading-[26px] text-[#ffffff99] text-end items-center`}
           onClick={handlePLGClick}
         >
           Made with <span className="text-[#FA5C00]">🧡</span> by PLG

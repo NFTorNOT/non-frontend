@@ -17,7 +17,7 @@ function SubmitForVoteModal({
     },
     {
       svgIcon: <Collect />,
-      desc: "People can collect your NFT on NFT or Not and Lenster",
+      desc: "People can collect your NFT on NFT or Not",
     },
     {
       svgIcon: <Collect />,
