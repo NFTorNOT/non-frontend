@@ -4,8 +4,6 @@ import Image from "next/image";
 import PublicationApi, { ReactionType } from "../../graphql/PublicationApi";
 import { useUserContext } from "../../context/UserContext";
 import { useAuthContext } from "../../context/AuthContext";
-import NonCard from "../nonCard";
-import NFTContractInfoModal from "./NFTContractInfoModal/NFTContractInfoModal";
 import Not from "./svg/not";
 import Hot from "./svg/hot";
 import TrendingThemeDefault from "./TrendingThemeDefault";
@@ -15,12 +13,11 @@ import VoteCard from "./voteCard";
 import { axiosInstance } from "../../AxiosInstance";
 import { useCollectedNFTModalContext } from "../../context/CollectedNFTModalContext";
 import CustomSignInModal from "../CustomSignInModal";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function VoteImage() {
-  const ipfs = "0x34...2745";
   const { userProfile } = useUserContext();
 
-  const [nftDetailsModal, setNftDetailsModal] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
   const [selectedTheme, setSelectedTheme] = useState("");
   const [themesData, setThemesData] = useState([]);
@@ -35,7 +32,7 @@ export default function VoteImage() {
 
   const childRefs = useRef();
 
-  const PAGINATION_ITEM_COUNT = 4;
+  const PAGINATION_ITEM_COUNT = 7;
 
   const allData = useRef([]);
 
@@ -228,32 +225,88 @@ export default function VoteImage() {
     upvoteImage({ publicationId });
   };
 
-  function alertUserToSignIn() {
-    alert("Please sign in to vote");
-  }
-
   const swiped = async (dir) => {
     if (!isUserLoggedIn) {
       setShouldShowSignInModal(true);
       return;
     }
-    if (dir == "right") {
-      setIsUpvoted(!isUpvoted);
-    }
 
-    submitVote(dir);
-    swipeAnimation(dir);
-    await loadMore();
-    showNextImage();
+    animatecard(dir);
+    setTimeout(async () => {
+      if (dir == "right") {
+        setIsUpvoted(!isUpvoted);
+      }
+      submitVote(dir);
+      await loadMore();
+
+      showNextImage();
+    }, 800);
   };
 
   const canSwipe = imageIndex >= 0;
 
   const swipeAnimation = async (dir) => {
     if (canSwipe && imageIndex < consumedData.current.length) {
-      await childRefs.current[imageIndex]?.swipe(dir);
+      // await childRefs.current?.[imageIndex]?.swipe(dir);
     }
   };
+
+  let styleSheet = null;
+  const dynamicHotAnimation = () => {
+    if (!styleSheet) {
+      styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      document.head.appendChild(styleSheet);
+    }
+
+    styleSheet.sheet.insertRule(
+      `@keyframes newAnimation {
+      from {
+        transform: rotate(0deg);
+        opacity: 1;
+      }
+      to {
+        transform: rotate(15deg) translateX(180px);
+        opacity: 0;
+      }
+    }`,
+      styleSheet.length
+    );
+  };
+
+  const dynamicNotAnimation = () => {
+    if (!styleSheet) {
+      styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      document.head.appendChild(styleSheet);
+    }
+
+    styleSheet.sheet.insertRule(
+      `@keyframes newAnimation {
+      from {
+        transform: rotate(0deg);
+        opacity: 1;
+      }
+      to {
+        transform: rotate(-15deg) translateX(-180px);
+        opacity: 0;
+      }
+    }`,
+      styleSheet.length
+    );
+  };
+
+  const animatecard = (dir) => {
+    let voteCard = document.getElementById("vote-card");
+    var lastChild = voteCard.lastElementChild;
+    lastChild.setAttribute("id", "lastvoteCard");
+    let demoIdVar = document.getElementById("lastvoteCard");
+    dir == "left"
+      ? dynamicNotAnimation("newAnimation", demoIdVar.value)
+      : dynamicHotAnimation("newAnimation", demoIdVar.value);
+    demoIdVar.style.animation = "newAnimation 1s";
+  };
+
   return (
     <div className="flex items-center justify-center flex-col">
       <TrendingThemeDefault
@@ -275,19 +328,23 @@ export default function VoteImage() {
         />
 
         <div
+          id="vote-card"
           className={`${styles.cardContainer} flex justify-center mb-[15px] order-2 aspect-[512/512] h-[520px] cursor-grab ${styles.voteCards}`}
         >
           {data.length > 0 &&
             data.map((character, index) => (
-              <NonCard
-                ref={(ref) => (childRefs.current[imageIndex] = ref)}
-                onSwipe={(dir) => submitVote(dir)}
-                className={`absolute pressable ${styles.voteCard}`}
-                preventSwipe={["up", "down"]}
-                key={character.publicationId}
-              >
+              <div className={`absolute pressable  ${styles.voteCard}`}>
                 <VoteCard character={character}></VoteCard>
-              </NonCard>
+              </div>
+              // <NonCard
+              //   ref={(ref) => (childRefs.current[imageIndex] = ref)}
+              //   onSwipe={(dir) => submitVote(dir)}
+              //   className={`absolute pressable ${styles.voteCard}`}
+              //   preventSwipe={["up", "down"]}
+              //   key={character.publicationId}
+              // >
+              //   <VoteCard character={character}></VoteCard>
+              // </NonCard>
             ))}
         </div>
         {consumedData.current.length > 0 ? (
@@ -314,7 +371,11 @@ export default function VoteImage() {
               >
                 <Not />
               </div>
-              <div className={`${isNotButtonClicked ? `block` : `hidden`}`}>
+              <div
+                className={`${styles.buttonClassNot} ${
+                  isNotButtonClicked ? `block` : `hidden`
+                }`}
+              >
                 <ClickOnHot />
               </div>
             </button>
@@ -341,7 +402,11 @@ export default function VoteImage() {
               >
                 <Hot />
               </div>
-              <div className={`${isHotButtonClicked ? `block` : `hidden`}`}>
+              <div
+                className={`${styles.buttonClassHot} ${
+                  isHotButtonClicked ? `block` : `hidden`
+                }`}
+              >
                 <Image
                   src="https://static.plgworks.com/assets/images/non/vote/hotButtonClick.png"
                   alt="Lens Icon"

@@ -30,7 +30,6 @@ export default function TopBar() {
   const { userProfile } = useUserContext();
 
   useEffect(() => {
-    console.log({ userProfile });
     if (isUserLoggedIn && Object.values(userProfile).length > 0) {
       notify({ text: "You’re on the Lens Testnet" });
     }

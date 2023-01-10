@@ -4,7 +4,6 @@ import TrendingThemeSvg from "./svg/TrendingThemeSvg";
 import { CURRENT_TRENDING_THEMES } from "../../utils/Constants";
 
 function TrendingThemeDefault({ selectedTheme, trendingThemes }) {
-  console.log({ trendingThemes });
   const currentTrendingThemes = CURRENT_TRENDING_THEMES;
 
   return (

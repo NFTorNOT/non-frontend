@@ -1,6 +1,5 @@
 import styles from "./Vote.module.scss";
 import React, { useEffect, useRef, useState } from "react";
-import ShareSVG from "./svg/socialShare";
 import ShareModal from "./shareModal";
 import HidePromptSvg from "./svg/hidePromptSvg";
 import ShowPromptSvg from "./svg/showPromptSvg";
@@ -121,6 +120,12 @@ export default function VoteCard(props) {
     });
   };
 
+  const ViewOnLensClick = () => {
+    let viewLensUrl =
+      "https://testnet.lenster.xyz/posts/" + character?.publicationId;
+    window.open(viewLensUrl, "_blank");
+  };
+
   useEffect(() => {
     const titleHeight = titleWrapperRef.current?.clientHeight;
     const wrapHeight = bioParentWrapperRef.current?.clientHeight;
@@ -166,8 +171,12 @@ export default function VoteCard(props) {
             >
               <ShareSVG />
             </div> */}
-            <div className={`cursor-pointer ${styles.lensSvg} mr-[16px]`}>
+            <div
+              className={`cursor-pointer ${styles.tooltip} mr-[16px]`}
+              onClick={ViewOnLensClick}
+            >
               <LensSvg />
+              <span className={styles.tooltiptext}>View On Lens</span>
             </div>
           </div>
         </div>
@@ -190,10 +199,11 @@ export default function VoteCard(props) {
         >
           {character.description}
           <div
-            className={`cursor-pointer mr-[16px]`}
+            className={`cursor-pointer  ${styles.tooltip} mr-[16px]`}
             onClick={() => onRemixClick()}
           >
             <RemixSvg />
+            <span className={styles.tooltiptext}>Remix</span>
           </div>
         </div>
 
