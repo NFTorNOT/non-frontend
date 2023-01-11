@@ -1,0 +1,58 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "nftornot-frontend"
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 3000
+
+ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: thursday
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /health-checker
+  hosts:
+    - host: staging.nftornot.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: 1
+    memory: 2Gi
+  requests:
+    cpu: 1
+    memory: 2Gi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+env:
+  NEXT_PUBLIC_ALCHEMY_API_KEY :  "ox0g0sAdYo4fdt2h2kpgoEeJfzL21gT4"
+  NEXT_PUBLIC_LENS_API_URL :  "https://api-mumbai.lens.dev"
+  NEXT_PUBLIC_WEB3_STORAGE_API_KEY :  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDYxRjA0OWJjYTJFOWQyOGEyNTNmOTM0MDhDYzk3Q0YyMzIxOTFmM0IiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njc0ODUzNTQ4NTksIm5hbWUiOiJGaXJzdCBUb2tlbiJ9.eArlzoXBOs_rac_Zk8OHdv7kT1oa3RxEJ4zaoLg5WtY"
+  NEXT_PUBLIC_LENS_HUB_CONTRACT_ADDRESS :  "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82"
